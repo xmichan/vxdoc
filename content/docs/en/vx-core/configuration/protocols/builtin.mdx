@@ -1,0 +1,59 @@
+---
+title: Freedom, Blackhole, Dokodemo
+description: Built-in inbound/outbound protocol configs
+---
+
+## Freedom
+
+Direct outbound — traffic leaves without an upstream proxy.
+
+Proto: [`freedom.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/proxy/freedom/freedom.proto)
+
+`FreedomConfig` has no fields.
+
+```json
+{
+  "@type": "type.googleapis.com/vx.proxy.freedom.FreedomConfig"
+}
+```
+
+Use as the default server `direct` outbound.
+
+---
+
+## Blackhole
+
+Drops traffic (block).
+
+Proto: [`blackhole.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/proxy/blackhole/blackhole.proto)
+
+`BlackholeConfig` has no fields.
+
+```json
+{
+  "@type": "type.googleapis.com/vx.proxy.blackhole.BlackholeConfig"
+}
+```
+
+---
+
+## Dokodemo-door
+
+Transparent redirect / port forward inbound.
+
+Proto: [`dokodemo.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/proxy/dokodemo/dokodemo.proto)
+
+| Field | Description |
+| --- | --- |
+| `address` | Target address to forward to |
+| `port` | Target port |
+| `networks` | `TCP`, `UDP`, … |
+
+```json
+{
+  "@type": "type.googleapis.com/vx.proxy.dokodemo.DokodemoConfig",
+  "address": "127.0.0.1",
+  "port": 8080,
+  "networks": ["TCP"]
+}
+```

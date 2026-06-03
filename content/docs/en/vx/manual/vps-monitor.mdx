@@ -1,0 +1,34 @@
+---
+title: VPS Monitor
+description: Monitor remote server status over SSH
+---
+
+The **Server** tab lets you connect to a Linux VPS over SSH and monitor vx-core runtime status in real time.
+
+## Monitored Metrics
+
+- **Installed** — Whether vx-core is present on the server
+- **Version** — Running vx-core version
+- **Uptime** — Service start time
+- **Memory** — Current memory usage
+
+## Streaming Updates
+
+Server monitoring uses a streaming connection so metrics refresh continuously while the monitor view is open — no manual refresh needed.
+
+## Server Actions
+
+From the same panel you can:
+
+- Shut down or reboot the VPS
+- Start, stop, or restart the vx-core service
+- Install, update, or uninstall vx-core
+
+## Setup
+
+Add a server by providing SSH credentials (host, port, username, key or password). VX stores credentials securely and reuses the connection for config editing and deployment.
+
+## Related
+
+- [VX-core Panel](/docs/vx/manual/vx-core-panel) — edit server configuration
+- [vx-core Quick Start](/docs/vx-core/quick-start) — manual server setup

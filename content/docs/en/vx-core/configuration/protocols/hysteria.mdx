@@ -1,0 +1,64 @@
+---
+title: Hysteria2
+description: Hysteria2ServerConfig and Hysteria2ClientConfig
+---
+
+Proto: [`protos/proto/vx/proxy/hysteria/hysteria.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/proxy/hysteria/hysteria.proto)
+
+Hysteria2 runs over QUIC. TLS is configured inside the protocol via `tlsConfig` ([TlsConfig](/docs/vx-core/configuration/security/tls)).
+
+## Hysteria2ServerConfig
+
+| Field | Description |
+| --- | --- |
+| `users` | `UserConfig[]` — auth string in `secret` |
+| `obfs` | `ObfsConfig` (Salamander) |
+| `bandwidth` | `maxTx` / `maxRx` caps |
+| `quic` | QUIC window and timeout settings |
+| `ignoreClientBandwidth` | Ignore client bandwidth hints |
+| `tlsConfig` | Server TLS |
+| `addresses` | Listen / announce addresses |
+
+## Hysteria2ClientConfig
+
+| Field | Description |
+| --- | --- |
+| `auth` | Auth password |
+| `tlsConfig` | Client TLS (SNI, pins, ECH, …) |
+| `quic` | QUIC tuning |
+| `fastOpen` | QUIC fast open |
+| `bandwidth` | Client upload/download limits |
+| `obfs` | Obfuscation |
+
+### QuicConfig (shared)
+
+| Field | Description |
+| --- | --- |
+| `initialStreamReceiveWindow`, `maxStreamReceiveWindow`, … | Stream windows (MB or `*Bytes` variants) |
+| `initialConnectionReceiveWindow`, `maxConnectionReceiveWindow`, … | Connection windows |
+| `maxIdleTimeout`, `keepAlivePeriod` | QUIC timeouts |
+| `disablePathMtuDiscovery` | Disable PMTUD |
+| `maxIncomingStreams` | Server-only stream limit |
+
+### ObfsConfig
+
+| Field | Description |
+| --- | --- |
+| `salamander` | `SalamanderConfig` with `password` |
+
+### BandwidthConfig
+
+| Field | Description |
+| --- | --- |
+| `maxTx` | Upload cap (client: upload) |
+| `maxRx` | Download cap (client: download) |
+
+```json
+{
+  "@type": "type.googleapis.com/vx.proxy.hysteria.Hysteria2ServerConfig",
+  "users": [{ "secret": "auth-password" }],
+  "tlsConfig": {
+    "certificates": [{ "certificateFilepath": "/path/cert.pem", "keyFilepath": "/path/key.pem" }]
+  }
+}
+```

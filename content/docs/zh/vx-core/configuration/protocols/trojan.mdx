@@ -1,0 +1,31 @@
+﻿---
+title: Trojan
+description: TrojanServerConfig 与 TrojanClientConfig
+---
+
+Proto：[`protos/proto/vx/proxy/trojan/trojan.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/proxy/trojan/trojan.proto)
+
+## TrojanServerConfig
+
+| 字段 | 类型 | 说明 |
+| --- | --- | --- |
+| `users` | `UserConfig[]` | 密码在 `secret` 中 |
+| `vision` | bool | 启用 Trojan Vision |
+
+```json
+{
+  "@type": "type.googleapis.com/vx.proxy.trojan.TrojanServerConfig",
+  "vision": true,
+  "users": [{ "id": "user1", "secret": "your-password" }]
+}
+```
+
+## TrojanClientConfig
+
+| 字段 | 类型 | 说明 |
+| --- | --- | --- |
+| `password` | string | Trojan 密码 |
+| `special` | bool | 内部 / 扩展用途 |
+| `vision` | bool | 启用 Trojan Vision |
+
+常与 443 端口的 [TLS](/zh/docs/vx-core/configuration/security/tls) 一起使用。

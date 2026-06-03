@@ -1,0 +1,35 @@
+---
+title: KCP
+description: KcpConfig
+---
+
+Proto: [`protos/proto/vx/transport/protocols/kcp/config.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/transport/protocols/kcp/config.proto)
+
+UDP-based KCP transport. Set on `TransportConfig.kcp`.
+
+## KcpConfig
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `mtu` | uint32 | MTU |
+| `tti` | uint32 | Transmission time interval |
+| `uplinkCapacity` | uint32 | Uplink capacity (deprecated style tuning) |
+| `downlinkCapacity` | uint32 | Downlink capacity |
+| `congestion` | bool | Enable congestion control |
+| `writeBuffer` | uint32 | Write buffer size |
+| `readBuffer` | uint32 | Read buffer size |
+| `headerConfig` | `Any` | Packet header disguise (same family as [TCP headers](/docs/vx-core/configuration/transport/tcp)) |
+| `seed` | string | Obfuscation seed |
+
+```json
+{
+  "transport": {
+    "kcp": {
+      "mtu": 1350,
+      "tti": 50,
+      "uplinkCapacity": 12,
+      "downlinkCapacity": 100
+    }
+  }
+}
+```

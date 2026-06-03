@@ -1,0 +1,80 @@
+﻿---
+title: DNS
+description: DnsConfig、服务器与劫持
+---
+
+DNS 在 `ServerConfig.dns`（`DnsConfig`）中配置。模式定义：[`protos/proto/vx/dns/dns.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/dns/dns.proto)。
+
+## DnsConfig
+
+| 字段 | 类型 | 说明 |
+| --- | --- | --- |
+| `records` | `Record[]` | 静态域名 → IP 映射 |
+| `recordStrings` | string[] | 备用记录编码 |
+| `dnsServers` | `DnsServerConfig[]` | 命名的 DNS 上游 |
+| `internalResolver` | `Resolver` | **拨号**出站时使用的解析器 |
+| `requestDomainResolver` | `Resolver` | **入站** DNS 请求使用的解析器 |
+| `concurrentDnsServers` | `ConcurrentDnsServer[]` | 并行查询多台服务器 |
+| `serialDnsServers` | `SerialDnsServer[]` | 依次尝试多台服务器 |
+| `resolvers` | `Resolver[]` | 其他命名解析器 |
+| `dnsHijack` | `DnsHijackConfig` | 劫持规则与 Fake DNS 开关 |
+
+### Record
+
+| 字段 | 说明 |
+| --- | --- |
+| `domain` | 主机名 |
+| `ip` | 静态应答 |
+| `proxiedDomain` | 将此域名映射为与 `proxiedDomain` 相同的 IP |
+
+### Resolver
+
+| 字段 | 说明 |
+| --- | --- |
+| `dnsServers` | 服务器名称或地址 |
+| `interval` | 串行行为中的重试间隔 |
+| `name` | 解析器名称 |
+
+## DnsServerConfig
+
+每台服务器有 `name` 与 `type` oneof：
+
+| 类型 | 消息 | 用途 |
+| --- | --- | --- |
+| `plainDnsServer` | `PlainDnsServer` | UDP DNS（`addresses`、`useDefaultDns`） |
+| `tlsDnsServer` | `TlsDnsServer` | DNS over TLS |
+| `dohDnsServer` | `DohDnsServer` | DNS over HTTPS（`url`） |
+| `quicDnsServer` | `QuicDnsServer` | DNS over QUIC |
+| `fakeDnsServer` | `FakeDnsServer` | Fake IP 池（`poolConfigs`：`cidr`、`lruSize`） |
+| `goDnsServer` | `GoDnsServer` | Go 解析器 |
+| `emptyDnsServer` | `EmptyDnsServer` | 空操作 / 占位 |
+
+通用字段：
+
+| 字段 | 说明 |
+| --- | --- |
+| `clientIp` | EDNS 客户端子网 |
+| `cacheDuration` | 覆盖 TTL 缓存；`0` 表示使用应答最小 TTL |
+| `ipTags` | 丢弃不在这些 [geo](/zh/docs/vx-core/configuration/geo) IP 集合内的应答 |
+
+## DnsHijackConfig
+
+| 字段 | 说明 |
+| --- | --- |
+| `dnsRules` | `DnsRuleConfig[]` — 按域名/标签/类型选择服务器 |
+| `enableFakeDns` | 为被劫持查询启用 Fake DNS |
+
+### DnsRuleConfig
+
+| 字段 | 说明 |
+| --- | --- |
+| `dnsServerName` | 目标 `DnsServerConfig.name` |
+| `domains`、`domainTags` | 匹配查询名 |
+| `includedTypes` | `A`、`AAAA`、`HTTPS` 等 |
+| `ruleName` | 调试标签 |
+
+## 相关
+
+- [Geo](/zh/docs/vx-core/configuration/geo) — 规则与服务器上的 `domainTags`、`ipTags`
+- [路由](/zh/docs/vx-core/configuration/router) — `fakeIp` 与域名解析规则
+- [拨号器工厂](/zh/docs/vx-core/configuration/dialer-factory) — `useInternalResolver`

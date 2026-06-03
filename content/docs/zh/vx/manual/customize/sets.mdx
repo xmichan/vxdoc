@@ -1,0 +1,138 @@
+﻿---
+title: 集合
+description: 用于分流流量的域名、IP 与应用集合
+---
+
+**集合** — 路由与 DNS 规则使用的命名集合。
+
+## 集合类型
+
+| 类型 | 包含 | 示例名称 |
+| --- | --- | --- |
+| **Atomic domain set** | 域名、geosite、远程 URL | Custom Proxy、Custom Direct、GFW、CN、Private |
+| **Atomic IP set** | CIDR、geoip、远程 URL | Custom Proxy、Custom Direct、CN、Public |
+| **Great domain set** | 域名集合的组合（包含 / 排除） | GFW Mode Proxy Domains |
+| **Great IP set** | 其他 IP 集合的组合 | GFW Mode Proxy IPs |
+| **App set** | 应用 ID | Proxy、Direct |
+
+**原子** 集合是基础块。**组合** 集合由原子集合（及其他组合集合）构建。
+
+## 组合域名集合与组合 IP 集合
+
+**组合集合** 不直接持有域名或 IP，而是通过 **Include** 与 **Exclude** 列表组合其他集合。
+
+当 vx-core 检查域名或 IP 是否属于组合集合时：
+
+1. **先排除** — 若目标匹配 **Exclude** 中任一集合，组合集合 **不匹配**。
+2. **包含** — 若目标匹配 **Include** 中任一集合，组合集合匹配。
+3. 否则不匹配。
+
+**组合 IP 集合** 同理，但使用 IP 集合而非域名集合。
+
+### 示例：GFW Mode Proxy Domains
+
+在 GFW 模式下，组合域名集合 **GFW Mode Proxy Domains** 定义为：
+
+- **Include：** `GFW`、`Custom Proxy`、`Fallback`
+- **Exclude：** `Custom Direct`
+
+在 GFW 列表中且不在 Custom Direct 中的域名匹配此集合。
+
+### 互斥集合名称
+
+创建或编辑 **组合域名集合** 或 **组合 IP 集合** 时，可可选设置 **Mutually Exclusive Set Name**。
+
+用于命名 **配对的相反集合**。例如：
+
+- **CN Mode Direct Domains** ↔ **CN Mode Proxy Domains**
+
+它们表示两个集合：一个包含中国大陆所有域名，另一个包含其余所有域名。
+
+在 UI 中为路由规则选择域名或 IP 集合时，集合及其互斥名称都会出现在选择器中。查找也可通过任一名称进行。
+
+
+
+## 原子集合
+
+### 原子域名集合
+
+| 字段 | 用途 |
+| --- | --- |
+| **Name** | 路由规则引用的唯一标识符。 |
+| **Use Bloom Filter** | 降低大集合的内存占用。有约 1% 的误报概率 — 不在集合中的域名可能被当作在集合中。 |
+| **Inverse** | 翻转成员关系：集合匹配 **不在** 其源中的目标。 |
+| **GeoSite URL** | 自定义 `geosite.dat` 文件的 HTTPS URL。若为空，VX 使用 LoyalSoldier 提供的 `geosite.dat`。 |
+| **GeoSite Codes** | geosite 数据中的类别（如 `cn`、`gfw`、`private`）。 |
+| **GeoSite Attributes** | 代码内的子筛选（如 `category-games` 下的 `cn`）。 |
+| **URLs** | 可通过 URL 下载的远程文件 — 见下方 [URL 文件类型](#url-file-types)。 |
+| **Domains** | 手动添加的域名条目（完整域名、后缀、关键词等）。 |
+
+### 原子 IP 集合
+
+| 字段 | 用途 |
+| --- | --- |
+| **Name** | 路由规则引用的唯一标识符。 |
+| **Inverse** | 与域名集合相同 — 匹配 **不在** 集合源中的 IP。 |
+| **GeoIP URL** | 自定义 `geoip.dat` 文件的 HTTPS URL。若为空，VX 使用 LoyalSoldier 提供的 `geosite.dat`。 |
+| **GeoIP Codes** | geoip 数据中的类别（如 `cn`、`private`）。 |
+| **URLs** | 可通过 URL 下载的远程文件 |
+| **CIDRs** | 手动添加的 IP 范围。 |
+
+### 支持的 URL 文件类型
+
+- V2ray GeoSite / GeoIP 文件
+
+- Clash Rules
+
+### Geo 文件更新
+
+VX 会定期从原子集合中指定的 URL 下载 geo 文件。
+
+在 **设置 → 常规 → 自动更新 Geo 文件** 中配置自动更新：
+
+| 设置 | 行为 |
+| --- | --- |
+| **Auto Update Geo Files** | 启用定期重新下载 geo 文件。 |
+| **Update Interval** | 刷新频率，单位 **天**（最少 1）。默认 **7 天**。 |
+| **Update Now** | 立即触发下载与处理。 |
+
+
+## 集合名称不可重复
+
+每个类别（域名/IP/应用）内集合名称必须唯一：
+
+- **原子域名集合** 名称不可与其他原子或组合域名集合相同。
+- **组合域名集合** 名称不可与任何现有原子或组合域名集合相同。
+- 新名称也不可与其他集合的 **互斥集合名称** 相同。
+
+IP 集合（原子与组合）适用相同规则。
+
+## 内置 geo 集合
+
+VX 始终包含以下内置集合：
+
+### 原子域名集合
+
+| 集合 | 作用 |
+| --- | --- |
+| **Custom Proxy** | 在简化视图的代理段添加/删除域名时编辑的集合 | 
+| **Custom Direct** | 在简化视图的直连段添加/删除域名时编辑的集合 |
+
+### 原子 IP 集合
+
+| 集合 | 作用 |
+| --- | --- |
+| **Custom Proxy** | 在简化视图的代理段添加/删除 IP 时编辑的集合 | 
+| **Custom Direct** | 在简化视图的直连段添加/删除 IP 时编辑的集合 |
+
+### 应用集合
+
+| 集合 | 作用 |
+| --- | --- |
+| **Proxy** | 在简化视图的代理段添加/删除应用时编辑的集合 | 
+| **Direct** | 在简化视图的直连段添加/删除应用时编辑的集合 |
+
+## 相关
+
+- [简化路由](/zh/docs/vx/manual/customize/simplified) — 快速编辑 Custom Proxy / Custom Direct
+- [路由模式](/zh/docs/vx/manual/customize/modes) — 集合如何与规则关联

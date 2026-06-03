@@ -1,0 +1,66 @@
+﻿---
+title: 出站
+description: OutboundHandlerConfig 参考
+---
+
+出站处理器列在 `ServerConfig.outbounds` 中。模式定义：[`protos/proto/vx/outbound/outbound.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/outbound/outbound.proto)。
+
+每个处理器有唯一的 `tag`，供[路由](/zh/docs/vx-core/configuration/router)规则（`outboundTag`）或链式目标引用。
+
+## OutboundHandlerConfig
+
+| 字段 | 类型 | 说明 |
+| --- | --- | --- |
+| `tag` | string | 路由用的处理器名称 |
+| `transport` | `TransportConfig` | 客户端传输（TLS、WebSocket 等） |
+| `address` | string | 远程主机或 IP |
+| `port` | uint32 | 远程端口 |
+| `ports` | `PortRange[]` | 多个端口范围 |
+| `protocol` | `Any` | 代理客户端配置（Freedom、Blackhole、VMess 等） |
+| `enableMux` | bool | 启用连接多路复用 |
+| `muxConfig` | `MuxConfig` | `maxConnection`、`maxConcurrency` |
+| `uot` | bool | UDP over TCP |
+| `domainStrategy` | enum | 拨号时解析域名的策略（`PreferIPv4`、`PreferIPv6`、`IPv4Only`、`IPv6Only`、`Speed`） |
+| `random` | `RandomPortSelectStrategy` | 同时使用 `ports` 中的全部端口 |
+| `one` | `OnePortSelectStrategy` | 轮换单个端口（`interval` 或 `minInterval` / `maxInterval`） |
+
+### 直连（freedom）出站
+
+最小服务器需配置此项，以便不经上游代理转发流量：
+
+```json
+{
+  "tag": "direct",
+  "protocol": {
+    "@type": "type.googleapis.com/vx.proxy.freedom.FreedomConfig"
+  }
+}
+```
+
+### 阻断出站
+
+```json
+{
+  "tag": "block",
+  "protocol": {
+    "@type": "type.googleapis.com/vx.proxy.blackhole.BlackholeConfig"
+  }
+}
+```
+
+代理客户端配置见[代理协议](/zh/docs/vx-core/configuration/protocols)（`*ClientConfig` 消息）。按需配合[传输](/zh/docs/vx-core/configuration/transport)与[安全](/zh/docs/vx-core/configuration/security)。
+
+## OutboundConfig（客户端 / 高级）
+
+同一 proto 文件中的 `OutboundConfig` 用于更复杂的客户端场景（处理器列表、链、统计）。服务器 `ServerConfig` 仅使用扁平的 `outbounds`（`OutboundHandlerConfig` 重复字段）。
+
+| 字段 | 说明 |
+| --- | --- |
+| `handlers` | `HandlerConfig[]` — 单出站或 `ChainHandlerConfig` |
+| `hysteriaRejectQuic` | 为 Hysteria 拒绝 QUIC |
+| `handlerLinkStats`、`handlerMeter`、`totalCounter` | 统计与计量 |
+
+## 相关
+
+- [路由](/zh/docs/vx-core/configuration/router) — 选择 `outboundTag` 或 `selectorTag`
+- [拨号器工厂](/zh/docs/vx-core/configuration/dialer-factory) — 出站连接时的拨号超时

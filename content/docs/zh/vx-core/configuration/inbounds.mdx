@@ -1,0 +1,79 @@
+﻿---
+title: 入站
+description: ProxyInboundConfig 与 MultiProxyInboundConfig
+---
+
+入站配置位于 `ServerConfig.inbounds` 与 `ServerConfig.multiInbounds`。模式定义：[`protos/proto/vx/inbound/inbound.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/inbound/inbound.proto)。
+
+## ProxyInboundConfig
+
+每个入站一个监听器。适用于每个端口只运行一种代理协议（可选共享 `transport` 层）的场景。
+
+| 字段 | 类型 | 说明 |
+| --- | --- | --- |
+| `tag` | string | 供[路由](/zh/docs/vx-core/configuration/router) `inboundTags` 引用的名称 |
+| `address` | string | 监听地址；空表示所有网卡 |
+| `port` | uint32 | 单个端口（可与 `ports` 同时设置） |
+| `ports` | uint32[] | 监听的端口列表 |
+| `transport` | `TransportConfig` | TLS、REALITY、WebSocket、gRPC 等 |
+| `protocol` | `Any` | 一种代理服务器配置（VMess、VLESS、Trojan 等） |
+| `protocols` | `Any[]` | 同一监听器上的多种协议 |
+| `users` | `UserConfig[]` | 本入站用户（见[用户](/zh/docs/vx-core/configuration/users)） |
+
+示例：
+
+```json
+{
+  "tag": "vmess",
+  "ports": [10000],
+  "protocol": {
+    "@type": "type.googleapis.com/vx.proxy.vmess.VmessServerConfig",
+    "secureEncryptionOnly": true
+  }
+}
+```
+
+协议 `@type` 值见[代理协议](/zh/docs/vx-core/configuration/protocols)。传输与 TLS/REALITY：[传输](/zh/docs/vx-core/configuration/transport)、[安全](/zh/docs/vx-core/configuration/security)。
+
+## MultiProxyInboundConfig
+
+当单个监听器需接受**多种传输与安全配置**时使用（常见于 TLS 或 REALITY 后的多协议端口）。
+
+| 字段 | 类型 | 说明 |
+| --- | --- | --- |
+| `tag` | string | 路由用的入站标签 |
+| `address` | string | 监听地址；空表示所有网卡 |
+| `ports` | uint32[] | 监听端口 |
+| `protocols` | `Any[]` | 代理协议配置（与上文相同的 `Any` 类型） |
+| `securityConfigs` | `Security[]` | 按 SNI/域名/正则匹配的 TLS 或 REALITY |
+| `transportProtocols` | `Protocol[]` | WebSocket、HTTP、gRPC、TCP、SplitHTTP、HTTPUpgrade |
+| `socket` | `SocketConfig` | 套接字级选项 |
+| `users` | `UserConfig[]` | 本入站所有处理器的用户 |
+
+### Security（`securityConfigs` 中的每一项）
+
+| 字段 | 说明 |
+| --- | --- |
+| `tls` | 本安全块生效时的 `TlsConfig` |
+| `reality` | 本安全块生效时的 `RealityConfig` |
+| `domains` | 本块处理的 SNI 主机名 |
+| `regularExpression` | SNI 正则匹配 |
+| `always` | 对所有连接使用本安全配置 |
+
+### 传输协议（`transportProtocols` 中的每一项）
+
+| 字段 | 说明 |
+| --- | --- |
+| `websocket`、`http`、`grpc`、`httpupgrade`、`splithttp`、`tcp` | 传输专用配置（oneof） |
+| `alpn` | 匹配 ALPN |
+| `sni` | 匹配连接 SNI |
+| `path` | HTTP/1 路径 |
+| `h2` | 连接使用 HTTP/2 |
+| `always` | 对所有连接使用本传输 |
+
+字段说明见[传输](/zh/docs/vx-core/configuration/transport)与[安全](/zh/docs/vx-core/configuration/security)。
+
+## 相关
+
+- [出站](/zh/docs/vx-core/configuration/outbounds) — 路由后的流量去向
+- [路由](/zh/docs/vx-core/configuration/router) — 按 `inboundTags` 匹配

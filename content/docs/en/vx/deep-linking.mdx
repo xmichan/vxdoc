@@ -1,0 +1,50 @@
+---
+title: Deep Linking
+description: Custom URL schemes for airport owners to distribute subscriptions
+---
+
+VX supports custom URL schemes so airport (proxy provider) owners can let users add subscriptions with one click.
+
+## Format 1: Base64 Encoded Subscription URL
+
+```
+vx://add/sub://<base64_encoded_url>?remarks=<subscription_name>
+```
+
+**Example:**
+
+```
+vx://add/sub://aHR0cHM6Ly9leGFtcGxlLmNvbS9hYmNk?remarks=My%20Airport
+```
+
+The subscription URL is Base64-encoded and placed after `sub://`. The `remarks` parameter sets the display name (URL-encoded).
+
+## Format 2: Direct URL with Parameters
+
+```
+vx://install-config?url=<subscription_url>&name=<subscription_name>
+```
+
+**Example:**
+
+```
+vx://install-config?url=https%3A%2F%2Fexample.com%2Fabcd&name=My%20Airport
+```
+
+| Parameter | Description |
+| --- | --- |
+| `url` | The subscription URL (URL-encoded) |
+| `name` | Display name for the subscription (URL-encoded) |
+
+Both formats add a subscription to the VX client. The user must have VX installed and the OS will prompt to open the link in VX.
+
+## Tips for Airport Owners
+
+- Always URL-encode parameter values (especially non-ASCII names)
+- Test links on both mobile and desktop before distributing
+- Provide a fallback plain subscription URL for users without VX installed
+- Link to [vx.5vnetwork.com](https://vx.5vnetwork.com) for downloads
+
+## QR Codes
+
+You can encode either URL format as a QR code. VX supports scanning subscription QR codes from the add-subscription screen.

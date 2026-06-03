@@ -1,0 +1,93 @@
+﻿---
+title: Geo
+description: GeoConfig — 域名、IP 与应用集合
+---
+
+地理数据集合在 `ServerConfig.geo`（`GeoConfig`）中定义。模式定义：[`protos/proto/vx/geo/geo.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/geo/geo.proto)。
+
+[路由](/zh/docs/vx-core/configuration/router)规则与 [DNS](/zh/docs/vx-core/configuration/dns) 通过 `domainTags`、`dstIpTags`、`srcIpTags`、`geoDomains` 按**名称**引用集合。
+
+## GeoConfig
+
+| 字段 | 类型 | 说明 |
+| --- | --- | --- |
+| `domainSets` | `DomainSetConfig[]` | 命名的域名集合标签组 |
+| `greatDomainSets` | `GreatDomainSetConfig[]` | 组合域名集合（`inNames`、`exNames`、取反） |
+| `atomicDomainSets` | `AtomicDomainSetConfig[]` | 具体域名列表或 geosite 文件 |
+| `greatIpSets` | `GreatIPSetConfig[]` | 组合 IP 集合 |
+| `atomicIpSets` | `AtomicIPSetConfig[]` | CIDR 列表或 geoip 文件 |
+| `appSets` | `AppSetConfig[]` | 移动端应用 id 分组 |
+
+各类别内名称须唯一（`greatDomainSets` 与 `atomicDomainSets` 之间不可重名，IP 集合同理）。
+
+## AtomicDomainSetConfig
+
+| 字段 | 说明 |
+| --- | --- |
+| `name` | `domainTags` 中使用的标签 |
+| `domains` | 内联 `Domain` 列表 |
+| `geosite`、`geosites` | 从 geosite 文件或远程加载 |
+| `useBloomFilter` | 布隆过滤器优化 |
+| `clashFiles` | Clash 格式规则文件 |
+| `inverse` | 匹配**不在**集合内的域名 |
+| `remoteGeoFiles` | 按计划下载地理数据 |
+
+### GeositeConfig
+
+| 字段 | 说明 |
+| --- | --- |
+| `codes` | Geosite 分类代码 |
+| `attributes` | 属性过滤 |
+| `filepath` | 本地 geosite.dat 路径 |
+| `remoteUrl`、`refreshCron` | 远程下载与 cron 刷新 |
+
+## AtomicIPSetConfig
+
+| 字段 | 说明 |
+| --- | --- |
+| `name` | `*IpTags` 中使用的标签 |
+| `cidrs` | 内联 CIDR 列表 |
+| `geoip` | `GeoIPConfig` — 文件、代码、远程 URL、cron |
+| `inverse` | 匹配集合外的 IP |
+| `clashFiles`、`remoteGeoFiles` | 外部规则 / 远程源 |
+
+## GreatDomainSetConfig / GreatIPSetConfig
+
+由其他命名集合构建大集合：
+
+| 字段 | 说明 |
+| --- | --- |
+| `name` | 结果集合名称 |
+| `oppositeName` | 补集集合名称 |
+| `inNames` | 包含这些集合 |
+| `exNames` | 排除这些集合 |
+
+## DomainSetConfig
+
+| 字段 | 说明 |
+| --- | --- |
+| `name` | 集合名称 |
+| `tags` | 成员 atomic/great 集合名称 |
+
+## AppSetConfig
+
+| 字段 | 说明 |
+| --- | --- |
+| `name` | 路由规则中 `appTags` 引用 |
+| `appIds` | `AppId` 条目（`keyword`、`prefix` 或 `exact`） |
+| `clashFiles` | Clash 应用规则 |
+
+## GeoRemoteFile
+
+用于 atomic 集合下的定时下载：
+
+| 字段 | 说明 |
+| --- | --- |
+| `filepath` | 写入的本地路径 |
+| `sourceUrl` | HTTPS URL |
+| `refreshCron` | 5 段 cron；空表示仅在启动/重载时拉取 |
+
+## 相关
+
+- [路由](/zh/docs/vx-core/configuration/router) — `domainTags`、`dstIpTags`、`geoDomains`
+- [DNS](/zh/docs/vx-core/configuration/dns) — DNS 规则与服务器上的 `domainTags`、`ipTags`

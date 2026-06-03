@@ -1,0 +1,41 @@
+---
+title: Sync and Backup
+description: Cloud sync and encrypted backup across devices (Pro)
+---
+
+**Pro feature** — Keep nodes, routing rules, server configs, and selector settings in sync across your devices, with optional encrypted cloud backup.
+
+## Sync
+
+When signed in with a Pro account, VX syncs changes through Supabase:
+
+| Data | Synced |
+| --- | --- |
+| Nodes and subscriptions | Optional |
+| Routing rules and modes | Optional |
+| Server SSH configs | Optional |
+| Proxy selector settings | Optional |
+
+Changes on one device propagate to others. Sync runs periodically and on demand. Push notifications (where available) can trigger immediate sync.
+
+## Encryption
+
+Sync data is encrypted with a password you set. The password is stored in secure device storage and never sent in plain text.
+
+## Backup
+
+Create encrypted backups of your full configuration:
+
+- Upload to cloud storage tied to your account
+- Restore on a new device or after reinstall
+- Set a separate backup password
+
+Backups include outbounds, routing, servers, and preferences — not your vx-core binary.
+
+## Enable Sync
+
+Go to **Settings → Sync & Backup**, sign in, set your sync password, and choose which categories to sync.
+
+## Related
+
+- [Free Trial](/docs/vx/manual/free-trial) — try Pro sync before subscribing

@@ -1,0 +1,73 @@
+---
+title: TLS
+description: TlsConfig and Certificate
+---
+
+Protos:
+
+- [`tls.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/transport/security/tls/tls.proto) — `TlsConfig`
+- [`certificate.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/transport/security/tls/certificate.proto) — `Certificate`
+
+Set on `TransportConfig.tls`, `MultiProxyInboundConfig.securityConfigs[].tls`, Hysteria2 `tlsConfig`, and SplitHTTP `downloadSettings.tls`.
+
+## TlsConfig
+
+| Field | Description |
+| --- | --- |
+| `certificates` | Server/client cert chain (`Certificate[]`) |
+| `rootCas` | Custom root CA PEM blobs |
+| `issueCas` | CAs used to issue certs to peers |
+| `serverName` | SNI; default = destination domain when dialing |
+| `disableSystemRoot` | Do not use system root CAs |
+| `allowInsecure` | Skip certificate verification (client) |
+| `nextProtocol` | ALPN list |
+| `enableSessionResumption` | TLS session tickets / resumption |
+| `pinnedPeerCertificateChainSha256` | Pin peer cert chain hashes |
+| `verifyClientCertificate` | Require valid client cert (server) |
+| `imitate` | uTLS client fingerprint name |
+| `noSNI` | Do not send SNI (uTLS) |
+| `forceAlpn` | `TRANSPORT_PREFERENCE_TAKE_PRIORITY`, `NO_ALPN`, `UTLS_PRESET` |
+| `masterKeyLog` | NSS key log path (debug) |
+| `echKey` | Server ECH key |
+| `echConfig` | Client ECH config blob |
+| `enableEch` | Client: enable ECH |
+
+### ForceALPN
+
+| Value | Behavior |
+| --- | --- |
+| `TRANSPORT_PREFERENCE_TAKE_PRIORITY` | User ALPN if set, else transport default |
+| `NO_ALPN` | Do not send ALPN extension |
+| `UTLS_PRESET` | Use uTLS preset ALPN |
+
+## Certificate
+
+| Field | Description |
+| --- | --- |
+| `certificate` | PEM cert bytes |
+| `key` | PEM private key bytes |
+| `certificateFilepath` | Path to cert file |
+| `keyFilepath` | Path to key file |
+
+```json
+{
+  "transport": {
+    "tcp": {},
+    "tls": {
+      "serverName": "example.com",
+      "certificates": [
+        {
+          "certificateFilepath": "/etc/vx/fullchain.pem",
+          "keyFilepath": "/etc/vx/privkey.pem"
+        }
+      ],
+      "nextProtocol": ["h2", "http/1.1"]
+    }
+  }
+}
+```
+
+## Related
+
+- [WebSocket](/docs/vx-core/configuration/transport/websocket) / [gRPC](/docs/vx-core/configuration/transport/grpc) — often paired with TLS on 443
+- [VLESS Vision](/docs/vx-core/configuration/protocols/vless) — `flow` with TLS or REALITY

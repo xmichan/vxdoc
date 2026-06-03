@@ -1,0 +1,105 @@
+---
+title: Router
+description: RouterConfig and RuleConfig
+---
+
+Routing is configured in `ServerConfig.router` (`RouterConfig`). Schema: [`protos/proto/vx/router/router.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/router/router.proto).
+
+Rules are evaluated in order. The first matching rule decides the outbound or selector.
+
+## RouterConfig
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `rules` | `RuleConfig[]` | Ordered routing rules |
+
+## RuleConfig
+
+**Destination:** set exactly one of `outboundTag` or `selectorTag`. If both are empty, the connection is **blocked**.
+
+| Field | Description |
+| --- | --- |
+| `outboundTag` | Send to this outbound handler |
+| `selectorTag` | Send to a [selector](#selectorconfig) (client / load-balancing) |
+| `matchAll` | Match every connection |
+| `inboundTags` | Match inbound `tag` |
+| `usernames` | Match authenticated user id |
+| `srcCidrs`, `srcIpTags` | Source IP match |
+| `dstCidrs`, `dstIpTags` | Destination IP match |
+| `geoDomains`, `domainTags` | Domain match (uses [geo](/docs/vx-core/configuration/geo) sets) |
+| `networks` | `TCP`, `UDP`, etc. |
+| `srcPortRanges`, `dstPortRanges` | Port ranges |
+| `appIds`, `appTags` | Application id match (client) |
+| `protocols` | Protocol sniff result |
+| `ipv6` | IPv6-only match |
+| `fakeIp` | Match fake-IP destinations |
+| `resolveDomain` | Resolve domain to IP; all IPs must be in `dstIpTags` |
+| `resolveSoftRewrite` | Resolve and rewrite target to an IP in `dstIpTags` |
+| `resolveSoftNoRewrite` | Resolve without rewriting target |
+| `skipSniff` | Disable sniff for IP-target connections |
+| `condition` | Nested `Condition` with the same matchers (composable) |
+| `fallbacks` | Try alternate selector/outbound if primary fails |
+| `ruleName` | Debug label |
+
+### Fallback
+
+| Field | Description |
+| --- | --- |
+| `selectorTag`, `outboundTag` | Alternate destination |
+| `action.ipToDomain` | Rewrite IP back to domain when falling back |
+| `dstIpTags`, `domainTags`, `matchAll`, `condition` | Extra match for this fallback |
+| `last` | If condition matches, stop after this fallback |
+
+## Condition
+
+Same matchers as `RuleConfig` but without `outboundTag` / `selectorTag` / `fallbacks`. Used inside `rule.condition` or `fallback.condition`. Includes `hasDomain` to match only when a domain is present.
+
+## SelectorConfig
+
+Selectors group outbounds by tag filters and picking strategy (mainly used on the **client**).
+
+| Field | Description |
+| --- | --- |
+| `tag` | Referenced by `selectorTag` on rules |
+| `filter` | `prefixes`, `tags`, `subStrings`, `inverse`, `groupTags`, `countryCodes`, … |
+| `strategy` | `ALL`, `ALL_OK`, `LEAST_PING`, `MOST_THROUGHPUT`, `TOP_PING`, `TOP_THROUGHPUT` |
+| `balanceStrategy` | `RANDOM` or `MEMORY` |
+| `landHandlers` | Landing handler ids |
+| `selectFromOm` | Select from outbound manager (non-DB mode) |
+| `speedTestSize`, `speedTestInterval`, `pingTestInterval`, … | Health and speed tests |
+
+## Examples
+
+Route everything to direct:
+
+```json
+{
+  "router": {
+    "rules": [
+      { "matchAll": true, "outboundTag": "direct" }
+    ]
+  }
+}
+```
+
+Route one inbound to an outbound:
+
+```json
+{
+  "router": {
+    "rules": [
+      {
+        "inboundTags": ["trojan"],
+        "matchAll": true,
+        "outboundTag": "direct"
+      }
+    ]
+  }
+}
+```
+
+## Related
+
+- [Geo](/docs/vx-core/configuration/geo) — `domainTags`, `dstIpTags`, `geoDomains`
+- [DNS](/docs/vx-core/configuration/dns) — resolution for `resolveDomain` rules
+- [Dispatcher](/docs/vx-core/configuration/dispatcher) — sniffing affects protocol/domain matching

@@ -1,0 +1,53 @@
+---
+title: Users
+description: UserConfig — authentication accounts
+---
+
+Global user accounts are listed in `ServerConfig.users` (`UserConfig[]`). The same message can be attached per [inbound](/docs/vx-core/configuration/inbounds) in `users`.
+
+Schema: [`protos/proto/vx/user/user.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/user/user.proto).
+
+## UserConfig
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `id` | string | User identifier (used in routing `usernames`) |
+| `userLevel` | uint32 | Policy level for [PolicyConfig](/docs/vx-core/configuration/policy) `userPolicyMap` |
+| `secret` | string | Shared secret / UUID depending on protocol |
+
+## Example
+
+```json
+{
+  "users": [
+    {
+      "id": "alice",
+      "userLevel": 0,
+      "secret": "00000000-0000-0000-0000-000000000001"
+    }
+  ],
+  "inbounds": [
+    {
+      "tag": "vless",
+      "ports": [443],
+      "users": [
+        {
+          "id": "alice",
+          "userLevel": 0,
+          "secret": "00000000-0000-0000-0000-000000000001"
+        }
+      ],
+      "protocol": {
+        "@type": "type.googleapis.com/vx.proxy.vless.VlessServerConfig"
+      }
+    }
+  ]
+}
+```
+
+Inbound-level `users` are added to all proxy handlers on that inbound. Global `users` apply across the server where the protocol supports a shared user store.
+
+## Related
+
+- [Router](/docs/vx-core/configuration/router) — match `usernames`
+- [Policy](/docs/vx-core/configuration/policy) — `userLevel` → buffer and limits

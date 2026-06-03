@@ -1,0 +1,33 @@
+---
+title: WebSocket
+description: WebsocketConfig
+---
+
+Proto: [`protos/proto/vx/transport/protocols/websocket/config.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/transport/protocols/websocket/config.proto)
+
+Set on `TransportConfig.websocket`.
+
+## WebsocketConfig
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `host` | string | Host header / authority |
+| `path` | string | URL path; empty = `/` |
+| `header` | `Header[]` | Extra headers (`key`, `value`) |
+| `maxEarlyData` | int32 | Max early data bytes |
+| `useBrowserForwarding` | bool | Browser forwarding mode |
+| `earlyDataHeaderName` | string | Header carrying early data |
+
+```json
+{
+  "transport": {
+    "websocket": {
+      "path": "/ray",
+      "host": "example.com"
+    },
+    "tls": { "serverName": "example.com" }
+  }
+}
+```
+
+Also embedded in [HTTPUpgrade](/docs/vx-core/configuration/transport/httpupgrade).

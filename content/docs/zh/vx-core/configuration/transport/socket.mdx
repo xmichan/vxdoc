@@ -1,0 +1,37 @@
+---
+title: Socket
+description: SocketConfig
+---
+
+Proto：[`protos/proto/vx/transport/dlhelper.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/transport/dlhelper.proto)
+
+`SocketConfig` 设置在 `TransportConfig.socket` 与 `MultiProxyInboundConfig.socket`。
+
+## SocketConfig
+
+| 字段 | 说明 |
+| --- | --- |
+| `mark` | `SO_MARK`（非零） |
+| `tfo` | TCP 快速打开：`AsIs`、`Enable`、`Disable` |
+| `tproxy` | `Off`、`TProxy`、`Redirect` |
+| `receiveOriginalDestAddress` | UDP：接收原始目标（IP_RECVORIGDSTADDR） |
+| `bindAddress`、`bindPort` | 绑定本地地址（Linux） |
+| `acceptProxyProtocol` | 接受 PROXY protocol v1/v2 |
+| `tcpKeepAliveInterval`、`tcpKeepAliveIdle` | TCP keepalive |
+| `tfoQueueLength` | TFO 队列长度 |
+| `bindToDevice` | 绑定到网络接口索引 |
+| `rxBufSize`、`txBufSize`、`forceBufSize` | 套接字缓冲区大小 |
+| `localAddr4`、`localAddr6` | 出站本地地址（拨号 / UDP 监听） |
+| `dialTimeout` | 拨号超时覆盖 |
+
+```json
+{
+  "transport": {
+    "socket": {
+      "tfo": "Enable",
+      "tcpKeepAliveIdle": 60
+    },
+    "tcp": {}
+  }
+}
+```

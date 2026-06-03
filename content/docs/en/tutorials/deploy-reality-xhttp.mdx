@@ -1,0 +1,30 @@
+---
+title: Deploy REALITY / XHTTP nodes
+description: Use VX Quick Deploy to install Xray and publish REALITY and XHTTP inbounds on a VPS
+---
+
+VX can deploy **REALITY** and **XHTTP** (SplitHTTP) nodes on your VPS without editing config files by hand. From a connected server, use **Quick Deploy → Reality/XHTTP**: VX installs Xray-core, writes the inbound config, enables BBR when needed, and adds matching **outbound nodes** to your client so you can connect right away.
+
+<Callout type="warn">
+  This deploy profile **replaces an existing Xray configuration** on the server if Xray is already installed.
+</Callout>
+
+Watch the walkthrough below, or open it on [YouTube](https://www.youtube.com/watch?v=BW23h3-2T-A).
+
+This video is for Chinese language speakers.
+
+<YouTube id="BW23h3-2T-A" title="Deploy REALITY and XHTTP nodes with VX Quick Deploy" />
+
+## Prerequisites
+
+- A Linux VPS reachable over **SSH** (added in VX under **Servers**)
+- A domain or site to use as the REALITY **destination** / SNI target (as shown in the video)
+- Optional: a **CDN hostname** if you front XHTTP through a CDN
+
+## Related
+
+- [VX-core panel](/docs/vx/manual/vx-core-panel) — SSH deploy, service control, and inbound wizard
+- [VPS monitor](/docs/vx/manual/vps-monitor) — server health over SSH
+- [REALITY](/docs/vx-core/configuration/security/reality) — vx-core REALITY settings
+- [SplitHTTP (XHTTP)](/docs/vx-core/configuration/transport/splithttp) — transport reference
+- [VX installation](/docs/vx/installation) — install the client first

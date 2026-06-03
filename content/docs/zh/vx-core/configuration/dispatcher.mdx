@@ -1,0 +1,37 @@
+﻿---
+title: 调度器
+description: DispatcherConfig — 嗅探与覆盖
+---
+
+调度器在 `ServerConfig.dispatcher`（`DispatcherConfig`）中配置。模式定义：[`protos/proto/vx/dispatcher/dispatcher.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/dispatcher/dispatcher.proto)。
+
+用于控制协议嗅探、目标覆盖及部分仅客户端行为。
+
+## DispatcherConfig
+
+| 字段 | 类型 | 说明 |
+| --- | --- | --- |
+| `destinationOverride` | string[] | 非空时嗅探连接，协议匹配时用嗅探域名覆盖目标 |
+| `sniff` | bool | 启用嗅探以获取额外连接元数据（日志 / 路由） |
+| `ipv6UseDomain` | bool | **仅客户端** — IPv6 处理偏好 |
+| `fallbackTimeout` | uint32 | 将连接视为失败前等待响应数据的时长（毫秒） |
+| `sessionStats` | bool | 按会话计量统计 |
+
+当 `destinationOverride` 列出协议（例如 `http`、`tls`）时，vx-core 可能用嗅探主机名替换连接目标，使[路由](/zh/docs/vx-core/configuration/router)域名规则适用于基于 IP 的连接。
+
+## 示例
+
+```json
+{
+  "dispatcher": {
+    "sniff": true,
+    "destinationOverride": ["http", "tls"],
+    "sessionStats": false
+  }
+}
+```
+
+## 相关
+
+- [路由](/zh/docs/vx-core/configuration/router) — `skipSniff`、`protocols`、嗅探后的域名规则
+- [DNS](/zh/docs/vx-core/configuration/dns) — 使用 `resolveDomain` 规则时的解析

@@ -1,0 +1,178 @@
+---
+title: Modes
+description: GFW, CN, Proxy All, and custom routing profiles
+---
+
+import { Accordion, Accordions } from 'fumadocs-ui/components/accordion';
+
+**Advanced → Mode** lists all **modes**. A mode is a made of:
+
+- **Routing rules** — decide whether each connection goes **proxy**, **direct**, or **block**
+- **DNS rules** — decide how **hijacked DNS queries** (from other apps) are answered
+- **Internal DNS servers** — used when vx-core itself needs to resolve a domain (for example while dialing an outbound)
+
+
+## Built-in modes
+
+| Mode | Label | Default behavior |
+| --- | --- | --- |
+| **GFW** (blacklist) | GFW | Blocked / GFW-listed domains and IPs — **proxy**; everything else — **direct** |
+| **CN** (whitelist) | CN | China mainland domains and IPs — **direct**; others — **proxy** |
+| **Proxy All** | Proxy All | All non-private traffic — **proxy**; private — **direct** |
+| **RU Blocked** | Russia Blocked | Russia-blocked lists — **proxy**; rest — **direct** |
+| **RU Blocked (All)** | Russia Blocked(All) | Broader Russia-blocked list — **proxy**; rest — **direct** |
+
+
+## How routing decisions are made
+
+When vx-core handles a connection, it walks the mode's **routing rules from top to bottom**. 
+The **first rule whose conditions all match** wins, after matcing, later rules will not be considerd.
+A rule has either Direct, a node, a selector or block as the decision, which decides where the traffic go 
+
+| Decision | Meaning |
+| --- | --- |
+| **Direct** | Traffic go direct, and is not proxied |
+| **A node** | Traffic go to the node |
+| **A [Selector](/docs/vx/manual/customize/selectors)** | Traffic go to the node selected by the selector |
+| **Block** | Connection is rejected |
+
+If no rule matches, the connection fails with "no rule matched."
+
+### Example: google traffic under GFW mode
+
+For a connection with domain "www.google.com" from browser, it will be matched against routing rules from the starting 
+rule "Default Proxy DNS Server" until the rule "GFW Mode Proxy Domains", where it matches since www.google.com is in the 
+Domain Set "GFW Mode Proxy Domains".
+
+
+## Routing rule and its conditions
+
+Each routing rule has:
+
+- A **name** (for display and debugging)
+- An **outbound**: Direct, a node, a selector, or Block
+- **Conditions** — optional filters on the connection
+- Optional **fallbacks**
+
+### Match all
+
+Enable **Match all** to make a rule apply to every connection (typically used for a catch-all "default proxy" or "default direct" rule at the bottom of the list). When Match all is on, other conditions are cleared.
+
+### Condition types
+
+When Match all is off, **every enabled condition must match** (logical AND). If no condition is enabled, the rule never matches.
+
+#### Inbound
+
+*Matches when inbound tag of connections is in one of the specified tags.*
+
+This is typically used to match traffic handled by a specific inbound — for example,
+connections from DNS-servers will have the name of the dns server as the inbound tag, you can use this condition
+to match the traffic from the dns servers. 
+
+#### Domain
+
+*Matches when destination domain is in one of the selected [domain sets](/docs/vx/manual/customize/sets), or explicitly added geo-domain entries.*
+
+#### IP
+
+*Matches when destination IP is in one of the selected IP sets or CIDRs.*
+
+IP conditions can optionally resolve the domain first; see [Domain resolution options](#domain-resolution-options-ip-conditions) below.
+
+#### App
+
+*Matches when originating application is in one of the selected app sets or app IDs.*
+
+#### Domain / IP / App (combined)
+
+*If domain of a connection is in the one of the specified domain sets, matches; or if ip of the connection is in one of the specified
+ip sets, matches; or if app of the connection is in one of the specified app sets, matches*
+ 
+This is to reduce number of rules. If you have a ip set named "Netflix", a domain set named "Netflix", an app set named "Netflix", and 
+you want all of them to go a specific node, you can add one rule with this condition instead of adding three rules. 
+
+#### Fake IP
+
+*Matches when destination is a fake-IP address issued by Fake DNS (from the `198.18.0.0/15` pool)* 
+
+#### Network
+
+*Matches when a connection has the specified network type* 
+
+> **Warning:** Avoid having both **Domain** and **IP** conditions in the same rule unless you understand why: 
+the rule matches when **both** conditions are true, which means both domain and IP information should be present to make the two conditions both match,
+which is often not true (many connections only have just one of them, not both).
+
+### Fallbacks
+
+A routing rule can define **fallbacks**. If the outbound chosen by the rule fails (for example the selected node is unreachable), 
+vx-core tries the node/selector specified in each fallback in order. Each fallback has its own conditions and node/selector — the
+ fallback is used only when **all** of its conditions are true. If a fallback's conditions are not all true, next fallback is condisered.
+
+For example, GFW's final rule "Default Direct" uses two fallbacks so traffic that failed when go direct can retry proxy. Each
+ fallback has conditions to make sure only connections with non-CN domains or ips retry proxy, to prevent domestic connections
+from using proxy.
+
+<Accordions type="single">
+  <Accordion title="Which problem does this Fallback feature tring to solve" id="why-fallbacks">
+
+<div>
+
+Ideally, all domains/ips blocked by GFW should go proxy in GFW mode. However, the commonly used gfw geo file is not complete. Many
+blocked domains are not included. Before fallback feature, connections with those domains will fail, which impact a user's experience.
+This feature is to solve this problem. Those connections will be saved by proxy nodes, which usually succeed when trying proxy. This feature
+significantly improves a user's experience when using GFW mode. 
+
+</div>
+
+  </Accordion>
+</Accordions>
+
+## DNS rules
+
+DNS rules specify which dns servers should handle a hijacked dns query. A hijacked dns query is a dns query sent by **other processes** on your device that 
+vx-core intercepts (in TUN mode or when system DNS is pointed at vx-core).
+
+### How hijacked DNS work
+
+1. An process, for example system dns, sends a DNS query (UDP/TCP port 53).
+2. vx-core intercepts it and hand the queries to the dns hijack component.
+3. DNS rules are evaluated from **top to bottom**, same as routing rules.
+4. The **first matching rule** picks a **DNS server** to handle the query. If no rules match, an empty dns response message 
+will be returned. 
+5. That vx-core return the response dns messages returned by the dns server to the source process.
+
+> **Note:** Rules that specify Fake DNS servers will be skipped if Fake DNS is disabled in the control drawer.
+
+### DNS rule conditions
+
+A DNS rule matches when **all enabled conditions match**, or when **no condition is enabled** (catch-all).
+
+> **Warning:** This is different from routing rules. If a routing rule has no condition, it never matches, but if a 
+dns rule has no conditions, it means "always matches".
+
+| Condition | Matches when |
+| --- | --- |
+| **Domain** | Query name matches is in one of the domains sets or domain entries |
+| **Query type** | Record type is A, AAAA, etc. (for example Fake DNS rules often limit to A/AAAA) |
+
+## Internal DNS servers
+
+**Internal DNS servers** are a ordered list of dns servers. They are primarily used when vx-core **dials** a 
+domain target. When your nodes have domain address, their ips are resolved by internal dns servers.
+They are **not** used to answer hijacked DNS queries from other apps. They will be used one by one, until 
+one returns IP answers.
+
+> **Tip:** You can double click a internal dns server to delete it.
+
+## How to add modes
+
+Clicking the add button on the top right corner to add. You can either duplicate an existing built-in mode or create a mode from scratch.
+
+## Related
+
+- [Sets](/docs/vx/manual/customize/sets) — domain, IP, and app lists referenced by rule conditions
+- [Selectors](/docs/vx/manual/customize/selectors) — which node handles "proxy" rules
+- [Routing DNS](/docs/vx/manual/customize/dns) — DNS rules vs global DNS Policy
+- [Simplified routing](/docs/vx/manual/customize/simplified) — quick edits without changing rule order

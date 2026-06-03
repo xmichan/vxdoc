@@ -1,0 +1,86 @@
+﻿---
+title: 快速开始
+description: 在 Linux 上以服务器模式运行 vx-core
+---
+
+本指南介绍在 Linux 上以服务器模式运行 vx-core。若希望通过图形界面部署，请改用 [VX 客户端的服务器面板](/zh/docs/vx/features#server-management)。
+
+## 前置条件
+
+- Linux VPS（amd64 或 arm64）
+- root 或 sudo 权限
+
+## 脚本安装
+
+推荐使用官方安装脚本：
+
+```bash
+bash -c "$(curl -L https://github.com/5vnetwork/vx-install/raw/main/install-vx.sh)" @ install
+```
+
+该脚本会安装 `vx` 二进制文件并配置 systemd 服务。
+
+## 手动配置
+
+配置文件可为 protobuf 二进制或 ProtoJSON 格式的 JSON。创建 `config.json`：
+
+```json
+{
+  "inbounds": [
+    {
+      "tag": "vmess",
+      "ports": [10000],
+      "protocol": {
+        "@type": "type.googleapis.com/vx.proxy.vmess.VmessServerConfig",
+        "secureEncryptionOnly": true
+      }
+    }
+  ],
+  "router": {
+    "rules": [
+      {
+        "matchAll": true,
+        "outboundTag": "direct"
+      }
+    ]
+  },
+  "outbounds": [
+    {
+      "tag": "direct",
+      "protocol": {
+        "@type": "type.googleapis.com/vx.proxy.freedom .FreedomConfig"
+      }
+    }
+  ]
+}
+```
+
+完整服务器配置模式定义于 [`protos/proto/vx/server.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/server.proto)。各配置节说明见[配置](/zh/docs/vx-core/configuration)。
+
+## 运行服务器
+
+```bash
+vx run --config config.json
+```
+
+若通过安装脚本安装，可使用 systemd 管理服务：
+
+```bash
+systemctl start vx
+systemctl enable vx
+systemctl status vx
+```
+
+## 默认配置路径
+
+通过安装脚本安装后，配置文件位于：
+
+```
+/usr/local/etc/vx/config.json
+```
+
+## 下一步
+
+- 参阅[配置](/zh/docs/vx-core/configuration)了解配置文件细节
+- 在[协议](/zh/docs/vx-core/protocols)中为不同协议添加更多入站
+- 使用 VX 远程部署并管理服务器

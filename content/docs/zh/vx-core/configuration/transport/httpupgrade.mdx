@@ -1,0 +1,28 @@
+﻿---
+title: HTTPUpgrade
+description: HttpUpgradeConfig
+---
+
+Proto：[`protos/proto/vx/transport/protocols/httpupgrade/config.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/transport/protocols/httpupgrade/config.proto)
+
+HTTP Upgrade 传输（经 HTTP upgrade 的类 WebSocket）。设置在 `TransportConfig.httpupgrade`。
+
+## HttpUpgradeConfig
+
+| 字段 | 类型 | 说明 |
+| --- | --- | --- |
+| `config` | `WebsocketConfig` | 与 [WebSocket](/zh/docs/vx-core/configuration/transport/websocket) 相同字段 |
+
+```json
+{
+  "transport": {
+    "httpupgrade": {
+      "config": {
+        "path": "/upgrade",
+        "host": "example.com"
+      }
+    },
+    "tls": { "serverName": "example.com" }
+  }
+}
+```

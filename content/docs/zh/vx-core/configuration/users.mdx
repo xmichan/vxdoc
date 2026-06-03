@@ -1,0 +1,53 @@
+﻿---
+title: 用户
+description: UserConfig — 认证账户
+---
+
+全局用户账户列在 `ServerConfig.users`（`UserConfig[]`）中。同一消息也可在[入站](/zh/docs/vx-core/configuration/inbounds)的 `users` 中附加。
+
+模式定义：[`protos/proto/vx/user/user.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/user/user.proto)。
+
+## UserConfig
+
+| 字段 | 类型 | 说明 |
+| --- | --- | --- |
+| `id` | string | 用户标识（用于路由 `usernames`） |
+| `userLevel` | uint32 | [PolicyConfig](/zh/docs/vx-core/configuration/policy) `userPolicyMap` 的策略级别 |
+| `secret` | string | 共享密钥 / UUID（因协议而异） |
+
+## 示例
+
+```json
+{
+  "users": [
+    {
+      "id": "alice",
+      "userLevel": 0,
+      "secret": "00000000-0000-0000-0000-000000000001"
+    }
+  ],
+  "inbounds": [
+    {
+      "tag": "vless",
+      "ports": [443],
+      "users": [
+        {
+          "id": "alice",
+          "userLevel": 0,
+          "secret": "00000000-0000-0000-0000-000000000001"
+        }
+      ],
+      "protocol": {
+        "@type": "type.googleapis.com/vx.proxy.vless.VlessServerConfig"
+      }
+    }
+  ]
+}
+```
+
+入站级 `users` 会加入该入站上所有代理处理器。全局 `users` 在协议支持共享用户库时应用于整台服务器。
+
+## 相关
+
+- [路由](/zh/docs/vx-core/configuration/router) — 匹配 `usernames`
+- [策略](/zh/docs/vx-core/configuration/policy) — `userLevel` → 缓冲区与限制

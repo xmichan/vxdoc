@@ -1,0 +1,138 @@
+---
+title: Sets
+description: Domain, IP, and app sets to help you split your traffic
+---
+
+**Sets** — named collections used by routing and dns rules.
+
+## Set types
+
+| Type | Contains | Example names |
+| --- | --- | --- |
+| **Atomic domain set** | Domains, geosite, remote URLs | Custom Proxy, Custom Direct, GFW, CN, Private |
+| **Atomic IP set** | CIDRs, geoip, remote URLs | Custom Proxy, Custom Direct, CN, Public |
+| **Great domain set** | Combination of domain sets (include / exclude) | GFW Mode Proxy Domains |
+| **Great IP set** | Combination of other IP sets | GFW Mode Proxy IPs |
+| **App set** | Application IDs | Proxy, Direct |
+
+**Atomic** sets are building blocks. **Great** sets are built from atomic sets (and other great sets).
+
+## Great domain sets and great IP sets
+
+A **great set** does not hold domains or IPs directly. It combines other sets using **Include** and **Exclude** lists.
+
+When vx-core checks whether a domain or IP belongs to a great set:
+
+1. **Exclude first** — if the destination matches any set in **Exclude**, the great set does **not** match.
+2. **Include** — if the destination matches any set in **Include**, the great set matches.
+3. Otherwise it does not match.
+
+**Great IP sets** work the same way, but with IP sets instead of domain sets.
+
+### Example: GFW Mode Proxy Domains
+
+In GFW mode, the great domain set **GFW Mode Proxy Domains** is defined as:
+
+- **Include:** `GFW`, `Custom Proxy`, `Fallback`
+- **Exclude:** `Custom Direct`
+
+A domain in the GFW list (and not in Custom Direct) matches this set.
+
+### Mutually exclusive set name
+
+When creating or editing a **great domain set** or **great IP set**, you can optionally set a **Mutually Exclusive Set Name**.
+
+This names the **paired opposite set**. For example:
+
+- **CN Mode Direct Domains** ↔ **CN Mode Proxy Domains**
+
+They represent two sets: one include all domains in China mainland, the other include all others.
+
+In the UI, when you pick domain or IP sets for routing rules, both a set and its mutually exclusive name appear in the picker. Lookups also work by either name.
+
+
+
+## Atomic set
+
+### Atomic domain set
+
+| Field | Purpose |
+| --- | --- |
+| **Name** | Unique identifier referenced by routing rules. |
+| **Use Bloom Filter** | Reduces memory for large sets. There is a small chance (~1%) of false positives — a domain not in the set may be treated as if it were. |
+| **Inverse** | Flips membership: the set matches destinations that are **not** in its sources. |
+| **GeoSite URL** | HTTPS URL to a custom `geosite.dat` file. If empty, VX uses the `geosite.dat` provided by LoyalSoldier. |
+| **GeoSite Codes** | Categories from geosite data (e.g. `cn`, `gfw`, `private`). |
+| **GeoSite Attributes** | Sub-filters within a code (e.g. `cn` under `category-games`). |
+| **URLs** | Remote files downloadable by urls — see [URL file types](#url-file-types) below. |
+| **Domains** | Manually added domain entries (full domain, suffix, keyword, etc.). |
+
+### Atomic IP set
+
+| Field | Purpose |
+| --- | --- |
+| **Name** | Unique identifier referenced by routing rules. |
+| **Inverse** | Same as for domain sets — matches IPs **not** in the set's sources. |
+| **GeoIP URL** | HTTPS URL to a custom `geoip.dat` file. If empty, VX uses the `geosite.dat` provided by LoyalSoldier.. |
+| **GeoIP Codes** | Categories from geoip data (e.g. `cn`, `private`). |
+| **URLs** |  Remote files downloadable by urls|
+| **CIDRs** | Manually added IP ranges. |
+
+### Supported URL file types
+
+- V2ray GeoSite / GeoIP files
+
+- Clash Rules
+
+### Geo file updates
+
+VX downloads geo files from urls specified in atomic sets periodically.
+
+Configure automatic updates in **Settings → General → Auto Update Geo Files**:
+
+| Setting | Behavior |
+| --- | --- |
+| **Auto Update Geo Files** | Enables periodic re-download of geo files. |
+| **Update Interval** | How often to refresh, in **days** (minimum 1). Default is **7 days**. |
+| **Update Now** | Triggers an immediate download and processing. |
+
+
+## Set name cannot be duplicated
+
+Every set name must be unique within its category(domain/ip/app):
+
+- An **atomic domain set** name cannot be same as any other atomic or great domain set name.
+- A **great domain set** name cannot be same as any existing atomic or great domain set name.
+- A new name also cannot be same as another set's **mutually exclusive set name**.
+
+The same rules apply separately to IP sets (atomic vs great).
+
+## Built-in geo sets
+
+VX always has these built-in sets:
+
+### Atomic Domain Set
+
+| Set | Role |
+| --- | --- |
+| **Custom Proxy** | This is the set you are editing when you add/remove domains in proxy segment of the simplified view  | 
+| **Custom Direct** | This is the set you are editing when you add/remove domains in direct segment of the simplified view  |
+
+### Atomic IP Set
+
+| Set | Role |
+| --- | --- |
+| **Custom Proxy** | This is the set you are editing when you add/remove ips in proxy segment of the simplified view  | 
+| **Custom Direct** | This is the set you are editing when you add/remove ips in direct segment of the simplified view  |
+
+### App Set
+
+| Set | Role |
+| --- | --- |
+| **Proxy** | This is the set you are editing when you add/remove apps in proxy segment of the simplified view  | 
+| **Direct** | This is the set you are editing when you add/remove apps in direct segment of the simplified view  |
+
+## Related
+
+- [Simplified routing](/docs/vx/manual/customize/simplified) — quick edits to Custom Proxy / Custom Direct
+- [Routing modes](/docs/vx/manual/customize/modes) — how sets connect to rules

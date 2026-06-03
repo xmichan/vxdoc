@@ -1,0 +1,30 @@
+---
+title: HTTP transport
+description: HttpConfig (HTTP/2 camouflage)
+---
+
+Proto: [`protos/proto/vx/transport/protocols/http/config.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/transport/protocols/http/config.proto)
+
+HTTP/2 transport camouflage (not the [HTTP proxy](/docs/vx-core/configuration/protocols/http-proxy) protocol). Set on `TransportConfig.http`.
+
+## HttpConfig
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `host` | string[] | Host header values (random choice) |
+| `path` | string | Request path |
+| `method` | string | HTTP method |
+| `header` | `Header[]` | Custom headers (`name`, repeated `value`) |
+
+```json
+{
+  "transport": {
+    "http": {
+      "host": ["example.com"],
+      "path": "/download",
+      "method": "GET"
+    },
+    "tls": { "serverName": "example.com" }
+  }
+}
+```

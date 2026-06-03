@@ -1,0 +1,59 @@
+---
+title: Freedom、Blackhole、Dokodemo
+description: 内置入站/出站协议配置
+---
+
+## Freedom
+
+直连出站 — 流量不经上游代理发出。
+
+Proto：[`freedom.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/proxy/freedom/freedom.proto)
+
+`FreedomConfig` 无字段。
+
+```json
+{
+  "@type": "type.googleapis.com/vx.proxy.freedom.FreedomConfig"
+}
+```
+
+用作服务器默认 `direct` 出站。
+
+---
+
+## Blackhole
+
+丢弃流量（阻断）。
+
+Proto：[`blackhole.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/proxy/blackhole/blackhole.proto)
+
+`BlackholeConfig` 无字段。
+
+```json
+{
+  "@type": "type.googleapis.com/vx.proxy.blackhole.BlackholeConfig"
+}
+```
+
+---
+
+## Dokodemo-door
+
+透明重定向 / 端口转发入站。
+
+Proto：[`dokodemo.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/proxy/dokodemo/dokodemo.proto)
+
+| 字段 | 说明 |
+| --- | --- |
+| `address` | 转发目标地址 |
+| `port` | 目标端口 |
+| `networks` | `TCP`、`UDP` 等 |
+
+```json
+{
+  "@type": "type.googleapis.com/vx.proxy.dokodemo.DokodemoConfig",
+  "address": "127.0.0.1",
+  "port": 8080,
+  "networks": ["TCP"]
+}
+```

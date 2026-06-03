@@ -1,0 +1,30 @@
+﻿---
+title: 部署 REALITY / XHTTP 节点
+description: 使用 VX Quick Deploy 安装 Xray 并在 VPS 上发布 REALITY 与 XHTTP 入站
+---
+
+VX 可在 VPS 上部署 **REALITY** 与 **XHTTP**（SplitHTTP）节点，无需手动编辑配置文件。在已连接的服务器上，使用 **Quick Deploy → Reality/XHTTP**：VX 会安装 Xray-core、写入入站配置、在需要时启用 BBR，并向客户端添加匹配的 **出站节点**，以便立即连接。
+
+<Callout type="warn">
+  若服务器上已安装 Xray，此部署配置**会替换现有的 Xray 配置**。
+</Callout>
+
+请观看下方视频，或在 [YouTube](https://www.youtube.com/watch?v=BW23h3-2T-A) 上打开。
+
+本视频为中文讲解。
+
+<YouTube id="BW23h3-2T-A" title="使用 VX Quick Deploy 部署 REALITY 与 XHTTP 节点" />
+
+## 前置条件
+
+- 可通过 **SSH** 访问的 Linux VPS（已在 VX 的 **Servers** 中添加）
+- 用作 REALITY **destination** / SNI 目标的域名或站点（如视频所示）
+- 可选：若通过 CDN 前置 XHTTP，需提供 **CDN 主机名**
+
+## 相关文档
+
+- [VX-core 面板](/zh/docs/vx/manual/vx-core-panel) — SSH 部署、服务控制与入站向导
+- [VPS 监控](/zh/docs/vx/manual/vps-monitor) — 通过 SSH 查看服务器健康状态
+- [REALITY](/zh/docs/vx-core/configuration/security/reality) — vx-core REALITY 设置
+- [SplitHTTP (XHTTP)](/zh/docs/vx-core/configuration/transport/splithttp) — 传输参考
+- [VX 安装](/zh/docs/vx/installation) — 请先安装客户端

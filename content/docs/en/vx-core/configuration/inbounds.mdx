@@ -1,0 +1,79 @@
+---
+title: Inbounds
+description: ProxyInboundConfig and MultiProxyInboundConfig
+---
+
+Inbound settings live in `ServerConfig.inbounds` and `ServerConfig.multiInbounds`. Schema: [`protos/proto/vx/inbound/inbound.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/inbound/inbound.proto).
+
+## ProxyInboundConfig
+
+One listener per inbound. Use when each port runs a single proxy protocol (optionally with a shared `transport` layer).
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `tag` | string | Name referenced by [router](/docs/vx-core/configuration/router) `inboundTags` |
+| `address` | string | Listen address; empty = all interfaces |
+| `port` | uint32 | Single port (combined with `ports` if both set) |
+| `ports` | uint32[] | Ports to listen on |
+| `transport` | `TransportConfig` | TLS, REALITY, WebSocket, gRPC, etc. |
+| `protocol` | `Any` | One proxy server config (VMess, VLESS, Trojan, …) |
+| `protocols` | `Any[]` | Multiple protocols on the same listener |
+| `users` | `UserConfig[]` | Users for this inbound (see [Users](/docs/vx-core/configuration/users)) |
+
+Example:
+
+```json
+{
+  "tag": "vmess",
+  "ports": [10000],
+  "protocol": {
+    "@type": "type.googleapis.com/vx.proxy.vmess.VmessServerConfig",
+    "secureEncryptionOnly": true
+  }
+}
+```
+
+Protocol `@type` values are documented under [Proxy protocols](/docs/vx-core/configuration/protocols). Transport and TLS/REALITY: [Transport](/docs/vx-core/configuration/transport), [Security](/docs/vx-core/configuration/security).
+
+## MultiProxyInboundConfig
+
+Use when one listener must accept **several transports and security profiles** (typical multi-protocol port behind TLS or REALITY).
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `tag` | string | Inbound tag for routing |
+| `address` | string | Listen address; empty = all interfaces |
+| `ports` | uint32[] | Listen ports |
+| `protocols` | `Any[]` | Proxy protocol configs (same `Any` types as above) |
+| `securityConfigs` | `Security[]` | TLS or REALITY per SNI/domain/regex |
+| `transportProtocols` | `Protocol[]` | WebSocket, HTTP, gRPC, TCP, SplitHTTP, HTTPUpgrade |
+| `socket` | `SocketConfig` | Socket-level options |
+| `users` | `UserConfig[]` | Users for all handlers on this inbound |
+
+### Security (per entry in `securityConfigs`)
+
+| Field | Description |
+| --- | --- |
+| `tls` | `TlsConfig` when this security block applies |
+| `reality` | `RealityConfig` when this security block applies |
+| `domains` | SNI hostnames handled by this block |
+| `regularExpression` | SNI regex match |
+| `always` | Use this security for every connection |
+
+### Transport protocol (per entry in `transportProtocols`)
+
+| Field | Description |
+| --- | --- |
+| `websocket`, `http`, `grpc`, `httpupgrade`, `splithttp`, `tcp` | Transport-specific config (oneof) |
+| `alpn` | Match ALPN |
+| `sni` | Match connection SNI |
+| `path` | HTTP/1 path |
+| `h2` | Connection uses HTTP/2 |
+| `always` | Use this transport for every connection |
+
+See [Transport](/docs/vx-core/configuration/transport) and [Security](/docs/vx-core/configuration/security) for field reference.
+
+## Related
+
+- [Outbounds](/docs/vx-core/configuration/outbounds) — where routed traffic is sent
+- [Router](/docs/vx-core/configuration/router) — match on `inboundTags`

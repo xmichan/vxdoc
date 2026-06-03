@@ -1,0 +1,50 @@
+---
+title: 深链
+description: 供机场主分发订阅的自定义 URL 方案
+---
+
+VX 支持自定义 URL 方案，机场（代理服务商）主可让用户一键添加订阅。
+
+## 格式 1：Base64 编码的订阅 URL
+
+```
+vx://add/sub://<base64_encoded_url>?remarks=<subscription_name>
+```
+
+**示例：**
+
+```
+vx://add/sub://aHR0cHM6Ly9leGFtcGxlLmNvbS9hYmNk?remarks=My%20Airport
+```
+
+订阅 URL 经 Base64 编码后放在 `sub://` 之后。`remarks` 参数设置显示名称（需 URL 编码）。
+
+## 格式 2：带参数的直接 URL
+
+```
+vx://install-config?url=<subscription_url>&name=<subscription_name>
+```
+
+**示例：**
+
+```
+vx://install-config?url=https%3A%2F%2Fexample.com%2Fabcd&name=My%20Airport
+```
+
+| 参数 | 说明 |
+| --- | --- |
+| `url` | 订阅 URL（需 URL 编码） |
+| `name` | 订阅的显示名称（需 URL 编码） |
+
+两种格式均会向 VX 客户端添加订阅。用户需已安装 VX，系统会提示在 VX 中打开链接。
+
+## 机场主提示
+
+- 参数值务必进行 URL 编码（尤其非 ASCII 名称）
+- 分发前在移动端与桌面端测试链接
+- 为未安装 VX 的用户提供纯文本订阅 URL 作为备选
+- 下载链接指向 [vx.5vnetwork.com](https://vx.5vnetwork.com)
+
+## 二维码
+
+可将任一 URL 格式编码为二维码。VX 支持在添加订阅界面扫描订阅二维码。

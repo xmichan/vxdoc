@@ -1,0 +1,73 @@
+﻿---
+title: TLS
+description: TlsConfig 与 Certificate
+---
+
+Protos：
+
+- [`tls.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/transport/security/tls/tls.proto) — `TlsConfig`
+- [`certificate.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/transport/security/tls/certificate.proto) — `Certificate`
+
+设置在 `TransportConfig.tls`、`MultiProxyInboundConfig.securityConfigs[].tls`、Hysteria2 `tlsConfig` 以及 SplitHTTP `downloadSettings.tls`。
+
+## TlsConfig
+
+| 字段 | 说明 |
+| --- | --- |
+| `certificates` | 服务端/客户端证书链（`Certificate[]`） |
+| `rootCas` | 自定义根 CA PEM |
+| `issueCas` | 用于向对等体签发证书的 CA |
+| `serverName` | SNI；拨号时默认等于目标域名 |
+| `disableSystemRoot` | 不使用系统根 CA |
+| `allowInsecure` | 跳过证书校验（客户端） |
+| `nextProtocol` | ALPN 列表 |
+| `enableSessionResumption` | TLS 会话票证 / 恢复 |
+| `pinnedPeerCertificateChainSha256` | 固定对等体证书链哈希 |
+| `verifyClientCertificate` | 要求有效客户端证书（服务端） |
+| `imitate` | uTLS 客户端指纹名称 |
+| `noSNI` | 不发送 SNI（uTLS） |
+| `forceAlpn` | `TRANSPORT_PREFERENCE_TAKE_PRIORITY`、`NO_ALPN`、`UTLS_PRESET` |
+| `masterKeyLog` | NSS 密钥日志路径（调试） |
+| `echKey` | 服务端 ECH 密钥 |
+| `echConfig` | 客户端 ECH 配置 blob |
+| `enableEch` | 客户端：启用 ECH |
+
+### ForceALPN
+
+| 值 | 行为 |
+| --- | --- |
+| `TRANSPORT_PREFERENCE_TAKE_PRIORITY` | 用户设置 ALPN 则用之，否则传输默认 |
+| `NO_ALPN` | 不发送 ALPN 扩展 |
+| `UTLS_PRESET` | 使用 uTLS 预设 ALPN |
+
+## Certificate
+
+| 字段 | 说明 |
+| --- | --- |
+| `certificate` | PEM 证书字节 |
+| `key` | PEM 私钥字节 |
+| `certificateFilepath` | 证书文件路径 |
+| `keyFilepath` | 私钥文件路径 |
+
+```json
+{
+  "transport": {
+    "tcp": {},
+    "tls": {
+      "serverName": "example.com",
+      "certificates": [
+        {
+          "certificateFilepath": "/etc/vx/fullchain.pem",
+          "keyFilepath": "/etc/vx/privkey.pem"
+        }
+      ],
+      "nextProtocol": ["h2", "http/1.1"]
+    }
+  }
+}
+```
+
+## 相关
+
+- [WebSocket](/zh/docs/vx-core/configuration/transport/websocket) / [gRPC](/zh/docs/vx-core/configuration/transport/grpc) — 常与 443 端口 TLS 配合
+- [VLESS Vision](/zh/docs/vx-core/configuration/protocols/vless) — 与 TLS 或 REALITY 的 `flow`

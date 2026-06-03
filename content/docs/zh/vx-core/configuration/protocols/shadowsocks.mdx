@@ -1,0 +1,70 @@
+---
+title: Shadowsocks
+description: Shadowsocks 与 Shadowsocks 2022 配置
+---
+
+## Shadowsocks（经典）
+
+Proto：[`shadowsocks.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/proxy/shadowsocks/shadowsocks.proto)
+
+### ShadowsocksCipherType
+
+| 值 | 名称 |
+| --- | --- |
+| `0` | `AES_128_GCM` |
+| `1` | `AES_256_GCM` |
+| `2` | `CHACHA20_POLY1305` |
+| `3` | `NONE` |
+
+### ShadowsocksServerConfig
+
+| 字段 | 说明 |
+| --- | --- |
+| `cipherType` | 加密算法枚举 |
+| `ivCheck` | IV 校验 |
+| `user` | 单个 `UserConfig`（`secret` = 密码） |
+| `experimentReducedIvHeadEntropy` | 实验选项 |
+
+### ShadowsocksClientConfig
+
+| 字段 | 说明 |
+| --- | --- |
+| `cipherType` | 加密算法枚举 |
+| `password` | PSK |
+
+```json
+{
+  "@type": "type.googleapis.com/vx.proxy.shadowsocks.ShadowsocksServerConfig",
+  "cipherType": "CHACHA20_POLY1305",
+  "user": { "secret": "your-password" }
+}
+```
+
+---
+
+## Shadowsocks 2022
+
+Proto：[`shadowsocks2022.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/proxy/shadowsocks2022/shadowsocks2022.proto)
+
+### Shadowsocks2022ServerConfig
+
+| 字段 | 说明 |
+| --- | --- |
+| `method` | 加密套件字符串（例如 `2022-blake3-aes-128-gcm`） |
+| `user` | `UserConfig`，PSK 在 `secret` 中 |
+| `networks` | 允许的网络（`TCP`、`UDP` 等） |
+
+### Shadowsocks2022ClientConfig
+
+| 字段 | 说明 |
+| --- | --- |
+| `method` | 加密套件字符串 |
+| `key` | PSK / 密钥材料 |
+
+```json
+{
+  "@type": "type.googleapis.com/vx.proxy.shadowsocks2022.Shadowsocks2022ServerConfig",
+  "method": "2022-blake3-aes-128-gcm",
+  "user": { "secret": "base64-or-raw-key" }
+}
+```

@@ -1,0 +1,32 @@
+﻿---
+title: HTTP proxy
+description: HttpServerConfig 与 HttpClientConfig
+---
+
+Proto：[`protos/proto/vx/proxy/http/http.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/proxy/http/http.proto)
+
+标准 HTTP CONNECT 代理（不是 HTTP *传输* — 见[传输 HTTP](/zh/docs/vx-core/configuration/transport/http)）。
+
+## HttpServerConfig
+
+空消息 — 无额外字段。认证通常在传输或路由层处理。
+
+```json
+{
+  "@type": "type.googleapis.com/vx.proxy.http.HttpServerConfig"
+}
+```
+
+## HttpClientConfig
+
+| 字段 | 类型 | 说明 |
+| --- | --- | --- |
+| `account` | `Account` | 可选 `username` / `password` |
+| `h1SkipWaitForReply` | bool | HTTP/1 优化 |
+
+### Account
+
+| 字段 | 说明 |
+| --- | --- |
+| `username` | 代理认证用户 |
+| `password` | 代理认证密码 |

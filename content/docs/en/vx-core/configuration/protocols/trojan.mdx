@@ -1,0 +1,31 @@
+---
+title: Trojan
+description: TrojanServerConfig and TrojanClientConfig
+---
+
+Proto: [`protos/proto/vx/proxy/trojan/trojan.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/proxy/trojan/trojan.proto)
+
+## TrojanServerConfig
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `users` | `UserConfig[]` | Password in `secret` |
+| `vision` | bool | Enable Trojan Vision |
+
+```json
+{
+  "@type": "type.googleapis.com/vx.proxy.trojan.TrojanServerConfig",
+  "vision": true,
+  "users": [{ "id": "user1", "secret": "your-password" }]
+}
+```
+
+## TrojanClientConfig
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `password` | string | Trojan password |
+| `special` | bool | Internal / extended use |
+| `vision` | bool | Enable Trojan Vision |
+
+Often used with [TLS](/docs/vx-core/configuration/security/tls) on port 443.

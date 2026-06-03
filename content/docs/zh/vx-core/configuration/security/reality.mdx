@@ -1,0 +1,81 @@
+﻿---
+title: REALITY
+description: RealityConfig
+---
+
+Proto：[`protos/proto/vx/transport/security/reality/config.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/transport/security/reality/config.proto)
+
+设置在 `TransportConfig.reality` 或 `MultiProxyInboundConfig.securityConfigs[].reality`。
+
+## RealityConfig
+
+### 仅服务端
+
+| 字段 | 说明 |
+| --- | --- |
+| `dest` | 回退目标（例如 `www.microsoft.com:443`） |
+| `xver` | 发往 dest 的 PROXY protocol 版本 |
+| `serverNames` | 允许的 SNI 服务器名 |
+| `privateKey` | X25519 私钥 |
+| `minClientVer`、`maxClientVer` | 允许的客户端版本字节 |
+| `maxTimeDiff` | 最大客户端时钟偏差（毫秒） |
+| `shortIds` | 允许的 short ID 列表 |
+
+### 客户端 / 共用
+
+| 字段 | 说明 |
+| --- | --- |
+| `show` | 调试输出 |
+| `Fingerprint` | uTLS 指纹 |
+| `serverName` | 呈现的 SNI |
+| `publicKey` | 服务端公钥（字节） |
+| `pbk` | 公钥（字符串形式） |
+| `shortId` | 客户端 short ID（字节） |
+| `sid` | Short ID 字符串（8 字节） |
+| `spiderX` | Spider X 路径 |
+| `spiderY` | Spider Y 值 |
+| `masterKeyLog` | 密钥日志路径（调试） |
+
+```json
+{
+  "transport": {
+    "tcp": {},
+    "reality": {
+      "dest": "www.microsoft.com:443",
+      "serverNames": ["www.example.com"],
+      "privateKey": "base64-or-raw",
+      "shortIds": ["", "0123456789abcdef"]
+    }
+  },
+  "protocol": {
+    "@type": "type.googleapis.com/vx.proxy.vless.VlessServerConfig",
+    "users": [{ "id": "uuid", "flow": "" }]
+  }
+}
+```
+
+客户端出站示例字段：
+
+```json
+{
+  "transport": {
+    "tcp": {},
+    "reality": {
+      "serverName": "www.example.com",
+      "publicKey": "...",
+      "shortId": "...",
+      "fingerprint": "chrome"
+    }
+  },
+  "protocol": {
+    "@type": "type.googleapis.com/vx.proxy.vless.VlessClientConfig",
+    "id": "uuid",
+    "flow": "xtls-rprx-vision"
+  }
+}
+```
+
+## 相关
+
+- [VLESS](/zh/docs/vx-core/configuration/protocols/vless) — Vision 流控
+- [入站](/zh/docs/vx-core/configuration/inbounds) — 多入站上的 `securityConfigs`

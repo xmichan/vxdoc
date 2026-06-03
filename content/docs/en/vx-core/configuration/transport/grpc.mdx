@@ -1,0 +1,33 @@
+---
+title: gRPC
+description: GrpcConfig
+---
+
+Proto: [`protos/proto/vx/transport/protocols/grpc/config.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/transport/protocols/grpc/config.proto)
+
+Set on `TransportConfig.grpc`.
+
+## GrpcConfig
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `authority` | string | `:authority` pseudo-header |
+| `serviceName` | string | gRPC service name |
+| `multiMode` | bool | Multi-stream mode |
+| `idleTimeout` | int32 | Idle timeout (seconds) |
+| `healthCheckTimeout` | int32 | Health check timeout |
+| `permitWithoutStream` | bool | Allow pings without active stream |
+| `initialWindowsSize` | int32 | Initial window size |
+| `userAgent` | string | User-Agent override |
+
+```json
+{
+  "transport": {
+    "grpc": {
+      "serviceName": "GunService",
+      "multiMode": true
+    },
+    "tls": { "serverName": "example.com" }
+  }
+}
+```

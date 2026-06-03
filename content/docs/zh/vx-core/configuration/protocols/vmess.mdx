@@ -1,0 +1,49 @@
+﻿---
+title: VMess
+description: VmessServerConfig 与 VmessClientConfig
+---
+
+Proto：[`protos/proto/vx/proxy/vmess/vmess.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/proxy/vmess/vmess.proto)
+
+## VmessServerConfig
+
+| 字段 | 类型 | 说明 |
+| --- | --- | --- |
+| `accounts` | `UserConfig[]` | 允许的用户（`id`、`userLevel`、`secret`） |
+| `secureEncryptionOnly` | bool | 拒绝旧版加密 |
+
+```json
+{
+  "@type": "type.googleapis.com/vx.proxy.vmess.VmessServerConfig",
+  "secureEncryptionOnly": true,
+  "accounts": [{ "id": "uuid-here", "userLevel": 0 }]
+}
+```
+
+## VmessClientConfig
+
+| 字段 | 类型 | 说明 |
+| --- | --- | --- |
+| `id` | string | 账户 UUID |
+| `security` | `SecurityType` | 见下表 |
+| `special` | bool | 内部 / 扩展用途 |
+| `alterId` | uint32 | 旧版 alterId（通常为 0） |
+
+### SecurityType
+
+| 值 | 名称 |
+| --- | --- |
+| `0` | `UNKNOWN` |
+| `1` | `LEGACY` |
+| `2` | `AUTO` |
+| `3` | `AES128_GCM` |
+| `4` | `CHACHA20_POLY1305` |
+| `5` | `NONE` |
+| `6` | `ZERO` |
+
+JSON 中使用枚举名（例如 `"security": "CHACHA20_POLY1305"`）。
+
+## 相关
+
+- [传输](/zh/docs/vx-core/configuration/transport) — WebSocket、TLS 等
+- [用户](/zh/docs/vx-core/configuration/users)

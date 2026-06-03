@@ -1,0 +1,34 @@
+---
+title: HTTP/SOCKS Server
+description: Share your proxy connection as a local HTTP or SOCKS server
+---
+
+VX can expose a local HTTP and/or SOCKS5 server so other devices or apps on your network use the same proxy connection.
+
+## Proxy Share Mode
+
+When enabled, vx-core listens on a configurable address and port and accepts incoming HTTP CONNECT and SOCKS5 connections. Traffic from those clients is routed through the same outbounds and rules as the VX app itself.
+
+## System Proxy Mode
+
+Alternatively, VX can set the **system proxy** (HTTP + SOCKS on localhost) without full TUN:
+
+- Lighter weight than TUN mode
+- Works for apps that respect system proxy settings
+- Dynamic port assignment available to avoid conflicts
+
+## Use Cases
+
+- Share a VPN/proxy connection with a game console or TV on the LAN
+- Let another browser or tool use VX without installing it
+- Test clients against your current routing setup
+
+## Settings
+
+- Listen address (default localhost; can bind to LAN interface for sharing)
+- Port (fixed or dynamically assigned)
+- UDP support for SOCKS5
+
+## Security Note
+
+Binding to `0.0.0.0` exposes the proxy to your local network. Only enable LAN sharing on trusted networks and consider firewall rules.

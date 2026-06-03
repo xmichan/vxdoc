@@ -1,0 +1,30 @@
+---
+title: AnyTLS
+description: AnytlsServerConfig and AnytlsClientConfig
+---
+
+Proto: [`protos/proto/vx/proxy/anytls/anytls.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/proxy/anytls/anytls.proto)
+
+## AnytlsServerConfig
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `users` | `UserConfig[]` | Password in `secret` |
+
+## AnytlsClientConfig
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `password` | string | Auth password |
+| `idleSessionCheckInterval` | uint32 | Session idle check interval |
+| `idleSessionTimeout` | uint32 | Close idle sessions after this |
+| `minIdleSession` | uint32 | Minimum pooled sessions |
+
+```json
+{
+  "@type": "type.googleapis.com/vx.proxy.anytls.AnytlsServerConfig",
+  "users": [{ "secret": "your-password" }]
+}
+```
+
+Use with [TLS](/docs/vx-core/configuration/security/tls) or [WebSocket](/docs/vx-core/configuration/transport/websocket) transport as needed.

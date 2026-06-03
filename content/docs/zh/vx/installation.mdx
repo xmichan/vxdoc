@@ -1,0 +1,68 @@
+﻿---
+title: 安装
+description: 如何在您的平台上安装 VX
+---
+
+## 从官网下载
+
+访问 [vx.5vnetwork.com](https://vx.5vnetwork.com) 下载适用于您平台的最新版本。
+
+支持的平台：
+
+- **Windows** — 安装包或便携版
+- **macOS** — 通用二进制（Apple Silicon 与 Intel）
+- **Linux** — AppImage 或软件包
+- **Android** — Google Play 或 APK
+- **iOS** — App Store
+
+## 首次启动
+
+安装完成后：
+
+1. 打开 VX，若提示则接受隐私政策
+2. 添加订阅或导入单个节点
+3. 选择节点并点击 **连接**
+
+## 添加订阅
+
+可通过以下方式添加订阅：
+
+- 在 **出站 → 订阅 → 添加** 中粘贴订阅 URL
+- 扫描二维码
+- 从机场服务商打开[深链](/zh/docs/vx/deep-linking)
+
+## 系统要求
+
+### Windows
+
+- Windows 10 或更高版本
+- TUN 模式建议使用管理员权限
+
+### macOS
+
+- macOS 11 或更高版本
+- TUN 模式需要网络扩展权限
+
+### Linux
+
+- 现代基于 glibc 的发行版
+- TUN 模式需要 root 权限
+
+### Android / iOS
+
+- Android 7+ / iOS 15+
+- TUN 模式需要 VPN 权限
+
+## 从源码构建
+
+VX 是 Flutter 项目。本地构建：
+
+```bash
+git clone https://github.com/5vnetwork/vx.git
+git clone https://github.com/5vnetwork/tm-plugin.git
+cd vx
+flutter pub get
+flutter run
+```
+
+您还需要为目标平台构建好的 vx-core 副本。请参阅[构建 vx-core](/zh/docs/vx-core/building)。

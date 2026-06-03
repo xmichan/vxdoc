@@ -1,0 +1,33 @@
+﻿---
+title: WebSocket
+description: WebsocketConfig
+---
+
+Proto：[`protos/proto/vx/transport/protocols/websocket/config.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/transport/protocols/websocket/config.proto)
+
+设置在 `TransportConfig.websocket`。
+
+## WebsocketConfig
+
+| 字段 | 类型 | 说明 |
+| --- | --- | --- |
+| `host` | string | Host 头 / authority |
+| `path` | string | URL 路径；空 = `/` |
+| `header` | `Header[]` | 额外头（`key`、`value`） |
+| `maxEarlyData` | int32 | 最大 early data 字节数 |
+| `useBrowserForwarding` | bool | 浏览器转发模式 |
+| `earlyDataHeaderName` | string | 携带 early data 的头 |
+
+```json
+{
+  "transport": {
+    "websocket": {
+      "path": "/ray",
+      "host": "example.com"
+    },
+    "tls": { "serverName": "example.com" }
+  }
+}
+```
+
+亦嵌入 [HTTPUpgrade](/zh/docs/vx-core/configuration/transport/httpupgrade)。

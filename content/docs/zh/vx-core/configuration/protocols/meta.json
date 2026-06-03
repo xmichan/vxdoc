@@ -1,0 +1,15 @@
+{
+  "title": "代理协议",
+  "pages": [
+    "vmess",
+    "vless",
+    "trojan",
+    "shadowsocks",
+    "socks",
+    "http-proxy",
+    "hysteria",
+    "anytls",
+    "wireguard",
+    "builtin"
+  ]
+}

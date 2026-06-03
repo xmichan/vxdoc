@@ -1,0 +1,39 @@
+---
+title: SOCKS
+description: SocksServerConfig and SocksClientConfig
+---
+
+Proto: [`protos/proto/vx/proxy/socks/socks.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/proxy/socks/socks.proto)
+
+## AuthType
+
+| Value | Description |
+| --- | --- |
+| `NO_AUTH` | Anonymous |
+| `PASSWORD` | Username/password |
+
+## SocksServerConfig
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `authType` | `AuthType` | Authentication mode |
+| `accounts` | `UserConfig[]` | Users when `PASSWORD` |
+| `address` | string | BND.ADDR in SOCKS reply |
+| `udpEnabled` | bool | Enable UDP associate |
+
+## SocksClientConfig
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `name` | string | Username |
+| `password` | string | Password |
+| `delayAuthWrite` | bool | Delay auth write on connection |
+
+```json
+{
+  "@type": "type.googleapis.com/vx.proxy.socks.SocksServerConfig",
+  "authType": "PASSWORD",
+  "udpEnabled": true,
+  "accounts": [{ "id": "u1", "secret": "pass" }]
+}
+```

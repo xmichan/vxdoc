@@ -1,0 +1,15 @@
+{
+  "title": "Proxy protocols",
+  "pages": [
+    "vmess",
+    "vless",
+    "trojan",
+    "shadowsocks",
+    "socks",
+    "http-proxy",
+    "hysteria",
+    "anytls",
+    "wireguard",
+    "builtin"
+  ]
+}

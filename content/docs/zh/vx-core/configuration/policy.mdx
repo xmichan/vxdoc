@@ -1,0 +1,47 @@
+﻿---
+title: 策略
+description: PolicyConfig — 连接超时与缓冲区
+---
+
+连接策略在 `ServerConfig.policy`（`PolicyConfig`）中设置。模式定义：[`protos/proto/vx/policy.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/policy.proto)。
+
+除非部署工具另有说明，所有超时值单位为**秒**。
+
+## PolicyConfig
+
+| 字段 | 类型 | 说明 |
+| --- | --- | --- |
+| `handshakeTimeout` | int32 | 连接后无数据则关闭 |
+| `connectionIdleTimeout` | int32 | 空闲时关闭（双向均无传输） |
+| `udpIdleTimeout` | int32 | 无上行 UDP 数据时关闭 |
+| `upLinkOnlyTimeout` | int32 | 下行结束后，无上行数据则关闭 |
+| `downLinkOnlyTimeout` | int32 | 上行结束后，无下行数据则关闭 |
+| `defaultBufferSize` | int32 | 默认每连接缓冲区（并非所有协议都遵守） |
+| `userPolicyMap` | map&lt;uint32, UserPolicy&gt; | 按 `userLevel` 覆盖 |
+
+## UserPolicy
+
+| 字段 | 说明 |
+| --- | --- |
+| `bufferSize` | 该级别用户的缓冲区大小 |
+
+用户级别来自各账户 [UserConfig](/zh/docs/vx-core/configuration/users) 的 `userLevel`。
+
+## 示例
+
+```json
+{
+  "policy": {
+    "handshakeTimeout": 4,
+    "connectionIdleTimeout": 300,
+    "udpIdleTimeout": 60,
+    "userPolicyMap": {
+      "0": { "bufferSize": 4096 }
+    }
+  }
+}
+```
+
+## 相关
+
+- [用户](/zh/docs/vx-core/configuration/users) — 每账户 `userLevel`

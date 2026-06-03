@@ -1,0 +1,68 @@
+---
+title: Installation
+description: How to install VX on your platform
+---
+
+## From Official Website
+
+Visit [vx.5vnetwork.com](https://vx.5vnetwork.com) to download the latest version for your platform.
+
+Supported platforms:
+
+- **Windows** — Installer or portable build
+- **macOS** — Universal binary (Apple Silicon and Intel)
+- **Linux** — AppImage or package
+- **Android** — Google Play or APK
+- **iOS** — App Store
+
+## First Launch
+
+After installing:
+
+1. Open VX and accept the privacy policy if prompted
+2. Add a subscription or import a single node
+3. Select a node and tap **Connect**
+
+## Adding a Subscription
+
+You can add subscriptions by:
+
+- Pasting a subscription URL in **Outbounds → Subscriptions → Add**
+- Scanning a QR code
+- Opening a [deep link](/docs/vx/deep-linking) from an airport provider
+
+## System Requirements
+
+### Windows
+
+- Windows 10 or later
+- Administrator privileges recommended for TUN mode
+
+### macOS
+
+- macOS 11 or later
+- Network extension permission required for TUN mode
+
+### Linux
+
+- Modern glibc-based distribution
+- Root privileges required for TUN mode
+
+### Android / iOS
+
+- Android 7+ / iOS 15+
+- VPN permission required for TUN mode
+
+## Building from Source
+
+VX is a Flutter project. To build locally:
+
+```bash
+git clone https://github.com/5vnetwork/vx.git
+git clone https://github.com/5vnetwork/tm-plugin.git
+cd vx
+flutter pub get
+flutter run
+```
+
+You also need a built copy of vx-core for your target platform. See [Building vx-core](/docs/vx-core/building).

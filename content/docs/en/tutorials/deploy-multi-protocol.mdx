@@ -1,0 +1,35 @@
+---
+title: Deploy multiple protocols at once
+description: Use VX All-in-One Quick Deploy to install vx-core and many inbounds on one VPS
+---
+
+VX **All in One** Quick Deploy installs **vx-core** on your VPS and deploys multiple nodes 
+in a single run. The deployed nodes use self-signed certs with SHA256 peer verification enabled, so you
+don't have to worry MITM attacks.
+
+A typical All-in-One deployment includes:
+
+- **Protocols** — VMess, Trojan, AnyTLS, and Hysteria2
+- **Transports** — WebSocket and gRPC
+- **Security** — TLS on generated certificates; optional **REALITY** when you provide a REALITY domain
+- **CDN** — optional CDN hostname for an extra WebSocket + TLS node in front of the server
+
+VX can also enable **BBR** and adjust firewall settings during deploy when needed.
+
+Watch the walkthrough below, or open it on [YouTube](https://www.youtube.com/watch?v=ZJHPvtQQkTo).
+
+This video is for Chinese language speakers.
+
+<YouTube id="ZJHPvtQQkTo" title="Deploy multiple protocols at once with VX All in One Quick Deploy" />
+
+## Prerequisites
+
+- A Linux VPS added in VX under **Servers** with working **SSH**
+
+## Related
+
+- [Deploy REALITY / XHTTP](/docs/tutorials/deploy-reality-xhttp) — focused Reality/XHTTP (Xray) Quick Deploy
+- [VX-core panel](/docs/vx/manual/vx-core-panel) — server panel overview
+- [Proxy protocols](/docs/vx-core/configuration/protocols) — protocol reference
+- [Multi-protocol support](/docs/vx/manual/multi-protocol) — using many protocols in the client
+- [VX installation](/docs/vx/installation) — install the client first

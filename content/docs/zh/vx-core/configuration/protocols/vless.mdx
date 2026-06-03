@@ -1,0 +1,40 @@
+﻿---
+title: VLESS
+description: VlessServerConfig 与 VlessClientConfig
+---
+
+Proto：[`protos/proto/vx/proxy/vless/vless.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/proxy/vless/vless.proto)
+
+## VlessServerConfig
+
+| 字段 | 类型 | 说明 |
+| --- | --- | --- |
+| `users` | `UserConfig[]` | 允许的用户；`id` 为 UUID，`secret` 可选 |
+
+```json
+{
+  "@type": "type.googleapis.com/vx.proxy.vless.VlessServerConfig",
+  "users": [
+    { "id": "66ad4540-b58c-4ad2-9926-ea63445a9b57", "userLevel": 0 }
+  ]
+}
+```
+
+## VlessClientConfig
+
+| 字段 | 类型 | 说明 |
+| --- | --- | --- |
+| `id` | string | 账户 UUID |
+| `flow` | string | 流控，例如 `xtls-rprx-vision` |
+| `encryption` | string | 仅客户端；当前为 `none` |
+
+```json
+{
+  "@type": "type.googleapis.com/vx.proxy.vless.VlessClientConfig",
+  "id": "66ad4540-b58c-4ad2-9926-ea63445a9b57",
+  "flow": "xtls-rprx-vision",
+  "encryption": "none"
+}
+```
+
+Vision 流控通常与传输上的 [REALITY](/zh/docs/vx-core/configuration/security/reality) 或 [TLS](/zh/docs/vx-core/configuration/security/tls) 配合使用。

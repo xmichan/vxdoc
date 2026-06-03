@@ -1,0 +1,70 @@
+---
+title: Shadowsocks
+description: Shadowsocks and Shadowsocks 2022 configs
+---
+
+## Shadowsocks (classic)
+
+Proto: [`shadowsocks.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/proxy/shadowsocks/shadowsocks.proto)
+
+### ShadowsocksCipherType
+
+| Value | Name |
+| --- | --- |
+| `0` | `AES_128_GCM` |
+| `1` | `AES_256_GCM` |
+| `2` | `CHACHA20_POLY1305` |
+| `3` | `NONE` |
+
+### ShadowsocksServerConfig
+
+| Field | Description |
+| --- | --- |
+| `cipherType` | Cipher enum |
+| `ivCheck` | IV validation |
+| `user` | Single `UserConfig` (`secret` = password) |
+| `experimentReducedIvHeadEntropy` | Experimental option |
+
+### ShadowsocksClientConfig
+
+| Field | Description |
+| --- | --- |
+| `cipherType` | Cipher enum |
+| `password` | PSK |
+
+```json
+{
+  "@type": "type.googleapis.com/vx.proxy.shadowsocks.ShadowsocksServerConfig",
+  "cipherType": "CHACHA20_POLY1305",
+  "user": { "secret": "your-password" }
+}
+```
+
+---
+
+## Shadowsocks 2022
+
+Proto: [`shadowsocks2022.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/proxy/shadowsocks2022/shadowsocks2022.proto)
+
+### Shadowsocks2022ServerConfig
+
+| Field | Description |
+| --- | --- |
+| `method` | Cipher suite string (e.g. `2022-blake3-aes-128-gcm`) |
+| `user` | `UserConfig` with PSK in `secret` |
+| `networks` | Allowed networks (`TCP`, `UDP`, …) |
+
+### Shadowsocks2022ClientConfig
+
+| Field | Description |
+| --- | --- |
+| `method` | Cipher suite string |
+| `key` | PSK / key material |
+
+```json
+{
+  "@type": "type.googleapis.com/vx.proxy.shadowsocks2022.Shadowsocks2022ServerConfig",
+  "method": "2022-blake3-aes-128-gcm",
+  "user": { "secret": "base64-or-raw-key" }
+}
+```

@@ -1,0 +1,37 @@
+---
+title: Dispatcher
+description: DispatcherConfig — sniffing and overrides
+---
+
+The dispatcher is configured in `ServerConfig.dispatcher` (`DispatcherConfig`). Schema: [`protos/proto/vx/dispatcher/dispatcher.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/dispatcher/dispatcher.proto).
+
+It controls protocol sniffing, destination override, and some client-only behaviors.
+
+## DispatcherConfig
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `destinationOverride` | string[] | If non-empty, sniff connections and override destination with sniffed domain when protocol matches |
+| `sniff` | bool | Enable sniffing for extra connection metadata (logging / routing) |
+| `ipv6UseDomain` | bool | **Client only** — IPv6 handling preference |
+| `fallbackTimeout` | uint32 | Wait time (ms) for response data before treating connection as failed |
+| `sessionStats` | bool | Meter per-session statistics |
+
+When `destinationOverride` lists protocols (for example `http`, `tls`), vx-core may replace the connection target with the sniffed hostname so [router](/docs/vx-core/configuration/router) domain rules apply to IP-based connections.
+
+## Example
+
+```json
+{
+  "dispatcher": {
+    "sniff": true,
+    "destinationOverride": ["http", "tls"],
+    "sessionStats": false
+  }
+}
+```
+
+## Related
+
+- [Router](/docs/vx-core/configuration/router) — `skipSniff`, `protocols`, domain rules after sniff
+- [DNS](/docs/vx-core/configuration/dns) — resolution when rules use `resolveDomain`

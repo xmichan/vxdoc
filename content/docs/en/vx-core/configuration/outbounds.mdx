@@ -1,0 +1,66 @@
+---
+title: Outbounds
+description: OutboundHandlerConfig reference
+---
+
+Outbound handlers are listed in `ServerConfig.outbounds`. Schema: [`protos/proto/vx/outbound/outbound.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/outbound/outbound.proto).
+
+Each handler has a unique `tag` used by [router](/docs/vx-core/configuration/router) rules (`outboundTag`) or as a chain target.
+
+## OutboundHandlerConfig
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `tag` | string | Handler name for routing |
+| `transport` | `TransportConfig` | Client transport (TLS, WebSocket, …) |
+| `address` | string | Remote host or IP |
+| `port` | uint32 | Remote port |
+| `ports` | `PortRange[]` | Multiple port ranges |
+| `protocol` | `Any` | Proxy client config (Freedom, Blackhole, VMess, …) |
+| `enableMux` | bool | Enable connection mux |
+| `muxConfig` | `MuxConfig` | `maxConnection`, `maxConcurrency` |
+| `uot` | bool | UDP over TCP |
+| `domainStrategy` | enum | How to resolve domains when dialing (`PreferIPv4`, `PreferIPv6`, `IPv4Only`, `IPv6Only`, `Speed`) |
+| `random` | `RandomPortSelectStrategy` | Use all ports in `ports` at once |
+| `one` | `OnePortSelectStrategy` | Rotate a single port (`interval` or `minInterval` / `maxInterval`) |
+
+### Direct (freedom) outbound
+
+Required for a minimal server that forwards traffic without an upstream proxy:
+
+```json
+{
+  "tag": "direct",
+  "protocol": {
+    "@type": "type.googleapis.com/vx.proxy.freedom.FreedomConfig"
+  }
+}
+```
+
+### Block outbound
+
+```json
+{
+  "tag": "block",
+  "protocol": {
+    "@type": "type.googleapis.com/vx.proxy.blackhole.BlackholeConfig"
+  }
+}
+```
+
+Proxy client configs: [Proxy protocols](/docs/vx-core/configuration/protocols) (`*ClientConfig` messages). Wrap with [Transport](/docs/vx-core/configuration/transport) and [Security](/docs/vx-core/configuration/security) as needed.
+
+## OutboundConfig (client / advanced)
+
+`OutboundConfig` in the same proto file is used in richer client setups (handler lists, chains, stats). Server `ServerConfig` uses the flat `outbounds` repeated field of `OutboundHandlerConfig` only.
+
+| Field | Description |
+| --- | --- |
+| `handlers` | `HandlerConfig[]` — single outbound or `ChainHandlerConfig` |
+| `hysteriaRejectQuic` | Reject QUIC for Hysteria |
+| `handlerLinkStats`, `handlerMeter`, `totalCounter` | Stats and metering |
+
+## Related
+
+- [Router](/docs/vx-core/configuration/router) — choose `outboundTag` or `selectorTag`
+- [Dialer factory](/docs/vx-core/configuration/dialer-factory) — dial timeouts when connecting out

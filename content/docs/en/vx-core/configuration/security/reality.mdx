@@ -1,0 +1,81 @@
+---
+title: REALITY
+description: RealityConfig
+---
+
+Proto: [`protos/proto/vx/transport/security/reality/config.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/transport/security/reality/config.proto)
+
+Set on `TransportConfig.reality` or `MultiProxyInboundConfig.securityConfigs[].reality`.
+
+## RealityConfig
+
+### Server-only
+
+| Field | Description |
+| --- | --- |
+| `dest` | Fallback destination (e.g. `www.microsoft.com:443`) |
+| `xver` | PROXY protocol version sent to dest |
+| `serverNames` | Allowed SNI server names |
+| `privateKey` | X25519 private key |
+| `minClientVer`, `maxClientVer` | Allowed client version bytes |
+| `maxTimeDiff` | Max client clock skew (ms) |
+| `shortIds` | Allowed short IDs (list) |
+
+### Client / shared
+
+| Field | Description |
+| --- | --- |
+| `show` | Debug output |
+| `Fingerprint` | uTLS fingerprint |
+| `serverName` | SNI to present |
+| `publicKey` | Server public key (bytes) |
+| `pbk` | Public key (string form) |
+| `shortId` | Client short ID (bytes) |
+| `sid` | Short ID string (8 bytes) |
+| `spiderX` | Spider X path |
+| `spiderY` | Spider Y values |
+| `masterKeyLog` | Key log path (debug) |
+
+```json
+{
+  "transport": {
+    "tcp": {},
+    "reality": {
+      "dest": "www.microsoft.com:443",
+      "serverNames": ["www.example.com"],
+      "privateKey": "base64-or-raw",
+      "shortIds": ["", "0123456789abcdef"]
+    }
+  },
+  "protocol": {
+    "@type": "type.googleapis.com/vx.proxy.vless.VlessServerConfig",
+    "users": [{ "id": "uuid", "flow": "" }]
+  }
+}
+```
+
+Client outbound example fields:
+
+```json
+{
+  "transport": {
+    "tcp": {},
+    "reality": {
+      "serverName": "www.example.com",
+      "publicKey": "...",
+      "shortId": "...",
+      "fingerprint": "chrome"
+    }
+  },
+  "protocol": {
+    "@type": "type.googleapis.com/vx.proxy.vless.VlessClientConfig",
+    "id": "uuid",
+    "flow": "xtls-rprx-vision"
+  }
+}
+```
+
+## Related
+
+- [VLESS](/docs/vx-core/configuration/protocols/vless) — Vision flow
+- [Inbounds](/docs/vx-core/configuration/inbounds) — `securityConfigs` on multi-inbound

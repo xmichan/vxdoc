@@ -1,0 +1,98 @@
+---
+title: Selectors
+description: Proxy selectors in Advanced routing
+---
+
+**Selector** selector a node to be use by proxied connections from a range of nodes.
+
+## Selector filter
+
+The **Range** (selector filter) defines which nodes the selector may choose from.
+
+| Range | Meaning |
+| --- | --- |
+| **All Nodes** | All nodes. |
+| **Partial Nodes** | Only nodes you specified. |
+
+When **Partial Nodes** is selected, use the filter chips to narrow the pool. 
+
+| Filter | Meaning |
+| --- | --- |
+| **Node** | Individual nodes. |
+| **Group** | Node group or subscription. |
+| **Prefix** | Nodes that starts with the given prefix string. |
+| **Sub String** | Nodes that contains the given substring. |
+| **Area** | Nodes in the area. |
+
+Changes to the filter take effect immediately, no need to restart.
+
+## Select strategy
+
+After filtering, the **Select Strategy** decides **which** node(s) from that pool are actually used.
+
+| Strategy | Meaning | 
+| --- | --- | 
+| **All** | Every node in the filtered pool | 
+| **Usable** | All nodes that are usable | 
+| **Lowest Latency** | The single node with the lowest ping | 
+| **Speed Highest** | The single node with the highest measured throughput | 
+| **Low Latency** | All nodes whose ping is within **30%** of the best ping (e.g. best 100 ms → include nodes ≤ 130 ms) | 
+| **High Speed** | All nodes with throughput ≥ **70%** of the best (e.g. best 100 → include nodes ≥ 70) | 
+
+Strategies that pick **one** node (**Lowest Latency**, **Speed Highest**) do not show a balance strategy — each connection uses that single node.
+
+Strategies that pick **multiple** nodes (**All**, **Usable**, **Low Latency**, **High Speed**) show **Balance Strategy** below.
+
+### Test intervals
+
+Each selector will test nodes periodically. You can configure how to test:
+
+| Field | Default | Purpose |
+| --- | --- | --- |
+| **Speed test size** | 1,000,000 bytes (1 MB) | Download size for each speed test. |
+| **Speed test interval** | 60 minutes | How often to speed-test filtered nodes. |
+| **Ping test interval** | 10 minutes | How often to ping filtered nodes. |
+| **Unusable test interval** | 10 minutes | How often to re-check nodes marked unusable. |
+
+Only **Speed Highest** and **High Speed** test speeds periodically. Only **Lowest Latency** and **Low Latency** test 
+ping periodically. All strategies except **All** test usablility and unusable nodes periodically.
+
+## Balance strategy
+
+When the select strategy keeps **multiple** nodes active, **Balance Strategy** decides which node handles a connection:
+
+| Strategy | Behavior |
+| --- | --- |
+| **Random** | Pick a random node from the active set for a connection. IPv6 traffic prefers IPv6-capable nodes when available. |
+| **Memory** | Stickiness: reuse the same node for the same **app** or **root domain** when possible. If no mapping exists yet, assign randomly and remember it. IPv6 traffic prefers IPv6-capable nodes. |
+
+Use **Memory** when you want stable exits per site or app (fewer IP changes mid-session). Use **Random** when you want even load spread across nodes.
+
+> **Note:** Balance strategy applies only when multiple nodes are selected (**All**, **Usable**, **Low Latency**, or **High Speed**). It does not apply to **Lowest Latency** or **Speed Highest**.
+
+> **Note:** Each selector will test whether a node support IPv6 to make sure IPv6 connections are not sent nodes that do not support IPv6.
+
+## Node chain
+
+**Node chain** (land handlers) sends traffic through extra proxy hops **after** the node chosen by the selector.
+
+Traffic path:
+
+```
+[Your traffic] → [Node(s) selected] → [First node in Node Chain] → … → [Last node in Node Chain] → [Destination]
+```
+The **last** node in the Node Chain list is the **landing node** (final exit before the destination).
+
+Use node chain when you need a fixed downstream hop (for example exit via a specific region) on top of whatever node the selector picks. See [Chain Proxy](/docs/vx/manual/chain-proxy) for details and limitations.
+
+## The Proxy selector
+
+This selector is special because it supports Manual node selection, whic means that the nodes to be used are selected by you manually in Node tab. You
+will see switches in Node tab when you use the manual node selection.
+
+## Related
+
+- [Automatic Node Selection](/docs/vx/manual/automatic-node-selection) — manual vs auto on Home for the Proxy selector
+- [Chain Proxy](/docs/vx/manual/chain-proxy) — landing nodes and multi-hop proxy
+- [Routing modes](/docs/vx/manual/customize/modes) — rules that reference selectors as outbounds
+- [Customize tab](/docs/vx/manual/customize) — Simplified vs Advanced overview

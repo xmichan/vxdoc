@@ -1,0 +1,31 @@
+---
+title: Dialer factory
+description: DialerFactoryConfig — outbound dialing
+---
+
+Outbound dialing defaults are set in `ServerConfig.dialerFactory` (`DialerFactoryConfig`). Schema: [`protos/proto/vx/dialerfactory/dialerfactory.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/dialerfactory/dialerfactory.proto).
+
+## DialerFactoryConfig
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `dialTimeout` | uint32 | Timeout for establishing outbound connections (seconds) |
+| `shouldBindDevice` | bool | Bind sockets to the default network interface |
+| `useInternalResolver` | bool | Use [DNS](/docs/vx-core/configuration/dns) `internalResolver` when resolving domains on dial |
+
+## Example
+
+```json
+{
+  "dialerFactory": {
+    "dialTimeout": 10,
+    "shouldBindDevice": false,
+    "useInternalResolver": true
+  }
+}
+```
+
+## Related
+
+- [Outbounds](/docs/vx-core/configuration/outbounds) — `address`, `domainStrategy`, ports
+- [DNS](/docs/vx-core/configuration/dns) — `internalResolver`

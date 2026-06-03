@@ -1,0 +1,49 @@
+---
+title: VMess
+description: VmessServerConfig and VmessClientConfig
+---
+
+Proto: [`protos/proto/vx/proxy/vmess/vmess.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/proxy/vmess/vmess.proto)
+
+## VmessServerConfig
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `accounts` | `UserConfig[]` | Allowed users (`id`, `userLevel`, `secret`) |
+| `secureEncryptionOnly` | bool | Reject legacy encryption |
+
+```json
+{
+  "@type": "type.googleapis.com/vx.proxy.vmess.VmessServerConfig",
+  "secureEncryptionOnly": true,
+  "accounts": [{ "id": "uuid-here", "userLevel": 0 }]
+}
+```
+
+## VmessClientConfig
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `id` | string | Account UUID |
+| `security` | `SecurityType` | See table below |
+| `special` | bool | Internal / extended use |
+| `alterId` | uint32 | Legacy alterId (usually 0) |
+
+### SecurityType
+
+| Value | Name |
+| --- | --- |
+| `0` | `UNKNOWN` |
+| `1` | `LEGACY` |
+| `2` | `AUTO` |
+| `3` | `AES128_GCM` |
+| `4` | `CHACHA20_POLY1305` |
+| `5` | `NONE` |
+| `6` | `ZERO` |
+
+In JSON use enum names (for example `"security": "CHACHA20_POLY1305"`).
+
+## Related
+
+- [Transport](/docs/vx-core/configuration/transport) — WebSocket, TLS, etc.
+- [Users](/docs/vx-core/configuration/users)

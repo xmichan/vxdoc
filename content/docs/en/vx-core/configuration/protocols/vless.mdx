@@ -1,0 +1,40 @@
+---
+title: VLESS
+description: VlessServerConfig and VlessClientConfig
+---
+
+Proto: [`protos/proto/vx/proxy/vless/vless.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/proxy/vless/vless.proto)
+
+## VlessServerConfig
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `users` | `UserConfig[]` | Allowed users; `id` is UUID, `secret` optional |
+
+```json
+{
+  "@type": "type.googleapis.com/vx.proxy.vless.VlessServerConfig",
+  "users": [
+    { "id": "66ad4540-b58c-4ad2-9926-ea63445a9b57", "userLevel": 0 }
+  ]
+}
+```
+
+## VlessClientConfig
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `id` | string | Account UUID |
+| `flow` | string | Flow control, e.g. `xtls-rprx-vision` |
+| `encryption` | string | Client-only; currently `none` |
+
+```json
+{
+  "@type": "type.googleapis.com/vx.proxy.vless.VlessClientConfig",
+  "id": "66ad4540-b58c-4ad2-9926-ea63445a9b57",
+  "flow": "xtls-rprx-vision",
+  "encryption": "none"
+}
+```
+
+Vision flow typically pairs with [REALITY](/docs/vx-core/configuration/security/reality) or [TLS](/docs/vx-core/configuration/security/tls) on the transport.

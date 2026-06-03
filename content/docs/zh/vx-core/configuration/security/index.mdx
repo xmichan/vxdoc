@@ -1,0 +1,34 @@
+﻿---
+title: 安全
+description: TransportConfig 上的 TLS 与 REALITY
+---
+
+安全层在线路协议之下加密或伪装连接。设置在 [`TransportConfig`](/zh/docs/vx-core/configuration/transport) 的 `tls` 或 `reality`（与传输协议 oneof）。
+
+```json
+{
+  "transport": {
+    "tcp": {},
+    "reality": {
+      "dest": "www.microsoft.com:443",
+      "serverNames": ["www.example.com"],
+      "privateKey": "...",
+      "shortIds": ["abcd1234"]
+    }
+  }
+}
+```
+
+Hysteria2 在[协议消息](/zh/docs/vx-core/configuration/protocols/hysteria)内使用内联 `tlsConfig`，而非 `TransportConfig`。
+
+## 章节
+
+<Cards>
+  <Card title="TLS" href="/zh/docs/vx-core/configuration/security/tls" description="证书、SNI、uTLS、ECH" />
+  <Card title="REALITY" href="/zh/docs/vx-core/configuration/security/reality" description="REALITY 服务端与客户端设置" />
+</Cards>
+
+Proto 路径：
+
+- [`protos/proto/vx/transport/security/tls/`](https://github.com/5vnetwork/vx-core/tree/main/protos/proto/vx/transport/security/tls)
+- [`protos/proto/vx/transport/security/reality/config.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/transport/security/reality/config.proto)

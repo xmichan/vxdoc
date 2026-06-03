@@ -1,0 +1,93 @@
+---
+title: Geo
+description: GeoConfig — domain, IP, and app sets
+---
+
+Geo data sets are defined in `ServerConfig.geo` (`GeoConfig`). Schema: [`protos/proto/vx/geo/geo.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/geo/geo.proto).
+
+Router [rules](/docs/vx-core/configuration/router) and [DNS](/docs/vx-core/configuration/dns) refer to sets by **name** via `domainTags`, `dstIpTags`, `srcIpTags`, and `geoDomains`.
+
+## GeoConfig
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `domainSets` | `DomainSetConfig[]` | Named groups of domain set tags |
+| `greatDomainSets` | `GreatDomainSetConfig[]` | Composed domain sets (`inNames`, `exNames`, opposites) |
+| `atomicDomainSets` | `AtomicDomainSetConfig[]` | Concrete domain lists or geosite files |
+| `greatIpSets` | `GreatIPSetConfig[]` | Composed IP sets |
+| `atomicIpSets` | `AtomicIPSetConfig[]` | CIDR lists or geoip files |
+| `appSets` | `AppSetConfig[]` | Mobile app id groupings |
+
+Names must be unique within each category (no duplicate names across `greatDomainSets` and `atomicDomainSets`, and similarly for IP sets).
+
+## AtomicDomainSetConfig
+
+| Field | Description |
+| --- | --- |
+| `name` | Tag used in `domainTags` |
+| `domains` | Inline `Domain` list |
+| `geosite`, `geosites` | Load from geosite file or remote |
+| `useBloomFilter` | Bloom filter optimization |
+| `clashFiles` | Clash-format rule files |
+| `inverse` | Match domains **not** in the set |
+| `remoteGeoFiles` | Download geodata on a schedule |
+
+### GeositeConfig
+
+| Field | Description |
+| --- | --- |
+| `codes` | Geosite category codes |
+| `attributes` | Attribute filters |
+| `filepath` | Local geosite.dat path |
+| `remoteUrl`, `refreshCron` | Remote download and cron refresh |
+
+## AtomicIPSetConfig
+
+| Field | Description |
+| --- | --- |
+| `name` | Tag used in `*IpTags` |
+| `cidrs` | Inline CIDR list |
+| `geoip` | `GeoIPConfig` — file, codes, remote URL, cron |
+| `inverse` | Match IPs outside the set |
+| `clashFiles`, `remoteGeoFiles` | External rule / remote sources |
+
+## GreatDomainSetConfig / GreatIPSetConfig
+
+Build large sets from other named sets:
+
+| Field | Description |
+| --- | --- |
+| `name` | Resulting set name |
+| `oppositeName` | Complement set name |
+| `inNames` | Include these sets |
+| `exNames` | Exclude these sets |
+
+## DomainSetConfig
+
+| Field | Description |
+| --- | --- |
+| `name` | Set name |
+| `tags` | Member atomic/great set names |
+
+## AppSetConfig
+
+| Field | Description |
+| --- | --- |
+| `name` | Referenced by `appTags` in router rules |
+| `appIds` | `AppId` entries (`keyword`, `prefix`, or `exact`) |
+| `clashFiles` | Clash app rules |
+
+## GeoRemoteFile
+
+Used under atomic sets for scheduled downloads:
+
+| Field | Description |
+| --- | --- |
+| `filepath` | Local path to write |
+| `sourceUrl` | HTTPS URL |
+| `refreshCron` | 5-field cron; empty = fetch only at startup/reload |
+
+## Related
+
+- [Router](/docs/vx-core/configuration/router) — `domainTags`, `dstIpTags`, `geoDomains`
+- [DNS](/docs/vx-core/configuration/dns) — `domainTags`, `ipTags` on DNS rules and servers

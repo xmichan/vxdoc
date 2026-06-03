@@ -1,0 +1,47 @@
+---
+title: Simplified View
+description: Configure which domains/IPs/apps should go proxy or go direct with ease
+---
+
+The **simplified** page is the default view. It hides complex modes, rule ordering, and set composition — you only choose **what** should go proxy or direct.
+
+Your choices will be prefered over the default routing. For example, **google.com** is a domain blocked by GFW, when using GFW mode, 
+it will go proxy by default. However, if you add google.com to direct, it will go direct as you specified.
+
+## Adding and removing entries
+
+- Tap **+** (or the add control) to enter a domain, IP, or app
+- **Long-press** or **right-click** a chip → Delete
+- **Double-click** a chip to delete (desktop)
+
+> **Note:** Adding/removing elements does not need to restart VX, it takes effect immediately.
+
+On Android, app elements in Direct with Exact types will not go through VX, which improve performance and reduce battery usage.
+Therefore, it is recommended that you add all apps that should go direct to Direct.
+
+## Relation to set
+
+When you add/remove elements, you are actually adding/removing elements to sets. 
+For example, when you add an domain under proxy segment because you want it to go proxy, you are actually adding the domain to the "Custom Proxy" set.
+
+#### Domain and IP
+
+| Segment | Category | Set name | 
+| --- | --- | --- | 
+| Proxy | Domain | **Custom Proxy** |
+| Proxy | IP | **Custom Proxy** |
+| Direct | Domain | **Custom Direct** | 
+| Direct | IP | **Custom Direct** |
+
+
+#### App
+
+| Segment | Category | Set name | 
+| --- | --- | --- | 
+| Proxy | App | **Proxy** | 
+| Direct | App | **Direct** |
+
+
+## Related
+
+- [Sets](/docs/vx/manual/customize/sets) — domain set, ip set and app set

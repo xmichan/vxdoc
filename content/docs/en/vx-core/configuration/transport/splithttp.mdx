@@ -1,0 +1,60 @@
+---
+title: SplitHTTP (xhttp)
+description: SplitHttpConfig
+---
+
+Proto: [`protos/proto/vx/transport/protocols/splithttp/config.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/transport/protocols/splithttp/config.proto)
+
+Split HTTP / XHTTP transport. Set on `TransportConfig.splithttp`.
+
+## SplitHttpConfig
+
+| Field | Description |
+| --- | --- |
+| `host` | Host header |
+| `path` | Request path |
+| `mode` | Operating mode string |
+| `headers` | Extra headers map |
+| `xPaddingBytes` | `RangeConfig` padding range |
+| `noGRPCHeader` | Omit gRPC-style headers |
+| `noSSEHeader` | Server: omit SSE headers |
+| `scMaxEachPostBytes` | Max bytes per POST (`RangeConfig`) |
+| `scMinPostsIntervalMs` | Min interval between POSTs |
+| `scMaxBufferedPosts` | Server: max buffered posts |
+| `scStreamUpServerSecs` | Server stream-up timeout range |
+| `xmux` | `XmuxConfig` — mux concurrency/connection limits |
+| `downloadSettings` | Separate `DownConfig` for download path |
+
+### RangeConfig
+
+| Field | Description |
+| --- | --- |
+| `from`, `to` | Inclusive int32 range |
+
+### XmuxConfig
+
+| Field | Description |
+| --- | --- |
+| `maxConcurrency`, `maxConnections`, `cMaxReuseTimes`, `hMaxRequestTimes`, `hMaxReusableSecs` | `RangeConfig` limits |
+| `hKeepAlivePeriod` | Keep-alive period |
+
+### DownConfig
+
+| Field | Description |
+| --- | --- |
+| `address`, `port` | Download endpoint |
+| `xhttpConfig` | Nested `SplitHttpConfig` |
+| `tls`, `reality` | Security for download leg |
+
+```json
+{
+  "transport": {
+    "splithttp": {
+      "path": "/xhttp",
+      "host": "example.com",
+      "mode": "auto"
+    },
+    "tls": { "serverName": "example.com" }
+  }
+}
+```

@@ -1,0 +1,19 @@
+﻿---
+title: 链式代理：以 Warp 作为落地节点
+description: 将流量路由经过 Warp 落地节点
+---
+
+**链式代理** 会按顺序将流量经过多个代理跳。本教程演示如何构建以 **Warp** 作为最终落地节点的链式代理。当你不信任首跳节点时，这可隐藏你的在线活动，使其不被首跳节点获知。也可用于在当前节点无法解锁某些网站时（例如 Gemini）进行访问。
+
+请观看下方视频，或在 [YouTube](https://www.youtube.com/watch?v=TrdLZ5gS6pI) 上打开。
+
+本视频为中文讲解。
+
+<YouTube id="TrdLZ5gS6pI" title="VX 中的 WireGuard 链式代理" />
+
+## 相关文档
+
+- [WireGuard (vx-core)](/zh/docs/vx-core/configuration/protocols/wireguard) — `DeviceConfig` 与 `PeerConfig`
+- [出站](/zh/docs/vx-core/configuration/outbounds) — 处理器标签与配置中的链式连接
+- [选择器与节点链](/zh/docs/vx/manual/customize/selectors) — 所选节点之后的落地处理器
+- [VX 安装](/zh/docs/vx/installation) — 请先安装客户端

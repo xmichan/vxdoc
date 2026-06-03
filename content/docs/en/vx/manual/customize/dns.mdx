@@ -1,0 +1,94 @@
+---
+title: DNS Servers
+description: DNS servers handle DNS queries from other processes or vx-core itself
+---
+
+DNS servers are referenced by **DNS rules** inside each [routing mode](/docs/vx/manual/customize/modes).
+ They are also used as **internal DNS servers** when vx-core resolves domain names while dialing outbounds.
+
+## How DNS queries are handled
+
+There are two types of queries:
+
+**Hijacked DNS** — Queries from other apps (TUN mode or when system DNS points at vx-core). The are matched against Dns Rules.
+
+**Internal DNS** — When vx-core itself needs to resolve a domain (for example a node with a domain address). The mode's ordered **internal DNS servers** list is tried left to right until one succeeds.
+
+For **both**, **DNS records** are checked first. If a record matches the query, vx-core returns that answer immediately and does not forward to a DNS server.
+
+## DNS server types
+
+When you add a **DNS Server**, choose a type from the dropdown. Each type is a single resolver implementation.
+
+| Type | What it does |
+| --- | --- |
+| **Fake** | Return fake IPs from configured CIDR pools (typically `198.18.0.0/15`). |
+| **UDP/TCP** | Classic DNS over UDP/TCP to one or more `host:port` addresses. Multiple addresses can be comma-separated; each query is sent to all of them at once and the **first reply** is used. |
+| **HTTPS** | DNS over HTTPS (DoH) to a resolver URL (for example `https://1.1.1.1/dns-query`). |
+| **TLS** | DNS over TLS (DoT) to one or more `host:port` addresses. |
+| **QUIC** | DNS over QUIC. |
+| **Go** | Uses the Go runtime / system DNS resolver (OS resolver behavior). Its traffic does not go through routing, it is typically used in servers and non-TUN modes. |
+| **Empty** | Always returns an empty DNS answer (no records). |
+
+### Common fields (most types)
+
+| Field | Purpose |
+| --- | --- |
+| **Name** | Unique tag used in DNS rules and internal DNS server lists. Cannot duplicate another server or composite name. The name `hijack` is reserved. |
+| **Client IP** | Optional ECS (EDNS Client Subnet) source address sent with queries so upstream resolvers return answers for your location. |
+| **Cache duration** | How long to cache responses in seconds. If empty or `0`, cache until the record TTL expires. |
+| **Result IP set** | After resolution, drop A/AAAA answers whose IPs are **not** in the selected IP sets. This can be used to prevent DNS pollution|
+
+### Fake DNS fields
+
+| Field | Purpose |
+| --- | --- |
+| **Pool** | Comma-separated CIDRs for fake IP allocation (for example `198.18.0.0/15`). |
+| **LRU size** | How many fake DNS mappings to keep per pool (default in the form is 6666). |
+
+## Composite DNS servers
+
+Besides single resolvers, you can create **groups** that combine other DNS servers by name:
+
+### Concurrent DNS Server
+
+Runs **all** member servers **in parallel** and returns the first **definitive** answer (NOERROR with at least one record). 
+Empty NOERROR answers are kept only as fallbacks if no server returns a definitive answer.
+
+Use this when you want the fastest resolver among several upstreams (for example `8.8.8.8` and `1.1.1.1` at the same time).
+
+### Serial DNS Server
+
+Queries member servers **in order**, but starts the next server after an **interval** (seconds) if no definitive answer has arrived yet. Earlier queries keep running in the background, so a slow-but-correct upstream can still win.
+
+Use this when you prefer a primary resolver with timed fallbacks (for example try domestic DNS first, then foreign DNS resolvers).
+
+Both composite types require at least one member DNS server. Member order matters for serial groups (reorder in the form).
+
+## DNS records
+
+Each record has:
+
+| Field | Purpose |
+| --- | --- |
+| **Domain** | Hostname to match (required). |
+| **IP addresses** | Comma-separated IPv4 and/or IPv6 addresses. Creates **A** and **AAAA** answers. |
+| **Proxied domain** | Optional **CNAME** target — the domain resolves to this name instead of direct IPs. |
+
+### Applied to all DNS queries
+
+**DNS records are evaluated for every DNS query** — hijacked app queries and vx-core internal lookups alike.
+
+vx-core checks static records **before** DNS rules and **before** upstream resolvers. If the query name and type match a record, that answer is returned immediately.
+
+This is useful for:
+
+- Blocking or redirecting specific domains without changing routing rules
+- Pinning a domain to a fixed IP for testing
+- Local development hostnames
+
+## Related
+
+- [Routing modes](/docs/vx/manual/customize/modes) — DNS rules and internal DNS servers per mode
+- [TUN Mode](/docs/vx/manual/tun-mode) — DNS hijack on the TUN interface
+- [DNS Policy](/docs/vx/manual/dns-policy) — global DNS options in Settings

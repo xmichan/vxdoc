@@ -1,0 +1,158 @@
+---
+title: Home Tab
+description: Guide to every widget on the VX home screen
+---
+
+The **Home** tab is your control center. It includes widgets to help you manage your network more easily — without leaving the main screen.
+
+VX offers two home layouts. Tap the **edit** icon in the top bar to switch between them or change which widgets are visible.
+
+## Layout modes
+
+| Mode | What you get |
+| --- | --- |
+| **Standard** | Fixed structure with optional show/hide per widget |
+| **Customizable** | Drag-and-drop layout, multi-column, per-subscription tiles |
+
+On **phones**, widgets stack in a single column. On **wider screens** (tablet/desktop), the standard layout splits into two or three columns.
+
+---
+
+## Stats widgets
+
+These four tiles sit at the top of the **standard** layout (or wherever you place them in customizable mode). They update in real time while connected.
+
+You can congigure how often stats are sampled in the Setting page, default interval is 3s.
+
+> **Tip:** If all four stats widgets are hidden, VX stops the stats stream to save resources.
+
+### Upload
+
+Shows current **upload speed** of all tunneled traffic in human-readable units (e.g. KB/s, MB/s).
+
+- **Tap** the tile to switch between the number and a **history chart**
+
+### Download
+
+Same as Upload, but for **download speed**. .
+
+### Memory
+
+Shows **vx-core memory usage** while the proxy is running. 
+
+It only show memory of the tunnel process, not the ui process. When you are connected, there are 
+two process, one is tunnel process which handle all your network traffic, the other is ui process which 
+is the opened VX application. 
+
+It typycally ranges from 30MB to 100MB.
+
+### Connections
+
+Shows the number of **active proxy connections** handled by vx-core. Green accent color.
+
+
+---
+
+## Current / Active Nodes
+
+Label in the app: **Current nodes** or **Active nodes**, depending on state.
+
+| State | Title shown | Content |
+| --- | --- | --- |
+| Disconnected (manual mode) | Current nodes | Nodes you have **selected** in the Proxy selector |
+| Connected | Active nodes | Nodes **currently being used** |
+
+Each row shows:
+
+- Country flag and node name
+- Protocol type
+- Observed speed and latency
+  - **Rate** — Live throughput for traffic routed through this node (based on a small download sample, typically ~10 KB). Shown while connected; the larger, the better.
+  - **Latency** — Round-trip time for a response through the node, in milliseconds. Reflects current path quality, the smaller, the better.
+
+---
+
+## Nodes helper
+
+Label: **Nodes helper** (Recommended nodes).
+
+A quick-pick list to find good nodes without browsing your full outbound list. Three tabs:
+
+| Tab | Shows |
+| --- | --- |
+| **Speed** | Top 10 nodes by last speed test |
+| **Latency** | Top 10 nodes by lowest ping |
+| **Recent** | Nodes you used recently |
+
+> **Tip:** For each row, tap the stats data to trigger a speed and latency test.
+
+---
+
+## Mode
+
+Label: **Mode**.
+
+Lets you switch the active **routing profile** with one tap. Each chip is a saved routing mode.
+
+- Hover/long-press default modes for a short description
+
+To manage modes, click the **Customize** tab. See [Customize](/docs/vx/manual/customize).
+
+---
+
+## Proxy Node Selctor
+
+Label: **Proxy**.
+
+A selector's job is to select nodes based on your preference. There is a default selector called Proxy.
+
+It is used in the default routing modes to select nodes for proxy traffic. 
+
+Proxy Node Selector is special because it supports manual mode: you select the nodes to use in the Node page by toggling switches. Other selectors do
+not support this mode.
+
+See [Node Selector](/docs/vx/manual/automatic-node-selection) for detailed explanations of a slector.
+
+---
+
+## Inbound
+
+Label: **Inbound**.
+
+Choose how traffic **enters** vx-core on **desktop** (Windows, macOS, Linux):
+
+| Option | Behavior |
+| --- | --- |
+| **TUN** | System-wide capture via virtual network interface |
+| **System proxy** | Sets OS HTTP/SOCKS proxy to localhost |
+
+Not shown on Android/iOS — those platforms always use the TUN mode.
+
+See [TUN Mode](/docs/vx/manual/tun-mode).
+
+---
+
+## Subscription
+
+Shows a widget for your **most recently added subscription** or **starred subscription**.
+
+> **Tip:** Click it will update it.
+
+See [Subscription Management](/docs/vx/manual/subscription-management).
+
+---
+
+## Customizing the home screen
+
+In custom layout, you can add more subscription widget and selector widget, you will see the button
+when you right click a subscription card or clicking the menu of a selector widget.
+
+---
+
+---
+
+## Related
+
+- [Traffic Statistics](/docs/vx/manual/traffic-statistics) — more on speed and usage data
+- [Routing Policy](/docs/vx/manual/routing-policy) — build custom routing modes
+- [Features overview](/docs/vx/manual/multi-protocol) — full feature list

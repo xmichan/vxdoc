@@ -1,0 +1,55 @@
+﻿---
+title: 代理协议
+description: 入站 protocol / protocols 与出站 protocol Any 字段中的协议配置
+---
+
+代理协议设置嵌入 [入站](/zh/docs/vx-core/configuration/inbounds) 的 `protocol` / `protocols` 与 [出站](/zh/docs/vx-core/configuration/outbounds) 的 `protocol`，类型为 `google.protobuf.Any`。
+
+在 ProtoJSON 中，将 `@type` 设为：
+
+```
+type.googleapis.com/<protobuf full name>
+```
+
+Protobuf 包名使用点号（例如 `vx.proxy.vmess.VmessServerConfig`）。
+
+## 服务端与客户端消息
+
+| 协议 | 服务端（`*ServerConfig`） | 客户端（`*ClientConfig`） |
+| --- | --- | --- |
+| VMess | `vx.proxy.vmess.VmessServerConfig` | `vx.proxy.vmess.VmessClientConfig` |
+| VLESS | `vx.proxy.vless.VlessServerConfig` | `vx.proxy.vless.VlessClientConfig` |
+| Trojan | `vx.proxy.trojan.TrojanServerConfig` | `vx.proxy.trojan.TrojanClientConfig` |
+| Shadowsocks | `vx.proxy.shadowsocks.ShadowsocksServerConfig` | `vx.proxy.shadowsocks.ShadowsocksClientConfig` |
+| Shadowsocks 2022 | `vx.proxy.shadowsocks2022.Shadowsocks2022ServerConfig` | `vx.proxy.shadowsocks2022.Shadowsocks2022ClientConfig` |
+| SOCKS | `vx.proxy.socks.SocksServerConfig` | `vx.proxy.socks.SocksClientConfig` |
+| HTTP proxy | `vx.proxy.http.HttpServerConfig` | `vx.proxy.http.HttpClientConfig` |
+| Hysteria2 | `vx.proxy.hysteria.Hysteria2ServerConfig` | `vx.proxy.hysteria.Hysteria2ClientConfig` |
+| AnyTLS | `vx.proxy.anytls.AnytlsServerConfig` | `vx.proxy.anytls.AnytlsClientConfig` |
+| WireGuard | — | `vx.proxy.wireguard.DeviceConfig` |
+| Freedom | `vx.proxy.freedom.FreedomConfig` | 同上 |
+| Blackhole | `vx.proxy.blackhole.BlackholeConfig` | 同上 |
+| Dokodemo | `vx.proxy.dokodemo.DokodemoConfig` | 同上 |
+
+## 传输与 TLS
+
+多数代理协议运行在原始 TCP 或 UDP 上。需要 TLS、WebSocket、gRPC、REALITY 等时，在入站/出站设置 `transport` 为 [TransportConfig](/zh/docs/vx-core/configuration/transport)（或对多入站使用 [MultiProxyInboundConfig](/zh/docs/vx-core/configuration/inbounds) 按 SNI 矩阵配置）。
+
+Hysteria2 在协议消息内嵌 `tlsConfig`。
+
+## 章节
+
+<Cards>
+  <Card title="VMess" href="/zh/docs/vx-core/configuration/protocols/vmess" />
+  <Card title="VLESS" href="/zh/docs/vx-core/configuration/protocols/vless" />
+  <Card title="Trojan" href="/zh/docs/vx-core/configuration/protocols/trojan" />
+  <Card title="Shadowsocks" href="/zh/docs/vx-core/configuration/protocols/shadowsocks" />
+  <Card title="SOCKS" href="/zh/docs/vx-core/configuration/protocols/socks" />
+  <Card title="HTTP proxy" href="/zh/docs/vx-core/configuration/protocols/http-proxy" />
+  <Card title="Hysteria2" href="/zh/docs/vx-core/configuration/protocols/hysteria" />
+  <Card title="AnyTLS" href="/zh/docs/vx-core/configuration/protocols/anytls" />
+  <Card title="WireGuard" href="/zh/docs/vx-core/configuration/protocols/wireguard" />
+  <Card title="Freedom / Blackhole / Dokodemo" href="/zh/docs/vx-core/configuration/protocols/builtin" />
+</Cards>
+
+Proto 树：[`protos/proto/vx/proxy/`](https://github.com/5vnetwork/vx-core/tree/main/protos/proto/vx/proxy)。

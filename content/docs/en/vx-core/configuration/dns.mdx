@@ -1,0 +1,80 @@
+---
+title: DNS
+description: DnsConfig, servers, and hijack
+---
+
+DNS is configured in `ServerConfig.dns` (`DnsConfig`). Schema: [`protos/proto/vx/dns/dns.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/dns/dns.proto).
+
+## DnsConfig
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `records` | `Record[]` | Static domain → IP mappings |
+| `recordStrings` | string[] | Alternate record encoding |
+| `dnsServers` | `DnsServerConfig[]` | Named DNS upstreams |
+| `internalResolver` | `Resolver` | Resolver used when **dialing** outbounds |
+| `requestDomainResolver` | `Resolver` | Resolver for **incoming** DNS requests |
+| `concurrentDnsServers` | `ConcurrentDnsServer[]` | Query multiple servers in parallel |
+| `serialDnsServers` | `SerialDnsServer[]` | Try servers one after another |
+| `resolvers` | `Resolver[]` | Additional named resolvers |
+| `dnsHijack` | `DnsHijackConfig` | Hijack rules and fake DNS toggle |
+
+### Record
+
+| Field | Description |
+| --- | --- |
+| `domain` | Hostname |
+| `ip` | Static answers |
+| `proxiedDomain` | Map this domain to the same IPs as `proxiedDomain` |
+
+### Resolver
+
+| Field | Description |
+| --- | --- |
+| `dnsServers` | Server names or addresses |
+| `interval` | Wait between tries (serial behavior) |
+| `name` | Resolver name |
+
+## DnsServerConfig
+
+Each server has a `name` and a `type` oneof:
+
+| Type | Message | Purpose |
+| --- | --- | --- |
+| `plainDnsServer` | `PlainDnsServer` | UDP DNS (`addresses`, `useDefaultDns`) |
+| `tlsDnsServer` | `TlsDnsServer` | DNS over TLS |
+| `dohDnsServer` | `DohDnsServer` | DNS over HTTPS (`url`) |
+| `quicDnsServer` | `QuicDnsServer` | DNS over QUIC |
+| `fakeDnsServer` | `FakeDnsServer` | Fake-IP pools (`poolConfigs`: `cidr`, `lruSize`) |
+| `goDnsServer` | `GoDnsServer` | Go resolver |
+| `emptyDnsServer` | `EmptyDnsServer` | No-op / placeholder |
+
+Common fields:
+
+| Field | Description |
+| --- | --- |
+| `clientIp` | EDNS client subnet |
+| `cacheDuration` | Override TTL cache; `0` = use minimum answer TTL |
+| `ipTags` | Drop answers outside these [geo](/docs/vx-core/configuration/geo) IP sets |
+
+## DnsHijackConfig
+
+| Field | Description |
+| --- | --- |
+| `dnsRules` | `DnsRuleConfig[]` — pick server by domain/tags/type |
+| `enableFakeDns` | Enable fake DNS for hijacked queries |
+
+### DnsRuleConfig
+
+| Field | Description |
+| --- | --- |
+| `dnsServerName` | Target `DnsServerConfig.name` |
+| `domains`, `domainTags` | Match query names |
+| `includedTypes` | `A`, `AAAA`, `HTTPS`, … |
+| `ruleName` | Debug label |
+
+## Related
+
+- [Geo](/docs/vx-core/configuration/geo) — `domainTags` and `ipTags` on rules and servers
+- [Router](/docs/vx-core/configuration/router) — `fakeIp` and domain resolution rules
+- [Dialer factory](/docs/vx-core/configuration/dialer-factory) — `useInternalResolver`

@@ -1,0 +1,58 @@
+﻿---
+title: 传输
+description: TransportConfig — 线路协议与套接字选项
+---
+
+传输设置通过 [入站](/zh/docs/vx-core/configuration/inbounds) 与 [出站](/zh/docs/vx-core/configuration/outbounds) 的 `transport: { ... }` 包装代理协议。
+
+根消息：[`TransportConfig`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/transport/transport.proto)，位于 `protos/proto/vx/transport/transport.proto`。
+
+## TransportConfig
+
+| 字段 | 说明 |
+| --- | --- |
+| `socket` | [`SocketConfig`](/zh/docs/vx-core/configuration/transport/socket) — mark、TFO、绑定、缓冲区 |
+| `tcp`、`kcp`、`websocket`、`http`、`grpc`、`httpupgrade`、`splithttp` | 线路协议（oneof） |
+| `tls`、`reality` | 安全层（oneof）；见[安全](/zh/docs/vx-core/configuration/security) |
+| `transportProtocol`、`securityProtocol` | 扩展类型的 `Any` 逃生舱 |
+
+每个配置应只设置一个**协议**与一个**安全**字段。
+
+## 示例（VLESS + WebSocket + TLS）
+
+```json
+{
+  "tag": "vless-ws",
+  "ports": [443],
+  "transport": {
+    "websocket": { "path": "/ws", "host": "example.com" },
+    "tls": {
+      "serverName": "example.com",
+      "certificates": [
+        { "certificateFilepath": "/etc/vx/cert.pem", "keyFilepath": "/etc/vx/key.pem" }
+      ]
+    }
+  },
+  "protocol": {
+    "@type": "type.googleapis.com/vx.proxy.vless.VlessServerConfig",
+    "users": [{ "id": "uuid" }]
+  }
+}
+```
+
+## 线路协议
+
+<Cards>
+  <Card title="TCP" href="/zh/docs/vx-core/configuration/transport/tcp" />
+  <Card title="WebSocket" href="/zh/docs/vx-core/configuration/transport/websocket" />
+  <Card title="HTTP" href="/zh/docs/vx-core/configuration/transport/http" />
+  <Card title="gRPC" href="/zh/docs/vx-core/configuration/transport/grpc" />
+  <Card title="KCP" href="/zh/docs/vx-core/configuration/transport/kcp" />
+  <Card title="HTTPUpgrade" href="/zh/docs/vx-core/configuration/transport/httpupgrade" />
+  <Card title="SplitHTTP (xhttp)" href="/zh/docs/vx-core/configuration/transport/splithttp" />
+  <Card title="Socket" href="/zh/docs/vx-core/configuration/transport/socket" />
+</Cards>
+
+## 多入站传输矩阵
+
+在 `MultiProxyInboundConfig` 上，传输协议在 `transportProtocols[]` 中按 ALPN/SNI/路径选择，而非单一 `TransportConfig`。`securityConfigs[]` 中的安全块同理。见[入站](/zh/docs/vx-core/configuration/inbounds)。

@@ -1,0 +1,34 @@
+---
+title: Log
+description: LoggerConfig
+---
+
+Logging is configured in `ServerConfig.log` (`LoggerConfig`). Schema: [`protos/proto/vx/log/logger.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/log/logger.proto).
+
+## LoggerConfig
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `logLevel` | `Level` | Minimum level: `DEBUG`, `INFO`, `WARN`, `ERROR`, `FATAL`, `DISABLED` |
+| `filePath` | string | Log file path |
+| `logFileDir` | string | If `filePath` is empty, write timestamped files here (`2006-01-02T15:04:05.txt`) |
+| `consoleWriter` | bool | Human-readable console output |
+| `showColor` | bool | Colorized logs (with console writer) |
+| `showCaller` | bool | Include caller location |
+| `redact` | bool | Redact domains and IPs in log lines |
+
+## Example
+
+```json
+{
+  "log": {
+    "logLevel": "INFO",
+    "filePath": "/var/log/vx/vx.log",
+    "redact": false
+  }
+}
+```
+
+## UserLoggerConfig
+
+`UserLoggerConfig` in the same proto file is for **VX client** session logging (`enable`, `logAppId`, `logSessionEnd`, `logRealtimeUsage`). It is not part of `ServerConfig`; the client wires it separately.

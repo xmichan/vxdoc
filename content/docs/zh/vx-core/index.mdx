@@ -1,0 +1,37 @@
+﻿---
+title: 概览
+description: 为 VX 提供能力的代理引擎
+---
+
+vx-core 是为 [VX](https://github.com/5vnetwork/vx)、[UmiVPN](https://github.com/5vnetwork/umivpn) 和 [努努加速器](https://github.com/5vnetwork/nunu) 提供能力的代理引擎。
+也可在任何操作系统上作为独立代理服务器使用。
+
+<GitHubRepoButton repo="vx-core" />
+
+## 致谢
+
+vx-core 包含以下来源的代码：
+
+- [v2ray-core](https://github.com/v2fly/v2ray-core)
+- [Xray-core](https://github.com/XTLS/Xray-core)
+- [hysteria](https://github.com/apernet/hysteria)
+- [sing-box](https://github.com/SagerNet/sing-box)
+
+## 部署模式
+
+vx-core 根据平台在不同场景下运行：
+
+| 模式 | 用途 |
+| --- | --- |
+| **Server** | 独立服务器程序 |
+| **Client library** | 通过 gomobile/c-shared 绑定嵌入 VX |
+
+## 推荐部署方式
+
+建议使用 [VX 客户端](/zh/docs/vx) 在 VPS 上安装并配置 vx-core。客户端提供图形界面，可通过 SSH 部署服务器、编辑配置并监控。
+
+若需手动部署服务器，请参阅[快速开始](/zh/docs/vx-core/quick-start)。
+
+## 许可证
+
+请参阅 vx-core 仓库中的 [LICENSE](https://github.com/5vnetwork/vx-core/blob/main/LICENSE) 文件。部分目录（VLESS、REALITY、WireGuard 等）中的代码源自 Xray-core，按 MPL 2.0 分发。

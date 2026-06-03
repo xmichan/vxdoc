@@ -1,0 +1,48 @@
+---
+title: TCP
+description: TcpConfig
+---
+
+Proto: [`protos/proto/vx/transport/protocols/tcp/config.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/transport/protocols/tcp/config.proto)
+
+Plain TCP transport. Set on `TransportConfig.tcp`.
+
+## TcpConfig
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `headerSettings` | `Any` | Connection header disguise (HTTP, TLS, SRTP, …) |
+
+### Header types (`headerSettings` @type)
+
+| @type | Purpose |
+| --- | --- |
+| `vx.transport.headers.noop.Config` | No header |
+| `vx.transport.headers.http.Config` | HTTP request/response disguise |
+| `vx.transport.headers.tls.Config` | TLS record disguise |
+| `vx.transport.headers.srtp.Config` | SRTP disguise |
+| `vx.transport.headers.utp.Config` | uTP disguise |
+| `vx.transport.headers.wechat.Config` | WeChat video disguise |
+| `vx.transport.headers.wireguard.Config` | WireGuard disguise |
+
+HTTP header config (`vx.transport.headers.http.Config`) includes `request` and `response` with `version`, `method`, `uri`, and `header` lists. See [`headers/http/config.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/transport/headers/http/config.proto).
+
+```json
+{
+  "transport": {
+    "tcp": {
+      "headerSettings": {
+        "@type": "type.googleapis.com/vx.transport.headers.http.Config",
+        "request": {
+          "version": { "value": "1.1" },
+          "method": { "value": "GET" },
+          "uri": ["/"],
+          "header": [{ "name": "Host", "value": ["example.com"] }]
+        }
+      }
+    }
+  }
+}
+```
+
+When `tcp` is omitted but no other protocol is set, raw TCP is used.

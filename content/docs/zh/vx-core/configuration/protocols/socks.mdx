@@ -1,0 +1,39 @@
+---
+title: SOCKS
+description: SocksServerConfig 与 SocksClientConfig
+---
+
+Proto：[`protos/proto/vx/proxy/socks/socks.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/proxy/socks/socks.proto)
+
+## AuthType
+
+| 值 | 说明 |
+| --- | --- |
+| `NO_AUTH` | 匿名 |
+| `PASSWORD` | 用户名/密码 |
+
+## SocksServerConfig
+
+| 字段 | 类型 | 说明 |
+| --- | --- | --- |
+| `authType` | `AuthType` | 认证模式 |
+| `accounts` | `UserConfig[]` | `PASSWORD` 时的用户 |
+| `address` | string | SOCKS 应答中的 BND.ADDR |
+| `udpEnabled` | bool | 启用 UDP associate |
+
+## SocksClientConfig
+
+| 字段 | 类型 | 说明 |
+| --- | --- | --- |
+| `name` | string | 用户名 |
+| `password` | string | 密码 |
+| `delayAuthWrite` | bool | 连接时延迟写入认证 |
+
+```json
+{
+  "@type": "type.googleapis.com/vx.proxy.socks.SocksServerConfig",
+  "authType": "PASSWORD",
+  "udpEnabled": true,
+  "accounts": [{ "id": "u1", "secret": "pass" }]
+}
+```

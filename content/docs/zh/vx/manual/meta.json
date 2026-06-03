@@ -1,0 +1,13 @@
+{
+  "title": "用户手册",
+  "pages": [
+    "home",
+    "customize",
+    "multi-protocol",
+    "vps-monitor",
+    "vx-core-panel",
+    "proxy-share",
+    "sync-and-backup",
+    "customer-support"
+  ]
+}

@@ -1,0 +1,46 @@
+---
+title: WireGuard
+description: DeviceConfig 与 PeerConfig
+---
+
+Proto：[`protos/proto/vx/proxy/wireguard/config.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/proxy/wireguard/config.proto)
+
+WireGuard 配置为出站 `DeviceConfig`（此 proto 中无单独的 `*ServerConfig`）。
+
+## DeviceConfig
+
+| 字段 | 类型 | 说明 |
+| --- | --- | --- |
+| `secretKey` | string | 本地私钥 |
+| `endpoint` | string[] | 端点主机 |
+| `peers` | `PeerConfig[]` | 远端对等体 |
+| `mtu` | int32 | 接口 MTU |
+| `numWorkers` | int32 | 工作线程数 |
+| `reserved` | bytes | WireGuard 保留字节（3） |
+| `isClient` | bool | 客户端模式 |
+| `noKernelTun` | bool | 仅用户空间 tun |
+
+## PeerConfig
+
+| 字段 | 说明 |
+| --- | --- |
+| `publicKey` | 对等体公钥 |
+| `preSharedKey` | 可选 PSK |
+| `endpoint` | 对等体端点 `host:port` |
+| `keepAlive` | 持久 keepalive（秒） |
+| `allowedIps` | 本对等体允许的 IP CIDR |
+
+```json
+{
+  "@type": "type.googleapis.com/vx.proxy.wireguard.DeviceConfig",
+  "secretKey": "...",
+  "isClient": true,
+  "peers": [
+    {
+      "publicKey": "...",
+      "endpoint": "vpn.example.com:51820",
+      "allowedIps": ["0.0.0.0/0", "::/0"]
+    }
+  ]
+}
+```

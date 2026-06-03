@@ -1,0 +1,33 @@
+﻿---
+title: 一次部署多种协议
+description: 使用 VX All-in-One Quick Deploy 在一台 VPS 上安装 vx-core 并部署多个入站
+---
+
+VX **All in One** Quick Deploy 可在 VPS 上安装 **vx-core**，并在单次部署中创建多个节点。部署的节点使用自签名证书并启用 SHA256 对等验证，因此无需担心 MITM 攻击。
+
+典型的 All-in-One 部署包括：
+
+- **协议** — VMess、Trojan、AnyTLS 与 Hysteria2
+- **传输** — WebSocket 与 gRPC
+- **安全** — 基于生成证书的 TLS；提供 REALITY 域名时可选用 **REALITY**
+- **CDN** — 可选 CDN 主机名，在服务器前端增加 WebSocket + TLS 节点
+
+VX 还可在部署时按需启用 **BBR** 并调整防火墙设置。
+
+请观看下方视频，或在 [YouTube](https://www.youtube.com/watch?v=ZJHPvtQQkTo) 上打开。
+
+本视频为中文讲解。
+
+<YouTube id="ZJHPvtQQkTo" title="使用 VX All in One Quick Deploy 一次部署多种协议" />
+
+## 前置条件
+
+- 已在 VX 的 **Servers** 中添加 Linux VPS，且 **SSH** 可用
+
+## 相关文档
+
+- [部署 REALITY / XHTTP](/zh/docs/tutorials/deploy-reality-xhttp) — 专注 Reality/XHTTP（Xray）的 Quick Deploy
+- [VX-core 面板](/zh/docs/vx/manual/vx-core-panel) — 服务器面板概览
+- [代理协议](/zh/docs/vx-core/configuration/protocols) — 协议参考
+- [多协议支持](/zh/docs/vx/manual/multi-protocol) — 在客户端中使用多种协议
+- [VX 安装](/zh/docs/vx/installation) — 请先安装客户端

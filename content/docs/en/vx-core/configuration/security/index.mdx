@@ -1,0 +1,34 @@
+---
+title: Security
+description: TLS and REALITY on TransportConfig
+---
+
+Security layers encrypt or disguise the connection under the wire protocol. They are set on [`TransportConfig`](/docs/vx-core/configuration/transport) as `tls` or `reality` (oneof with the transport protocol).
+
+```json
+{
+  "transport": {
+    "tcp": {},
+    "reality": {
+      "dest": "www.microsoft.com:443",
+      "serverNames": ["www.example.com"],
+      "privateKey": "...",
+      "shortIds": ["abcd1234"]
+    }
+  }
+}
+```
+
+Hysteria2 uses inline `tlsConfig` on the [protocol message](/docs/vx-core/configuration/protocols/hysteria) instead of `TransportConfig`.
+
+## Sections
+
+<Cards>
+  <Card title="TLS" href="/docs/vx-core/configuration/security/tls" description="Certificates, SNI, uTLS, ECH" />
+  <Card title="REALITY" href="/docs/vx-core/configuration/security/reality" description="REALITY server and client settings" />
+</Cards>
+
+Proto paths:
+
+- [`protos/proto/vx/transport/security/tls/`](https://github.com/5vnetwork/vx-core/tree/main/protos/proto/vx/transport/security/tls)
+- [`protos/proto/vx/transport/security/reality/config.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/transport/security/reality/config.proto)

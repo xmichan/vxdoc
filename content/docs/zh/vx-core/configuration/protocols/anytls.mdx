@@ -1,0 +1,30 @@
+﻿---
+title: AnyTLS
+description: AnytlsServerConfig 与 AnytlsClientConfig
+---
+
+Proto：[`protos/proto/vx/proxy/anytls/anytls.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/proxy/anytls/anytls.proto)
+
+## AnytlsServerConfig
+
+| 字段 | 类型 | 说明 |
+| --- | --- | --- |
+| `users` | `UserConfig[]` | 密码在 `secret` 中 |
+
+## AnytlsClientConfig
+
+| 字段 | 类型 | 说明 |
+| --- | --- | --- |
+| `password` | string | 认证密码 |
+| `idleSessionCheckInterval` | uint32 | 会话空闲检查间隔 |
+| `idleSessionTimeout` | uint32 | 空闲超过此时长后关闭会话 |
+| `minIdleSession` | uint32 | 连接池最小空闲会话数 |
+
+```json
+{
+  "@type": "type.googleapis.com/vx.proxy.anytls.AnytlsServerConfig",
+  "users": [{ "secret": "your-password" }]
+}
+```
+
+按需配合 [TLS](/zh/docs/vx-core/configuration/security/tls) 或 [WebSocket](/zh/docs/vx-core/configuration/transport/websocket) 传输。

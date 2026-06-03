@@ -1,0 +1,44 @@
+---
+title: VX-core Panel
+description: Manage vx-core server configuration from the client
+---
+
+The server panel in VX is the recommended way to deploy and configure vx-core on a Linux VPS — no SSH terminal or manual JSON editing required.
+
+## Deploy
+
+Connect via SSH and VX can:
+
+- Run the official install script
+- Enable the `vx` systemd service
+- Apply optional optimizations (BBR, firewall rules)
+
+Deploy supports vx-core as well as Xray and Hysteria configs when migrating or running side-by-side.
+
+## Config Editing
+
+View and edit the server config at `/usr/local/etc/vx/config.json` directly from the app. Changes are pushed over SSH and the service is restarted automatically.
+
+You can work with:
+
+- Inbound definitions (ports, protocols, TLS settings)
+- Router rules
+- Outbound handlers
+
+## Service Control
+
+| Action | Description |
+| --- | --- |
+| Install | Download and install vx-core |
+| Update | Upgrade to the latest version |
+| Start / Stop / Restart | Control the systemd service |
+| Uninstall | Remove vx-core from the server |
+
+## Inbound Wizard
+
+Add new inbounds through a guided flow — pick protocol, port, and security options. VX generates the correct ProtoJSON config and applies it to the server.
+
+## Related
+
+- [VPS Monitor](/docs/vx/manual/vps-monitor) — runtime status
+- [Configuration](/docs/vx-core/configuration) — config file reference

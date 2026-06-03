@@ -1,0 +1,48 @@
+---
+title: TCP
+description: TcpConfig
+---
+
+Proto：[`protos/proto/vx/transport/protocols/tcp/config.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/transport/protocols/tcp/config.proto)
+
+纯 TCP 传输。设置在 `TransportConfig.tcp`。
+
+## TcpConfig
+
+| 字段 | 类型 | 说明 |
+| --- | --- | --- |
+| `headerSettings` | `Any` | 连接头伪装（HTTP、TLS、SRTP 等） |
+
+### 头类型（`headerSettings` @type）
+
+| @type | 用途 |
+| --- | --- |
+| `vx.transport.headers.noop.Config` | 无头 |
+| `vx.transport.headers.http.Config` | HTTP 请求/响应伪装 |
+| `vx.transport.headers.tls.Config` | TLS 记录伪装 |
+| `vx.transport.headers.srtp.Config` | SRTP 伪装 |
+| `vx.transport.headers.utp.Config` | uTP 伪装 |
+| `vx.transport.headers.wechat.Config` | 微信视频伪装 |
+| `vx.transport.headers.wireguard.Config` | WireGuard 伪装 |
+
+HTTP 头配置（`vx.transport.headers.http.Config`）包含 `request` 与 `response`，其中有 `version`、`method`、`uri` 与 `header` 列表。见 [`headers/http/config.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/transport/headers/http/config.proto)。
+
+```json
+{
+  "transport": {
+    "tcp": {
+      "headerSettings": {
+        "@type": "type.googleapis.com/vx.transport.headers.http.Config",
+        "request": {
+          "version": { "value": "1.1" },
+          "method": { "value": "GET" },
+          "uri": ["/"],
+          "header": [{ "name": "Host", "value": ["example.com"] }]
+        }
+      }
+    }
+  }
+}
+```
+
+未设置 `tcp` 且未设置其他协议时，使用原始 TCP。

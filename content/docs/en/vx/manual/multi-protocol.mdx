@@ -1,0 +1,35 @@
+---
+title: Supported Protocols
+description: Connect using VMESS, VLESS, Shadowsocks, Trojan, Hysteria2, and more
+---
+
+VX supports the major proxy protocols through vx-core.
+
+## Supported Protocols
+
+| Protocol | Notes |
+| --- | --- |
+| VMESS | AEAD encryption, widely supported by providers |
+| VLESS | Reduced TLS-in-TLS fingerprint |
+| Shadowsocks | Classic protocol with multiple ciphers |
+| Shadowsocks2022 | Improved Shadowsocks protocol |
+| Trojan | TLS-wrapped, good for disguised traffic |
+| Hysteria2 | QUIC-based, optimized for high-speed links |
+| SOCKS5 | Standard SOCKS proxy |
+| HTTP | HTTP CONNECT proxy |
+| AnyTLS | Reduced TLS-in-TLS fingerprint |
+| WireGuard | Popular VPN protocol |
+
+## Transports
+
+Many protocols support additional transport layers:
+
+- TCP, WebSocket, gRPC
+- HTTPUpgrade / SplitHTTP
+- KCP
+- TLS, uTLS, REALITY
+
+## Related
+
+- [Protocols reference](/docs/vx-core/protocols) — full vx-core protocol list
+- [Subscription Management](/docs/vx/manual/subscription-management) — import nodes in bulk

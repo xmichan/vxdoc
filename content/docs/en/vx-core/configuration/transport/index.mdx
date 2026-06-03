@@ -1,0 +1,58 @@
+---
+title: Transport
+description: TransportConfig — wire protocols and socket options
+---
+
+Transport settings wrap proxy protocols on [inbounds](/docs/vx-core/configuration/inbounds) and [outbounds](/docs/vx-core/configuration/outbounds) via `transport: { ... }`.
+
+Root message: [`TransportConfig`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/transport/transport.proto) in `protos/proto/vx/transport/transport.proto`.
+
+## TransportConfig
+
+| Field | Description |
+| --- | --- |
+| `socket` | [`SocketConfig`](/docs/vx-core/configuration/transport/socket) — marks, TFO, bind, buffers |
+| `tcp`, `kcp`, `websocket`, `http`, `grpc`, `httpupgrade`, `splithttp` | Wire protocol (oneof) |
+| `tls`, `reality` | Security layer (oneof); see [Security](/docs/vx-core/configuration/security) |
+| `transportProtocol`, `securityProtocol` | `Any` escape hatch for extended types |
+
+Only one **protocol** and one **security** field should be set per config.
+
+## Example (VLESS + WebSocket + TLS)
+
+```json
+{
+  "tag": "vless-ws",
+  "ports": [443],
+  "transport": {
+    "websocket": { "path": "/ws", "host": "example.com" },
+    "tls": {
+      "serverName": "example.com",
+      "certificates": [
+        { "certificateFilepath": "/etc/vx/cert.pem", "keyFilepath": "/etc/vx/key.pem" }
+      ]
+    }
+  },
+  "protocol": {
+    "@type": "type.googleapis.com/vx.proxy.vless.VlessServerConfig",
+    "users": [{ "id": "uuid" }]
+  }
+}
+```
+
+## Wire protocols
+
+<Cards>
+  <Card title="TCP" href="/docs/vx-core/configuration/transport/tcp" />
+  <Card title="WebSocket" href="/docs/vx-core/configuration/transport/websocket" />
+  <Card title="HTTP" href="/docs/vx-core/configuration/transport/http" />
+  <Card title="gRPC" href="/docs/vx-core/configuration/transport/grpc" />
+  <Card title="KCP" href="/docs/vx-core/configuration/transport/kcp" />
+  <Card title="HTTPUpgrade" href="/docs/vx-core/configuration/transport/httpupgrade" />
+  <Card title="SplitHTTP (xhttp)" href="/docs/vx-core/configuration/transport/splithttp" />
+  <Card title="Socket" href="/docs/vx-core/configuration/transport/socket" />
+</Cards>
+
+## Multi-inbound transport matrix
+
+On `MultiProxyInboundConfig`, transport protocols are selected per ALPN/SNI/path in `transportProtocols[]` instead of a single `TransportConfig`. Security blocks work the same way in `securityConfigs[]`. See [Inbounds](/docs/vx-core/configuration/inbounds).

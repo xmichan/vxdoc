@@ -1,0 +1,28 @@
+---
+title: HTTPUpgrade
+description: HttpUpgradeConfig
+---
+
+Proto: [`protos/proto/vx/transport/protocols/httpupgrade/config.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/transport/protocols/httpupgrade/config.proto)
+
+HTTP Upgrade transport (WebSocket-like over HTTP upgrade). Set on `TransportConfig.httpupgrade`.
+
+## HttpUpgradeConfig
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `config` | `WebsocketConfig` | Same fields as [WebSocket](/docs/vx-core/configuration/transport/websocket) |
+
+```json
+{
+  "transport": {
+    "httpupgrade": {
+      "config": {
+        "path": "/upgrade",
+        "host": "example.com"
+      }
+    },
+    "tls": { "serverName": "example.com" }
+  }
+}
+```

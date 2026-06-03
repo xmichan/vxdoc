@@ -1,0 +1,61 @@
+﻿---
+title: UWP 环回豁免（Windows）
+description: 允许 Microsoft Store（UWP）应用通过 localhost 连接 VX
+---
+
+在 Windows 上，**UWP 应用**（从 Microsoft Store 安装的应用）默认无法连接 `127.0.0.1` 及其他环回地址。该限制会导致在使用 VX 系统代理入站模式时，来自 Store 应用的流量无法进入 VX。
+
+本教程说明如何 **解除 UWP 环回限制**，使 Store 应用在使用系统代理入站模式时也能被代理。若使用 TUN 模式，可跳过此步骤，因为 TUN 模式会处理所有网络流量。
+
+<Tabs
+  groupId="windows-uwp-loopback"
+  items={['Video', 'Step-by-step']}
+  persist
+  defaultIndex={0}
+>
+  <Tab value="Video">
+
+请观看下方视频，或在 [YouTube](https://www.youtube.com/watch?v=xarHLgNEbkM) 上打开。
+
+本视频为中文讲解 
+
+<YouTube id="xarHLgNEbkM" title="在 Windows 上解除 UWP 环回限制" />
+
+  </Tab>
+  <Tab value="Step-by-step">
+
+若偏好文字与截图，请按以下步骤操作。
+
+### 1. 下载环回豁免工具
+https://telerik-fiddler.s3.amazonaws.com/fiddler/addons/enableloopbackutility.exe
+
+### 2. 安装环回豁免工具
+
+### 3. 打开环回豁免工具
+
+以**管理员**身份运行 UWP 环回豁免工具（与视频中相同）。
+
+### 4. 选择要豁免的应用
+
+![选择要解除限制的应用](/tutorials/windows-uwp-loopback/pick.png)
+
+### 5. 点击「Save Changes」
+![点击「Save Changes」](/tutorials/windows-uwp-loopback/save.png)
+
+### 7. 确认成功
+![若左下角显示已成功更新，则表示生效](/tutorials/windows-uwp-loopback/result.png)
+
+<Callout>
+  若要撤销，请返回同一工具并移除这些应用的豁免。
+</Callout>
+
+  </Tab>
+</Tabs>
+
+## 何时需要
+
+- 在 Windows 上使用系统代理入站模式，且 **Microsoft Store** 应用无法被代理。
+
+## 相关文档
+
+- [VX 安装](/zh/docs/vx/installation) — 请先安装 Windows 客户端。

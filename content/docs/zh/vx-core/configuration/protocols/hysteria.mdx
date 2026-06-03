@@ -1,0 +1,64 @@
+﻿---
+title: Hysteria2
+description: Hysteria2ServerConfig 与 Hysteria2ClientConfig
+---
+
+Proto：[`protos/proto/vx/proxy/hysteria/hysteria.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/proxy/hysteria/hysteria.proto)
+
+Hysteria2 基于 QUIC 运行。TLS 在协议内通过 `tlsConfig` 配置（[TlsConfig](/zh/docs/vx-core/configuration/security/tls)）。
+
+## Hysteria2ServerConfig
+
+| 字段 | 说明 |
+| --- | --- |
+| `users` | `UserConfig[]` — 认证字符串在 `secret` 中 |
+| `obfs` | `ObfsConfig`（Salamander） |
+| `bandwidth` | `maxTx` / `maxRx` 上限 |
+| `quic` | QUIC 窗口与超时设置 |
+| `ignoreClientBandwidth` | 忽略客户端带宽提示 |
+| `tlsConfig` | 服务端 TLS |
+| `addresses` | 监听 / 宣告地址 |
+
+## Hysteria2ClientConfig
+
+| 字段 | 说明 |
+| --- | --- |
+| `auth` | 认证密码 |
+| `tlsConfig` | 客户端 TLS（SNI、固定、ECH 等） |
+| `quic` | QUIC 调优 |
+| `fastOpen` | QUIC 快速打开 |
+| `bandwidth` | 客户端上传/下载限制 |
+| `obfs` | 混淆 |
+
+### QuicConfig（共用）
+
+| 字段 | 说明 |
+| --- | --- |
+| `initialStreamReceiveWindow`、`maxStreamReceiveWindow` 等 | 流窗口（MB 或 `*Bytes` 变体） |
+| `initialConnectionReceiveWindow`、`maxConnectionReceiveWindow` 等 | 连接窗口 |
+| `maxIdleTimeout`、`keepAlivePeriod` | QUIC 超时 |
+| `disablePathMtuDiscovery` | 禁用 PMTUD |
+| `maxIncomingStreams` | 仅服务端的流限制 |
+
+### ObfsConfig
+
+| 字段 | 说明 |
+| --- | --- |
+| `salamander` | 带 `password` 的 `SalamanderConfig` |
+
+### BandwidthConfig
+
+| 字段 | 说明 |
+| --- | --- |
+| `maxTx` | 上传上限（客户端：上传） |
+| `maxRx` | 下载上限（客户端：下载） |
+
+```json
+{
+  "@type": "type.googleapis.com/vx.proxy.hysteria.Hysteria2ServerConfig",
+  "users": [{ "secret": "auth-password" }],
+  "tlsConfig": {
+    "certificates": [{ "certificateFilepath": "/path/cert.pem", "keyFilepath": "/path/key.pem" }]
+  }
+}
+```

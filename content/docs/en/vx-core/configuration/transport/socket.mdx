@@ -1,0 +1,37 @@
+---
+title: Socket
+description: SocketConfig
+---
+
+Proto: [`protos/proto/vx/transport/dlhelper.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/transport/dlhelper.proto)
+
+`SocketConfig` is set on `TransportConfig.socket` and on `MultiProxyInboundConfig.socket`.
+
+## SocketConfig
+
+| Field | Description |
+| --- | --- |
+| `mark` | `SO_MARK` (non-zero) |
+| `tfo` | TCP fast open: `AsIs`, `Enable`, `Disable` |
+| `tproxy` | `Off`, `TProxy`, `Redirect` |
+| `receiveOriginalDestAddress` | UDP: receive original destination (IP_RECVORIGDSTADDR) |
+| `bindAddress`, `bindPort` | Bind local address (Linux) |
+| `acceptProxyProtocol` | Accept PROXY protocol v1/v2 |
+| `tcpKeepAliveInterval`, `tcpKeepAliveIdle` | TCP keepalive |
+| `tfoQueueLength` | TFO queue length |
+| `bindToDevice` | Bind to network interface index |
+| `rxBufSize`, `txBufSize`, `forceBufSize` | Socket buffer sizes |
+| `localAddr4`, `localAddr6` | Outbound local address (dial / UDP listen) |
+| `dialTimeout` | Dial timeout override |
+
+```json
+{
+  "transport": {
+    "socket": {
+      "tfo": "Enable",
+      "tcpKeepAliveIdle": 60
+    },
+    "tcp": {}
+  }
+}
+```

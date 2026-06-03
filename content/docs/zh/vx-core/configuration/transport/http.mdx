@@ -1,0 +1,30 @@
+﻿---
+title: HTTP transport
+description: HttpConfig（HTTP/2 伪装）
+---
+
+Proto：[`protos/proto/vx/transport/protocols/http/config.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/transport/protocols/http/config.proto)
+
+HTTP/2 传输伪装（不是 [HTTP proxy](/zh/docs/vx-core/configuration/protocols/http-proxy) 协议）。设置在 `TransportConfig.http`。
+
+## HttpConfig
+
+| 字段 | 类型 | 说明 |
+| --- | --- | --- |
+| `host` | string[] | Host 头值（随机选取） |
+| `path` | string | 请求路径 |
+| `method` | string | HTTP 方法 |
+| `header` | `Header[]` | 自定义头（`name`、重复 `value`） |
+
+```json
+{
+  "transport": {
+    "http": {
+      "host": ["example.com"],
+      "path": "/download",
+      "method": "GET"
+    },
+    "tls": { "serverName": "example.com" }
+  }
+}
+```

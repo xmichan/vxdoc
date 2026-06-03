@@ -1,0 +1,33 @@
+---
+title: gRPC
+description: GrpcConfig
+---
+
+Proto：[`protos/proto/vx/transport/protocols/grpc/config.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/transport/protocols/grpc/config.proto)
+
+设置在 `TransportConfig.grpc`。
+
+## GrpcConfig
+
+| 字段 | 类型 | 说明 |
+| --- | --- | --- |
+| `authority` | string | `:authority` 伪头 |
+| `serviceName` | string | gRPC 服务名 |
+| `multiMode` | bool | 多流模式 |
+| `idleTimeout` | int32 | 空闲超时（秒） |
+| `healthCheckTimeout` | int32 | 健康检查超时 |
+| `permitWithoutStream` | bool | 无活跃流时允许 ping |
+| `initialWindowsSize` | int32 | 初始窗口大小 |
+| `userAgent` | string | User-Agent 覆盖 |
+
+```json
+{
+  "transport": {
+    "grpc": {
+      "serviceName": "GunService",
+      "multiMode": true
+    },
+    "tls": { "serverName": "example.com" }
+  }
+}
+```

@@ -1,0 +1,35 @@
+﻿---
+title: KCP
+description: KcpConfig
+---
+
+Proto：[`protos/proto/vx/transport/protocols/kcp/config.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/transport/protocols/kcp/config.proto)
+
+基于 UDP 的 KCP 传输。设置在 `TransportConfig.kcp`。
+
+## KcpConfig
+
+| 字段 | 类型 | 说明 |
+| --- | --- | --- |
+| `mtu` | uint32 | MTU |
+| `tti` | uint32 | 传输时间间隔 |
+| `uplinkCapacity` | uint32 | 上行容量（旧式调参） |
+| `downlinkCapacity` | uint32 | 下行容量 |
+| `congestion` | bool | 启用拥塞控制 |
+| `writeBuffer` | uint32 | 写缓冲区大小 |
+| `readBuffer` | uint32 | 读缓冲区大小 |
+| `headerConfig` | `Any` | 包头伪装（与 [TCP 头](/zh/docs/vx-core/configuration/transport/tcp) 同族） |
+| `seed` | string | 混淆种子 |
+
+```json
+{
+  "transport": {
+    "kcp": {
+      "mtu": 1350,
+      "tti": 50,
+      "uplinkCapacity": 12,
+      "downlinkCapacity": 100
+    }
+  }
+}
+```

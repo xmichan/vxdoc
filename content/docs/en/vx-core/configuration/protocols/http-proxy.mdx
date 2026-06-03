@@ -1,0 +1,32 @@
+---
+title: HTTP proxy
+description: HttpServerConfig and HttpClientConfig
+---
+
+Proto: [`protos/proto/vx/proxy/http/http.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/proxy/http/http.proto)
+
+Standard HTTP CONNECT proxy (not the HTTP *transport* — see [Transport HTTP](/docs/vx-core/configuration/transport/http)).
+
+## HttpServerConfig
+
+Empty message — no extra fields. Authentication is typically handled at the transport or routing layer.
+
+```json
+{
+  "@type": "type.googleapis.com/vx.proxy.http.HttpServerConfig"
+}
+```
+
+## HttpClientConfig
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `account` | `Account` | Optional `username` / `password` |
+| `h1SkipWaitForReply` | bool | HTTP/1 optimization |
+
+### Account
+
+| Field | Description |
+| --- | --- |
+| `username` | Proxy auth user |
+| `password` | Proxy auth password |

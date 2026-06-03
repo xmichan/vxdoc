@@ -1,0 +1,10 @@
+{
+  "title": "Documentation",
+  "pages": [
+    "index",
+    "vx",
+    "vx-core",
+    "tutorials"
+  ],
+  "defaultOpen": true
+}

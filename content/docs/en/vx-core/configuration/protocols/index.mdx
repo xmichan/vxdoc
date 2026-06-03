@@ -1,0 +1,55 @@
+---
+title: Proxy protocols
+description: Protocol configs used in inbound protocol and outbound protocol Any fields
+---
+
+Proxy protocol settings are embedded in [inbound](/docs/vx-core/configuration/inbounds) `protocol` / `protocols` and [outbound](/docs/vx-core/configuration/outbounds) `protocol` as `google.protobuf.Any`.
+
+In ProtoJSON, set `@type` to:
+
+```
+type.googleapis.com/<protobuf full name>
+```
+
+Protobuf package names use dots (for example `vx.proxy.vmess.VmessServerConfig`).
+
+## Server vs client messages
+
+| Protocol | Server (`*ServerConfig`) | Client (`*ClientConfig`) |
+| --- | --- | --- |
+| VMess | `vx.proxy.vmess.VmessServerConfig` | `vx.proxy.vmess.VmessClientConfig` |
+| VLESS | `vx.proxy.vless.VlessServerConfig` | `vx.proxy.vless.VlessClientConfig` |
+| Trojan | `vx.proxy.trojan.TrojanServerConfig` | `vx.proxy.trojan.TrojanClientConfig` |
+| Shadowsocks | `vx.proxy.shadowsocks.ShadowsocksServerConfig` | `vx.proxy.shadowsocks.ShadowsocksClientConfig` |
+| Shadowsocks 2022 | `vx.proxy.shadowsocks2022.Shadowsocks2022ServerConfig` | `vx.proxy.shadowsocks2022.Shadowsocks2022ClientConfig` |
+| SOCKS | `vx.proxy.socks.SocksServerConfig` | `vx.proxy.socks.SocksClientConfig` |
+| HTTP proxy | `vx.proxy.http.HttpServerConfig` | `vx.proxy.http.HttpClientConfig` |
+| Hysteria2 | `vx.proxy.hysteria.Hysteria2ServerConfig` | `vx.proxy.hysteria.Hysteria2ClientConfig` |
+| AnyTLS | `vx.proxy.anytls.AnytlsServerConfig` | `vx.proxy.anytls.AnytlsClientConfig` |
+| WireGuard | — | `vx.proxy.wireguard.DeviceConfig` |
+| Freedom | `vx.proxy.freedom.FreedomConfig` | same |
+| Blackhole | `vx.proxy.blackhole.BlackholeConfig` | same |
+| Dokodemo | `vx.proxy.dokodemo.DokodemoConfig` | same |
+
+## Transport and TLS
+
+Most proxy protocols run over raw TCP or UDP. When you need TLS, WebSocket, gRPC, REALITY, etc., set `transport` on the inbound/outbound to a [TransportConfig](/docs/vx-core/configuration/transport) (or use [MultiProxyInboundConfig](/docs/vx-core/configuration/inbounds) for per-SNI matrices).
+
+Hysteria2 embeds its own `tlsConfig` in the protocol message.
+
+## Sections
+
+<Cards>
+  <Card title="VMess" href="/docs/vx-core/configuration/protocols/vmess" />
+  <Card title="VLESS" href="/docs/vx-core/configuration/protocols/vless" />
+  <Card title="Trojan" href="/docs/vx-core/configuration/protocols/trojan" />
+  <Card title="Shadowsocks" href="/docs/vx-core/configuration/protocols/shadowsocks" />
+  <Card title="SOCKS" href="/docs/vx-core/configuration/protocols/socks" />
+  <Card title="HTTP proxy" href="/docs/vx-core/configuration/protocols/http-proxy" />
+  <Card title="Hysteria2" href="/docs/vx-core/configuration/protocols/hysteria" />
+  <Card title="AnyTLS" href="/docs/vx-core/configuration/protocols/anytls" />
+  <Card title="WireGuard" href="/docs/vx-core/configuration/protocols/wireguard" />
+  <Card title="Freedom / Blackhole / Dokodemo" href="/docs/vx-core/configuration/protocols/builtin" />
+</Cards>
+
+Proto tree: [`protos/proto/vx/proxy/`](https://github.com/5vnetwork/vx-core/tree/main/protos/proto/vx/proxy).

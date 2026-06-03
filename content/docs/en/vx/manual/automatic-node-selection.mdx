@@ -1,0 +1,40 @@
+---
+title: Automatic Node Selection
+description: Latency-based automatic node selection (Pro)
+---
+
+**Pro feature** — Automatically pick the best node from a group based on latency tests and health checks.
+
+## Proxy Selector Modes
+
+| Mode | Behavior |
+| --- | --- |
+| Manual | You choose a single node or balance across selected nodes |
+| Auto | VX periodically tests nodes and switches to the best available |
+
+## Auto Selection
+
+In auto mode, VX runs RTT/latency tests against configured nodes and selects the fastest healthy one. If the current node degrades, the selector switches automatically without disconnecting you.
+
+Configure:
+
+- Test interval and timeout
+- Which subscriptions or tags participate
+- Fallback behavior when all nodes fail
+
+## Manual Multi-Node (Pro)
+
+Manual mode also supports selecting **multiple** nodes with a balance strategy:
+
+- **Random** — Distribute connections randomly
+- **Round robin** — Rotate through nodes
+- **Least latency** — Prefer the fastest node per connection
+
+## Free Tier
+
+Free users can use manual single-node selection only. Upgrade to Pro for auto selection and multi-node balancing.
+
+## Related
+
+- [Routing Policy](/docs/vx/manual/routing-policy) — assign selectors to routing rules
+- [Free Trial](/docs/vx/manual/free-trial) — try Pro features first

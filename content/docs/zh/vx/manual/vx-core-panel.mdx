@@ -1,0 +1,44 @@
+﻿---
+title: VX-core 面板
+description: 从客户端管理 vx-core 服务器配置
+---
+
+VX 中的服务器面板是在 Linux VPS 上部署与配置 vx-core 的推荐方式 — 无需 SSH 终端或手动编辑 JSON。
+
+## 部署
+
+通过 SSH 连接后，VX 可以：
+
+- 运行官方安装脚本
+- 启用 `vx` systemd 服务
+- 应用可选优化（BBR、防火墙规则）
+
+部署支持 vx-core，以及在迁移或并行运行时支持 Xray 与 Hysteria 配置。
+
+## 配置编辑
+
+在应用中直接查看并编辑 `/usr/local/etc/vx/config.json`。更改通过 SSH 推送，服务会自动重启。
+
+可编辑：
+
+- 入站定义（端口、协议、TLS 设置）
+- 路由规则
+- 出站处理器
+
+## 服务控制
+
+| 操作 | 说明 |
+| --- | --- |
+| 安装 | 下载并安装 vx-core |
+| 更新 | 升级到最新版本 |
+| 启动 / 停止 / 重启 | 控制 systemd 服务 |
+| 卸载 | 从服务器移除 vx-core |
+
+## 入站向导
+
+通过引导流程添加入站 — 选择协议、端口与安全选项。VX 生成正确的 ProtoJSON 配置并应用到服务器。
+
+## 相关
+
+- [VPS 监控](/zh/docs/vx/manual/vps-monitor) — 运行时状态
+- [配置](/zh/docs/vx-core/configuration) — 配置文件参考

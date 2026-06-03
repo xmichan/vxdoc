@@ -1,0 +1,116 @@
+﻿---
+title: 配置
+description: vx-core 服务器配置参考（ServerConfig）
+---
+
+vx-core 读取单个**服务器配置文件**。根消息为 [`protos/proto/vx/server.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/server.proto) 中的 `ServerConfig`。
+
+## 配置格式
+
+配置为 protobuf 消息，可序列化为：
+
+- **二进制 protobuf** — 紧凑；部分内部路径使用
+- **ProtoJSON** — 人类可读的 JSON；适合手工编辑
+
+协议与传输的类型化设置使用 `google.protobuf.Any`。在 JSON 中，将 `@type` 设为消息的类型 URL：
+
+```json
+{
+  "@type": "type.googleapis.com/vx.proxy.trojan.TrojanServerConfig",
+  "users": [{ "secret": "your-password" }]
+}
+```
+
+JSON 字段名使用 **camelCase**（例如 `matchAll`、`outboundTag`、`multiInbounds`）。
+
+## ServerConfig 概览
+
+| 字段 | 类型 | 用途 |
+| --- | --- | --- |
+| `inbounds` | `ProxyInboundConfig[]` | 单协议监听器 |
+| `multiInbounds` | `MultiProxyInboundConfig[]` | 多协议监听器（TLS/REALITY + 传输矩阵） |
+| `outbounds` | `OutboundHandlerConfig[]` | 流量去向（直连、代理、阻断等） |
+| `router` | `RouterConfig` | 按连接选择出站或选择器的规则 |
+| `dns` | `DnsConfig` | DNS 服务器、解析器、劫持、静态记录 |
+| `geo` | `GeoConfig` | 路由与 DNS 使用的域名/IP/应用集合 |
+| `policy` | `PolicyConfig` | 超时与按级别的缓冲区限制 |
+| `log` | `LoggerConfig` | 日志级别、文件路径、脱敏 |
+| `users` | `UserConfig[]` | 全局用户（也可按入站附加） |
+| `dispatcher` | `DispatcherConfig` | 嗅探与目标覆盖 |
+| `dialerFactory` | `DialerFactoryConfig` | 出站拨号超时与解析器绑定 |
+
+最小服务器示例：
+
+```json
+{
+  "inbounds": [
+    {
+      "tag": "trojan",
+      "ports": [443],
+      "protocol": {
+        "@type": "type.googleapis.com/vx.proxy.trojan.TrojanServerConfig"
+      }
+    }
+  ],
+  "router": {
+    "rules": [{ "matchAll": true, "outboundTag": "direct" }]
+  },
+  "outbounds": [
+    {
+      "tag": "direct",
+      "protocol": {
+        "@type": "type.googleapis.com/vx.proxy.freedom.FreedomConfig"
+      }
+    }
+  ]
+}
+```
+
+## 章节
+
+<Cards>
+  <Card title="入站" href="/zh/docs/vx-core/configuration/inbounds" description="ProxyInboundConfig 与 MultiProxyInboundConfig" />
+  <Card title="出站" href="/zh/docs/vx-core/configuration/outbounds" description="OutboundHandlerConfig 与 protocol Any" />
+  <Card title="路由" href="/zh/docs/vx-core/configuration/router" description="RuleConfig、条件、选择器、回退" />
+  <Card title="DNS" href="/zh/docs/vx-core/configuration/dns" description="服务器、解析器、劫持、Fake DNS" />
+  <Card title="Geo" href="/zh/docs/vx-core/configuration/geo" description="规则使用的域名/IP/应用集合" />
+  <Card title="策略" href="/zh/docs/vx-core/configuration/policy" description="超时与缓冲区大小" />
+  <Card title="日志" href="/zh/docs/vx-core/configuration/log" description="LoggerConfig" />
+  <Card title="用户" href="/zh/docs/vx-core/configuration/users" description="UserConfig" />
+  <Card title="调度器" href="/zh/docs/vx-core/configuration/dispatcher" description="嗅探与会话统计" />
+  <Card title="拨号器工厂" href="/zh/docs/vx-core/configuration/dialer-factory" description="拨号超时与网卡绑定" />
+  <Card title="代理协议" href="/zh/docs/vx-core/configuration/protocols" description="VMess、VLESS、Trojan、Shadowsocks 等" />
+  <Card title="传输" href="/zh/docs/vx-core/configuration/transport" description="TCP、WebSocket、gRPC、KCP、xhttp、socket" />
+  <Card title="安全" href="/zh/docs/vx-core/configuration/security" description="TLS 与 REALITY" />
+</Cards>
+
+## CLI
+
+```bash
+vx run --config config.json
+```
+
+| 标志 | 默认值 | 说明 |
+| --- | --- | --- |
+| `--config` | `config.json` | 配置文件路径 |
+
+通过[安装脚本](/zh/docs/vx-core/quick-start)安装时，默认路径为 `/usr/local/etc/vx/config.json`。
+
+## Proto 源文件
+
+| 区域 | Proto 路径 |
+| --- | --- |
+| 根 | `protos/proto/vx/server.proto` |
+| 入站 | `protos/proto/vx/inbound/inbound.proto` |
+| 出站 | `protos/proto/vx/outbound/outbound.proto` |
+| 路由 | `protos/proto/vx/router/router.proto` |
+| DNS | `protos/proto/vx/dns/dns.proto` |
+| Geo | `protos/proto/vx/geo/geo.proto` |
+| 策略 | `protos/proto/vx/policy.proto` |
+| 日志 | `protos/proto/vx/log/logger.proto` |
+| 用户 | `protos/proto/vx/user/user.proto` |
+| 调度器 | `protos/proto/vx/dispatcher/dispatcher.proto` |
+| 拨号器工厂 | `protos/proto/vx/dialerfactory/dialerfactory.proto` |
+| 代理协议 | `protos/proto/vx/proxy/*/` — [文档](/zh/docs/vx-core/configuration/protocols) |
+| 传输 | `protos/proto/vx/transport/` — [文档](/zh/docs/vx-core/configuration/transport) |
+| 安全（TLS/REALITY） | `protos/proto/vx/transport/security/` — [文档](/zh/docs/vx-core/configuration/security) |

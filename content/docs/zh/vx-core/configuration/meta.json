@@ -1,0 +1,18 @@
+{
+  "title": "配置",
+  "pages": [
+    "inbounds",
+    "outbounds",
+    "router",
+    "dns",
+    "geo",
+    "policy",
+    "log",
+    "users",
+    "dispatcher",
+    "dialer-factory",
+    "protocols",
+    "transport",
+    "security"
+  ]
+}

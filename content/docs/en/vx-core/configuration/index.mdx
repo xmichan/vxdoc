@@ -1,0 +1,116 @@
+---
+title: Configuration
+description: vx-core server configuration reference (ServerConfig)
+---
+
+vx-core reads a single **server config** file. The root message is `ServerConfig` in [`protos/proto/vx/server.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/server.proto).
+
+## Config format
+
+Configs are protobuf messages, serialized as either:
+
+- **Binary protobuf** — compact; used internally in some paths
+- **ProtoJSON** — human-readable JSON; use this for hand-edited files
+
+Typed protocol and transport settings use `google.protobuf.Any`. In JSON, set `@type` to the message’s type URL:
+
+```json
+{
+  "@type": "type.googleapis.com/vx.proxy.trojan.TrojanServerConfig",
+  "users": [{ "secret": "your-password" }]
+}
+```
+
+Field names in JSON use **camelCase** (for example `matchAll`, `outboundTag`, `multiInbounds`).
+
+## ServerConfig overview
+
+| Field | Type | Purpose |
+| --- | --- | --- |
+| `inbounds` | `ProxyInboundConfig[]` | Single-protocol listeners |
+| `multiInbounds` | `MultiProxyInboundConfig[]` | Multi-protocol listeners (TLS/REALITY + transport matrix) |
+| `outbounds` | `OutboundHandlerConfig[]` | Where traffic is sent (direct, proxy, block, …) |
+| `router` | `RouterConfig` | Rules that pick an outbound or selector per connection |
+| `dns` | `DnsConfig` | DNS servers, resolvers, hijack, static records |
+| `geo` | `GeoConfig` | Domain/IP/app sets used by routing and DNS |
+| `policy` | `PolicyConfig` | Timeouts and per-level buffer limits |
+| `log` | `LoggerConfig` | Log level, file path, redaction |
+| `users` | `UserConfig[]` | Global users (also attachable per inbound) |
+| `dispatcher` | `DispatcherConfig` | Sniffing and destination override |
+| `dialerFactory` | `DialerFactoryConfig` | Outbound dial timeouts and resolver binding |
+
+Minimal server example:
+
+```json
+{
+  "inbounds": [
+    {
+      "tag": "trojan",
+      "ports": [443],
+      "protocol": {
+        "@type": "type.googleapis.com/vx.proxy.trojan.TrojanServerConfig"
+      }
+    }
+  ],
+  "router": {
+    "rules": [{ "matchAll": true, "outboundTag": "direct" }]
+  },
+  "outbounds": [
+    {
+      "tag": "direct",
+      "protocol": {
+        "@type": "type.googleapis.com/vx.proxy.freedom.FreedomConfig"
+      }
+    }
+  ]
+}
+```
+
+## Sections
+
+<Cards>
+  <Card title="Inbounds" href="/docs/vx-core/configuration/inbounds" description="ProxyInboundConfig and MultiProxyInboundConfig" />
+  <Card title="Outbounds" href="/docs/vx-core/configuration/outbounds" description="OutboundHandlerConfig and protocol Any" />
+  <Card title="Router" href="/docs/vx-core/configuration/router" description="RuleConfig, conditions, selectors, fallbacks" />
+  <Card title="DNS" href="/docs/vx-core/configuration/dns" description="Servers, resolvers, hijack, fake DNS" />
+  <Card title="Geo" href="/docs/vx-core/configuration/geo" description="Domain/IP/app sets for rules" />
+  <Card title="Policy" href="/docs/vx-core/configuration/policy" description="Timeouts and buffer sizes" />
+  <Card title="Log" href="/docs/vx-core/configuration/log" description="LoggerConfig" />
+  <Card title="Users" href="/docs/vx-core/configuration/users" description="UserConfig" />
+  <Card title="Dispatcher" href="/docs/vx-core/configuration/dispatcher" description="Sniffing and session stats" />
+  <Card title="Dialer factory" href="/docs/vx-core/configuration/dialer-factory" description="Dial timeouts and device binding" />
+  <Card title="Proxy protocols" href="/docs/vx-core/configuration/protocols" description="VMess, VLESS, Trojan, Shadowsocks, …" />
+  <Card title="Transport" href="/docs/vx-core/configuration/transport" description="TCP, WebSocket, gRPC, KCP, xhttp, socket" />
+  <Card title="Security" href="/docs/vx-core/configuration/security" description="TLS and REALITY" />
+</Cards>
+
+## CLI
+
+```bash
+vx run --config config.json
+```
+
+| Flag | Default | Description |
+| --- | --- | --- |
+| `--config` | `config.json` | Path to the config file |
+
+When installed via the [install script](/docs/vx-core/quick-start), the default path is `/usr/local/etc/vx/config.json`.
+
+## Proto sources
+
+| Area | Proto path |
+| --- | --- |
+| Root | `protos/proto/vx/server.proto` |
+| Inbounds | `protos/proto/vx/inbound/inbound.proto` |
+| Outbounds | `protos/proto/vx/outbound/outbound.proto` |
+| Router | `protos/proto/vx/router/router.proto` |
+| DNS | `protos/proto/vx/dns/dns.proto` |
+| Geo | `protos/proto/vx/geo/geo.proto` |
+| Policy | `protos/proto/vx/policy.proto` |
+| Log | `protos/proto/vx/log/logger.proto` |
+| Users | `protos/proto/vx/user/user.proto` |
+| Dispatcher | `protos/proto/vx/dispatcher/dispatcher.proto` |
+| Dialer factory | `protos/proto/vx/dialerfactory/dialerfactory.proto` |
+| Proxy protocols | `protos/proto/vx/proxy/*/` — [docs](/docs/vx-core/configuration/protocols) |
+| Transport | `protos/proto/vx/transport/` — [docs](/docs/vx-core/configuration/transport) |
+| Security (TLS/REALITY) | `protos/proto/vx/transport/security/` — [docs](/docs/vx-core/configuration/security) |
