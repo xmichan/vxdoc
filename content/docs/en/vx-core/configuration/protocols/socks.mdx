@@ -3,21 +3,20 @@ title: SOCKS
 description: SocksServerConfig and SocksClientConfig
 ---
 
-Proto: [`protos/proto/vx/proxy/socks/socks.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/proxy/socks/socks.proto)
+SOCKS proxy configuration. Proto: [`protos/proto/vx/proxy/socks/socks.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/proxy/socks/socks.proto)
+
+The server inbound supports **SOCKS5** (TCP connections and UDP associate), and is compatible with **SOCKS4/4a** TCP when `authType` is `NO_AUTH`. The client outbound uses the **SOCKS5** handshake.
 
 ## AuthType
 
-<ProtoField name="NO_AUTH">
+<ProtoField name="NO_AUTH" type="0" />
 
-Anonymous
+<ProtoField name="PASSWORD" type="1" />
 
-</ProtoField>
+Use enum names in JSON (for example `"authType": "PASSWORD"`).
 
-<ProtoField name="PASSWORD">
-
-Username/password
-
-</ProtoField>
+- `NO_AUTH`: no username/password required; SOCKS4/4a clients are allowed
+- `PASSWORD`: SOCKS5 username/password authentication required; SOCKS4 requests are rejected
 
 ## SocksServerConfig
 
@@ -29,39 +28,19 @@ Authentication mode
 
 <ProtoField name="accounts" type="UserConfig[]">
 
-Users when `PASSWORD`
+Allowed users when `PASSWORD` is set. `id` is the username, `secret` is the password.
 
 </ProtoField>
 
 <ProtoField name="address" type="string">
 
-BND.ADDR in SOCKS reply
+**BND.ADDR** used in SOCKS replies. Mainly affects the bind address in **UDP ASSOCIATE** replies: if set, this IP is used; otherwise loopback for local clients, or the inbound listen address for external clients.
 
 </ProtoField>
 
 <ProtoField name="udpEnabled" type="bool">
 
-Enable UDP associate
-
-</ProtoField>
-
-## SocksClientConfig
-
-<ProtoField name="name" type="string">
-
-Username
-
-</ProtoField>
-
-<ProtoField name="password" type="string">
-
-Password
-
-</ProtoField>
-
-<ProtoField name="delayAuthWrite" type="bool">
-
-Delay auth write on connection
+When `true`, allow SOCKS5 `UDP ASSOCIATE` commands and enable inbound UDP relay. When `false`, UDP commands return not supported.
 
 </ProtoField>
 
@@ -70,6 +49,42 @@ Delay auth write on connection
   "@type": "type.googleapis.com/vx.proxy.socks.SocksServerConfig",
   "authType": "PASSWORD",
   "udpEnabled": true,
+  "address": "203.0.113.1",
   "accounts": [{ "id": "u1", "secret": "pass" }]
 }
 ```
+
+## SocksClientConfig
+
+<ProtoField name="name" type="string">
+
+SOCKS5 username. When both `name` and `password` are empty, password authentication is not sent (corresponds to server `NO_AUTH`).
+
+</ProtoField>
+
+<ProtoField name="password" type="string">
+
+SOCKS5 password, corresponding to server `accounts[].secret`.
+
+</ProtoField>
+
+<ProtoField name="delayAuthWrite" type="bool">
+
+`false` (default): send authentication in the initial handshake message.
+
+`true`: send supported authentication methods first, then write the username/password after the server selects `PASSWORD`. Used for upstream SOCKS servers that require a step-by-step handshake.
+
+</ProtoField>
+
+```json
+{
+  "@type": "type.googleapis.com/vx.proxy.socks.SocksClientConfig",
+  "name": "u1",
+  "password": "pass"
+}
+```
+
+## Related
+
+- [Users](/docs/vx-core/configuration/users) — `UserConfig`
+- [Transport](/docs/vx-core/configuration/transport) — often used with TCP inbounds/outbounds

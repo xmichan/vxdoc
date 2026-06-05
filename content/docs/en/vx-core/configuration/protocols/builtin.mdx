@@ -1,11 +1,11 @@
 ---
 title: Freedom, Blackhole, Dokodemo
-description: Built-in inbound/outbound protocol configs
+description: Built-in inbound/outbound protocol configuration
 ---
 
 ## Freedom
 
-Direct outbound — traffic leaves without an upstream proxy.
+Direct outbound — traffic is sent without passing through an upstream proxy.
 
 Proto: [`freedom.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/proxy/freedom/freedom.proto)
 
@@ -17,13 +17,13 @@ Proto: [`freedom.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/p
 }
 ```
 
-Use as the default server `direct` outbound.
+Used as the server default `direct` outbound.
 
 ---
 
 ## Blackhole
 
-Drops traffic (block).
+Drops traffic (blocking).
 
 Proto: [`blackhole.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/proxy/blackhole/blackhole.proto)
 
@@ -39,25 +39,25 @@ Proto: [`blackhole.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos
 
 ## Dokodemo-door
 
-Transparent redirect / port forward inbound.
+Transparent redirect / port-forward inbound.
 
 Proto: [`dokodemo.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/proxy/dokodemo/dokodemo.proto)
 
 <ProtoField name="address">
 
-Target address to forward to
+Forward destination address
 
 </ProtoField>
 
 <ProtoField name="port">
 
-Target port
+Destination port
 
 </ProtoField>
 
 <ProtoField name="networks">
 
-`TCP`, `UDP`, …
+`TCP`, `UDP`, etc.
 
 </ProtoField>
 

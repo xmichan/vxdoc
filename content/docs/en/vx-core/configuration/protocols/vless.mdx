@@ -1,4 +1,4 @@
----
+﻿---
 title: VLESS
 description: VlessServerConfig and VlessClientConfig
 ---
@@ -9,18 +9,7 @@ Proto: [`protos/proto/vx/proxy/vless/vless.proto`](https://github.com/5vnetwork/
 
 <ProtoField name="users" type="UserConfig[]">
 
-Allowed users; `id` is UUID, `secret` optional
-
 </ProtoField>
-
-```json
-{
-  "@type": "type.googleapis.com/vx.proxy.vless.VlessServerConfig",
-  "users": [
-    { "id": "66ad4540-b58c-4ad2-9926-ea63445a9b57", "userLevel": 0 }
-  ]
-}
-```
 
 ## VlessClientConfig
 
@@ -32,13 +21,13 @@ Account UUID
 
 <ProtoField name="flow" type="string">
 
-Flow control, e.g. `xtls-rprx-vision`
+Flow control, for example `xtls-rprx-vision`
 
 </ProtoField>
 
 <ProtoField name="encryption" type="string">
 
-Client-only; currently `none`
+Client only; currently `none`
 
 </ProtoField>
 
@@ -51,4 +40,4 @@ Client-only; currently `none`
 }
 ```
 
-Vision flow typically pairs with [REALITY](/docs/vx-core/configuration/security/reality) or [TLS](/docs/vx-core/configuration/security/tls) on the transport.
+Vision flow control is typically used with [REALITY](/docs/vx-core/configuration/security/reality) or [TLS](/docs/vx-core/configuration/security/tls) on the transport.

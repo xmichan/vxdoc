@@ -11,7 +11,7 @@ Plain TCP transport. Set on `TransportConfig.tcp`.
 
 <ProtoField name="headerSettings" type="Any">
 
-Connection header disguise (HTTP, TLS, SRTP, …)
+Connection header camouflage (HTTP, TLS, SRTP, etc.)
 
 </ProtoField>
 
@@ -25,41 +25,41 @@ No header
 
 <ProtoField name="vx.transport.headers.http.Config">
 
-HTTP request/response disguise
+HTTP request/response camouflage
 
 </ProtoField>
 
 <ProtoField name="vx.transport.headers.tls.Config">
 
-TLS record disguise
+TLS record camouflage
 
 </ProtoField>
 
 <ProtoField name="vx.transport.headers.srtp.Config">
 
-SRTP disguise
+SRTP camouflage
 
 </ProtoField>
 
 <ProtoField name="vx.transport.headers.utp.Config">
 
-uTP disguise
+uTP camouflage
 
 </ProtoField>
 
 <ProtoField name="vx.transport.headers.wechat.Config">
 
-WeChat video disguise
+WeChat video camouflage
 
 </ProtoField>
 
 <ProtoField name="vx.transport.headers.wireguard.Config">
 
-WireGuard disguise
+WireGuard camouflage
 
 </ProtoField>
 
-HTTP header config (`vx.transport.headers.http.Config`) includes `request` and `response` with `version`, `method`, `uri`, and `header` lists. See [`headers/http/config.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/transport/headers/http/config.proto).
+HTTP header configuration (`vx.transport.headers.http.Config`) includes `request` and `response`, each with `version`, `method`, `uri`, and a `header` list. See [`headers/http/config.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/transport/headers/http/config.proto).
 
 ```json
 {
@@ -79,4 +79,4 @@ HTTP header config (`vx.transport.headers.http.Config`) includes `request` and `
 }
 ```
 
-When `tcp` is omitted but no other protocol is set, raw TCP is used.
+When neither `tcp` nor any other protocol is set, raw TCP is used.

@@ -1,28 +1,28 @@
----
+﻿---
 title: Quick Start
-description: Run vx-core as a server on Linux
+description: Run vx-core in server mode on Linux
 ---
 
-This guide covers running vx-core as a server on Linux. For GUI-based deployment, use the [VX client's server panel](/docs/vx/features#server-management) instead.
+This guide explains how to run vx-core in server mode on Linux. For graphical deployment, use the [VX client server panel](/docs/vx/features#server-management) instead.
 
 ## Prerequisites
 
 - Linux VPS (amd64 or arm64)
-- Root or sudo access
+- root or sudo access
 
-## Install via Script
+## Script installation
 
-The recommended install method uses the official install script:
+We recommend the official install script:
 
 ```bash
 bash -c "$(curl -L https://github.com/5vnetwork/vx-install/raw/main/install-vx.sh)" @ install
 ```
 
-This installs the `vx` binary and sets up a systemd service.
+The script installs the `vx` binary and configures a systemd service.
 
-## Manual Configuration
+## Manual configuration
 
-Config files can be protobuf binary or JSON using ProtoJSON format. Create `config.json`:
+The configuration file can be binary protobuf or JSON in ProtoJSON format. Create `config.json`:
 
 ```json
 {
@@ -55,15 +55,15 @@ Config files can be protobuf binary or JSON using ProtoJSON format. Create `conf
 }
 ```
 
-The full server config schema is defined in [`protos/proto/vx/server.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/server.proto). See [Configuration](/docs/vx-core/configuration) for each section.
+The full server configuration schema is defined in [`protos/proto/vx/server.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/server.proto). See [Configuration](/docs/vx-core/configuration) for each section.
 
-## Run the Server
+## Run the server
 
 ```bash
 vx run --config config.json
 ```
 
-When installed via the install script, manage the service with systemd:
+If installed via the install script, manage the service with systemd:
 
 ```bash
 systemctl start vx
@@ -71,16 +71,16 @@ systemctl enable vx
 systemctl status vx
 ```
 
-## Default Config Path
+## Default configuration path
 
-When installed via the install script, the config lives at:
+After installation via the install script, the configuration file is located at:
 
 ```
 /usr/local/etc/vx/config.json
 ```
 
-## Next Steps
+## Next steps
 
-- See [Configuration](/docs/vx-core/configuration) for config file details
-- Add more inbounds for different protocols in [Protocols](/docs/vx-core/protocols)
-- Use VX to deploy and manage the server remotely
+- See [Configuration](/docs/vx-core/configuration) for configuration file details
+- Add more inbounds for different protocols in [Protocols](/docs/vx-core/configuration/protocols)
+- Use VX to deploy and manage servers remotely

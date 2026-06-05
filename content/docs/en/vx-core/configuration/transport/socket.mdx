@@ -5,82 +5,149 @@ description: SocketConfig
 
 Proto: [`protos/proto/vx/transport/dlhelper.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/transport/dlhelper.proto)
 
-`SocketConfig` is set on `TransportConfig.socket` and on `MultiProxyInboundConfig.socket`.
+`SocketConfig` is set on `TransportConfig.socket` and `MultiProxyInboundConfig.socket`.
 
 ## SocketConfig
 
-<ProtoField name="mark">
+<ProtoField name="mark" type="uint32">
 
-`SO_MARK` (non-zero)
-
-</ProtoField>
-
-<ProtoField name="tfo">
-
-TCP fast open: `AsIs`, `Enable`, `Disable`
+`SO_MARK` (set when non-zero)
 
 </ProtoField>
 
-<ProtoField name="tproxy">
+<ProtoField name="tfo" type="TCPFastOpenState">
 
-`Off`, `TProxy`, `Redirect`
-
-</ProtoField>
-
-<ProtoField name="receiveOriginalDestAddress">
-
-UDP: receive original destination (IP_RECVORIGDSTADDR)
+TCP Fast Open; see [TCPFastOpenState](#tcpfastopenstate)
 
 </ProtoField>
 
-<ProtoField name="bindAddress, bindPort">
+<ProtoField name="tproxy" type="TProxyMode">
 
-Bind local address (Linux)
+Transparent proxy mode; see [TProxyMode](#tproxymode)
 
 </ProtoField>
 
+<ProtoField name="receiveOriginalDestAddress" type="bool">
 
-<ProtoField name="acceptProxyProtocol">
+UDP: enable `IP_RECVORIGDSTADDR` to receive the original destination address
+
+</ProtoField>
+
+<ProtoField name="bindAddress" type="bytes">
+
+Bind local address (**Linux only**)
+
+</ProtoField>
+
+<ProtoField name="bindPort" type="uint32">
+
+Bind local port (used with `bindAddress`)
+
+</ProtoField>
+
+<ProtoField name="acceptProxyProtocol" type="bool">
 
 Accept PROXY protocol v1/v2
 
 </ProtoField>
 
-<ProtoField name="tcpKeepAliveInterval, tcpKeepAliveIdle">
+<ProtoField name="tcpKeepAliveInterval" type="int32">
 
-TCP keepalive
+TCP keepalive probe interval (seconds)
 
 </ProtoField>
 
+<ProtoField name="tcpKeepAliveIdle" type="int32">
 
-<ProtoField name="tfoQueueLength">
+TCP keepalive idle time (seconds)
+
+</ProtoField>
+
+<ProtoField name="tfoQueueLength" type="uint32">
 
 TFO queue length
 
 </ProtoField>
 
-<ProtoField name="bindToDevice">
+<ProtoField name="bindToDevice" type="uint32">
 
 Bind to network interface index
 
 </ProtoField>
 
-<ProtoField name="rxBufSize, txBufSize, forceBufSize">
+<ProtoField name="rxBufSize" type="int64">
 
-Socket buffer sizes
-
-</ProtoField>
-
-<ProtoField name="localAddr4, localAddr6">
-
-Outbound local address (dial / UDP listen)
+Receive socket buffer size (bytes)
 
 </ProtoField>
 
+<ProtoField name="txBufSize" type="int64">
 
-<ProtoField name="dialTimeout">
+Send socket buffer size (bytes)
 
-Dial timeout override
+</ProtoField>
+
+<ProtoField name="forceBufSize" type="bool">
+
+Force application of `rxBufSize` / `txBufSize`
+
+</ProtoField>
+
+<ProtoField name="localAddr4" type="string">
+
+Outbound IPv4 local address (dial / UDP listen)
+
+</ProtoField>
+
+<ProtoField name="localAddr6" type="string">
+
+Outbound IPv6 local address
+
+</ProtoField>
+
+<ProtoField name="dialTimeout" type="uint32">
+
+Dial timeout override (seconds)
+
+</ProtoField>
+
+### TCPFastOpenState
+
+<ProtoField name="AsIs" type="0">
+
+Keep the system TFO setting unchanged
+
+</ProtoField>
+
+<ProtoField name="Enable" type="1">
+
+Explicitly enable TFO
+
+</ProtoField>
+
+<ProtoField name="Disable" type="2">
+
+Explicitly disable TFO
+
+</ProtoField>
+
+### TProxyMode
+
+<ProtoField name="Off" type="0">
+
+Disable transparent proxy
+
+</ProtoField>
+
+<ProtoField name="TProxy" type="1">
+
+TProxy mode
+
+</ProtoField>
+
+<ProtoField name="Redirect" type="2">
+
+Redirect mode
 
 </ProtoField>
 

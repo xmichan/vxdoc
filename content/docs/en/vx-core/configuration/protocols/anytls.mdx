@@ -1,41 +1,17 @@
----
+﻿---
 title: AnyTLS
 description: AnytlsServerConfig and AnytlsClientConfig
 ---
 
-Proto: [`protos/proto/vx/proxy/anytls/anytls.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/proxy/anytls/anytls.proto)
+AnyTLS is a multiplexed TLS tunnel protocol. Proto: [`protos/proto/vx/proxy/anytls/anytls.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/proxy/anytls/anytls.proto)
+
+Typically used with [TLS](/docs/vx-core/configuration/security/tls) or [WebSocket](/docs/vx-core/configuration/transport/websocket) transport.
 
 ## AnytlsServerConfig
 
 <ProtoField name="users" type="UserConfig[]">
 
-Password in `secret`
-
-</ProtoField>
-
-## AnytlsClientConfig
-
-<ProtoField name="password" type="string">
-
-Auth password
-
-</ProtoField>
-
-<ProtoField name="idleSessionCheckInterval" type="uint32">
-
-Session idle check interval
-
-</ProtoField>
-
-<ProtoField name="idleSessionTimeout" type="uint32">
-
-Close idle sessions after this
-
-</ProtoField>
-
-<ProtoField name="minIdleSession" type="uint32">
-
-Minimum pooled sessions
+Allowed users; the authentication password is in `secret`
 
 </ProtoField>
 
@@ -46,4 +22,43 @@ Minimum pooled sessions
 }
 ```
 
-Use with [TLS](/docs/vx-core/configuration/security/tls) or [WebSocket](/docs/vx-core/configuration/transport/websocket) transport as needed.
+## AnytlsClientConfig
+
+<ProtoField name="password" type="string">
+
+Authentication password; must match a server `users[].secret`
+
+</ProtoField>
+
+<ProtoField name="idleSessionCheckInterval" type="uint32">
+
+Idle session check interval (**seconds**, default 30)
+
+</ProtoField>
+
+<ProtoField name="idleSessionTimeout" type="uint32">
+
+Close the session after this idle duration (**seconds**, default 30)
+
+</ProtoField>
+
+<ProtoField name="minIdleSession" type="uint32">
+
+Minimum number of idle sessions kept in the connection pool (default 5)
+
+</ProtoField>
+
+```json
+{
+  "@type": "type.googleapis.com/vx.proxy.anytls.AnytlsClientConfig",
+  "password": "your-password",
+  "idleSessionCheckInterval": 30,
+  "idleSessionTimeout": 60,
+  "minIdleSession": 4
+}
+```
+
+## Related
+
+- [TLS](/docs/vx-core/configuration/security/tls)
+- [WebSocket](/docs/vx-core/configuration/transport/websocket)

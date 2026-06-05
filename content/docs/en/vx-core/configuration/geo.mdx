@@ -1,66 +1,62 @@
----
+﻿---
 title: Geo
 description: GeoConfig — domain, IP, and app sets
 ---
 
-Geo data sets are defined in `ServerConfig.geo` (`GeoConfig`). Schema: [`protos/proto/vx/geo/geo.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/geo/geo.proto).
+Geographic data sets are defined in `ServerConfig.geo` (`GeoConfig`). Schema definition: [`protos/proto/vx/geo/geo.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/geo/geo.proto).
 
-Router [rules](/docs/vx-core/configuration/router) and [DNS](/docs/vx-core/configuration/dns) refer to sets by **name** via `domainTags`, `dstIpTags`, `srcIpTags`, and `geoDomains`.
+**Atomic sets** (`atomic*`) hold domains, IPs, or app IDs directly. **Great sets** (`great*`) combine other sets via `inNames` / `exNames`. Names must be unique within each category for both great and atomic sets.
+
+[Router](/docs/vx-core/configuration/router) and [DNS](/docs/vx-core/configuration/dns) reference sets by **name** via `domainTags`, `dstIpTags`, `srcIpTags`, and `appTags`. For client UI details, see [Sets](/docs/vx/manual/customize/sets).
 
 ## GeoConfig
 
-<ProtoField name="domainSets" type="DomainSetConfig[]">
-
-Named groups of domain set tags
-
-</ProtoField>
-
 <ProtoField name="greatDomainSets" type="GreatDomainSetConfig[]">
 
-Composed domain sets (`inNames`, `exNames`, opposites)
+Composite domain sets (include / exclude other sets)
 
 </ProtoField>
 
 <ProtoField name="atomicDomainSets" type="AtomicDomainSetConfig[]">
 
-Concrete domain lists or geosite files
+Atomic domain sets (inline domains, geosite, Clash rules, remote files, etc.)
 
 </ProtoField>
 
 <ProtoField name="greatIpSets" type="GreatIPSetConfig[]">
 
-Composed IP sets
+Great IP sets
 
 </ProtoField>
 
 <ProtoField name="atomicIpSets" type="AtomicIPSetConfig[]">
 
-CIDR lists or geoip files
+Atomic IP sets
 
 </ProtoField>
 
 <ProtoField name="appSets" type="AppSetConfig[]">
 
-Mobile app id groupings
+Application sets
 
 </ProtoField>
 
-Names must be unique within each category (no duplicate names across `greatDomainSets` and `atomicDomainSets`, and similarly for IP sets).
+Names must be unique within each category (`greatDomainSets` and `atomicDomainSets` cannot share a name; same for IP sets).
 
 ## Domain
 
 A single domain matching rule. Defined in [`protos/proto/vx/common/geo/geo.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/common/geo/geo.proto).
 
-Used in [router](/docs/vx-core/configuration/router) rule `geoDomains` and [AtomicDomainSetConfig](#atomicdomainsetconfig) `domains`.
+Used in [router](/docs/vx-core/configuration/router) `geoDomains`, [DNS](/docs/vx-core/configuration/dns) `geoDomains`, and [AtomicDomainSetConfig](#atomicdomainsetconfig) `domains`.
 
 <ProtoField name="type" type="Domain.Type">
 
-How to match:
+Matching mode:
 
-- `Plain` — substring (keyword) match
-- `Regex` — regular expression match
-- `RootDomain` — root domain and subdomains (suffix match)
-- `Full` — exact hostname match
+- `Plain`: Substring match (keyword)
+- `Regex`: Regular expression match
+- `RootDomain`: Root domain and its subdomains (suffix match)
+- `Full`: Exact full hostname match
 
 </ProtoField>
 
@@ -70,31 +66,34 @@ Domain or pattern to match
 
 </ProtoField>
 
-<ProtoField name="attribute" type="Domain.Attribute[]">
 
-Optional attributes for filtering (e.g. geosite)
+
+
+## CIDR
+
+A single IP network segment. Defined in [`protos/proto/vx/common/geo/geo.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/common/geo/geo.proto).
+
+Used in [AtomicIPSetConfig](#atomicipsetconfig) `cidrs`.
+
+<ProtoField name="ip" type="bytes">
+
+IP address, 4 bytes (IPv4) or 16 bytes (IPv6). Usually base64-encoded in ProtoJSON.
 
 </ProtoField>
 
-### Domain.Attribute
+<ProtoField name="prefix" type="uint32">
 
-<ProtoField name="key" type="string">
-
-Attribute name
-
-</ProtoField>
-
-<ProtoField name="boolValue, intValue" type="bool · int64">
-
-Attribute value (set one)
+Network prefix length (CIDR mask bits, e.g. `24` for `/24`)
 
 </ProtoField>
 
 ## AtomicDomainSetConfig
 
-<ProtoField name="name">
+Atomic domain set. `domains`, `geosite`, `geosites`, `clashFiles`, and `remoteGeoFiles` can be combined.
 
-Tag used in `domainTags`
+<ProtoField name="name" type="string">
+
+Set name, referenced by `domainTags`
 
 </ProtoField>
 
@@ -104,182 +103,312 @@ Inline [Domain](#domain) list
 
 </ProtoField>
 
-<ProtoField name="geosite, geosites">
+<ProtoField name="geosite" type="GeositeConfig">
 
-Load from geosite file or remote
-
-</ProtoField>
-
-
-<ProtoField name="useBloomFilter">
-
-Bloom filter optimization
+Load domains from a single geosite configuration
 
 </ProtoField>
 
-<ProtoField name="clashFiles">
+<ProtoField name="geosites" type="GeositeConfig[]">
 
-Clash-format rule files
-
-</ProtoField>
-
-<ProtoField name="inverse">
-
-Match domains **not** in the set
+Load domains from multiple geosite configurations (can be used alongside `geosite`)
 
 </ProtoField>
 
-<ProtoField name="remoteGeoFiles">
+<ProtoField name="useBloomFilter" type="bool">
 
-Download geodata on a schedule
-
-</ProtoField>
-
-### GeositeConfig
-
-<ProtoField name="codes">
-
-Geosite category codes
+Enable a bloom filter for large sets to reduce memory usage (common on iOS). Has about a 1% false positive rate.
 
 </ProtoField>
 
-<ProtoField name="attributes">
+<ProtoField name="clashFiles" type="string[]">
 
-Attribute filters
-
-</ProtoField>
-
-<ProtoField name="filepath">
-
-Local geosite.dat path
+Clash-format rule file paths from which domain rules are extracted
 
 </ProtoField>
 
-<ProtoField name="remoteUrl, refreshCron">
+<ProtoField name="inverse" type="bool">
 
-Remote download and cron refresh
+Inverse match: matches when the domain is **not** in this set's sources
 
 </ProtoField>
 
+<ProtoField name="remoteGeoFiles" type="GeoRemoteFile[]">
+
+Remote geo files downloaded periodically over HTTPS (see [GeoRemoteFile](#georemotefile))
+
+</ProtoField>
+
+## GeositeConfig
+
+Load domains from `geosite.dat` (or compatible format) by category code.
+
+<ProtoField name="codes" type="string[]">
+
+Geosite category codes (e.g. `cn`, `gfw`, `private`)
+
+</ProtoField>
+
+<ProtoField name="attributes" type="string[]">
+
+Further filter loaded domains by `Domain.attribute.key` (case-insensitive)
+
+</ProtoField>
+
+<ProtoField name="filepath" type="string">
+
+Local `geosite.dat` path
+
+</ProtoField>
+
+<ProtoField name="remoteUrl" type="string">
+
+HTTPS URL for remote `geosite.dat`; refreshed on schedule via `refreshCron`. Downloaded to `filepath`
+
+</ProtoField>
+
+<ProtoField name="refreshCron" type="string">
+
+5-field cron (minute hour day month weekday). Empty means fetch only on startup / reload
+
+</ProtoField>
 
 ## AtomicIPSetConfig
 
-<ProtoField name="name">
+Atomic IP set. `cidrs`, `geoip`, `clashFiles`, and `remoteGeoFiles` can be combined.
 
-Tag used in `*IpTags`
+<ProtoField name="name" type="string">
 
-</ProtoField>
-
-<ProtoField name="cidrs">
-
-Inline CIDR list
+Set name, referenced by `dstIpTags`, `srcIpTags`, and `ipTags`
 
 </ProtoField>
 
-<ProtoField name="geoip">
+<ProtoField name="cidrs" type="CIDR[]">
 
-`GeoIPConfig` — file, codes, remote URL, cron
-
-</ProtoField>
-
-<ProtoField name="inverse">
-
-Match IPs outside the set
+Inline [CIDR](#cidr) list
 
 </ProtoField>
 
-<ProtoField name="clashFiles, remoteGeoFiles">
+<ProtoField name="geoip" type="GeoIPConfig">
 
-External rule / remote sources
-
-</ProtoField>
-
-
-## GreatDomainSetConfig / GreatIPSetConfig
-
-Build large sets from other named sets:
-
-<ProtoField name="name">
-
-Resulting set name
+Load CIDRs from a geoip file by country/region code
 
 </ProtoField>
 
-<ProtoField name="oppositeName">
+<ProtoField name="inverse" type="bool">
 
-Complement set name
-
-</ProtoField>
-
-<ProtoField name="inNames">
-
-Include these sets
+Inverse match: matches when the IP is **not** in this set's sources
 
 </ProtoField>
 
-<ProtoField name="exNames">
+<ProtoField name="clashFiles" type="string[]">
 
-Exclude these sets
-
-</ProtoField>
-
-## DomainSetConfig
-
-<ProtoField name="name">
-
-Set name
+Clash-format rule file paths from which IP / CIDR rules are extracted
 
 </ProtoField>
 
-<ProtoField name="tags">
+<ProtoField name="remoteGeoFiles" type="GeoRemoteFile[]">
 
-Member atomic/great set names
+Remote geo files downloaded on schedule
+
+</ProtoField>
+
+## GeoIPConfig
+
+Load IP ranges from `geoip.dat` (or compatible format) by code.
+
+<ProtoField name="codes" type="string[]">
+
+GeoIP category / country codes (e.g. `cn`, `private`)
+
+</ProtoField>
+
+<ProtoField name="filepath" type="string">
+
+Local `geoip.dat` path
+
+</ProtoField>
+
+<ProtoField name="remoteUrl" type="string">
+
+HTTPS URL for remote `geoip.dat`
+
+</ProtoField>
+
+<ProtoField name="refreshCron" type="string">
+
+5-field cron. Empty means fetch only on startup / reload
+
+</ProtoField>
+
+## GreatDomainSetConfig
+
+Great domain set that does not hold domains directly; it references other atomic or great domain sets.
+
+Matching logic: check `exNames` first (a hit means **no match**), then check `inNames` (a hit on any means **match**).
+
+<ProtoField name="name" type="string">
+
+Composite set name
+
+</ProtoField>
+
+<ProtoField name="oppositeName" type="string">
+
+Paired opposite set name. See opposite set behavior in [Sets](/docs/vx/manual/customize/sets)
+
+</ProtoField>
+
+<ProtoField name="inNames" type="string[]">
+
+Include domains from these sets (match if any hit)
+
+</ProtoField>
+
+<ProtoField name="exNames" type="string[]">
+
+Exclude domains from these sets (no match if any hit)
+
+</ProtoField>
+
+Do not include this set's own `name` in `inNames` or `exNames`.
+
+## GreatIPSetConfig
+
+Great IP set; same logic as [GreatDomainSetConfig](#greatdomainsetconfig), but for IPs.
+
+<ProtoField name="name" type="string">
+
+Composite set name
+
+</ProtoField>
+
+<ProtoField name="oppositeName" type="string">
+
+Paired opposite set name
+
+</ProtoField>
+
+<ProtoField name="inNames" type="string[]">
+
+Include addresses from these IP sets
+
+</ProtoField>
+
+<ProtoField name="exNames" type="string[]">
+
+Exclude addresses from these IP sets
 
 </ProtoField>
 
 ## AppSetConfig
 
-<ProtoField name="name">
+Application set used by router `appTags`.
 
-Referenced by `appTags` in router rules
+<ProtoField name="name" type="string">
 
-</ProtoField>
-
-<ProtoField name="appIds">
-
-`AppId` entries (`keyword`, `prefix`, or `exact`)
+Set name
 
 </ProtoField>
 
-<ProtoField name="clashFiles">
+<ProtoField name="appIds" type="AppId[]">
 
-Clash app rules
+List of [AppId](#appid)
+
+</ProtoField>
+
+<ProtoField name="clashFiles" type="string[]">
+
+Clash-format rule files from which AppId rules are extracted
+
+</ProtoField>
+
+## AppId
+
+A single application ID matching rule. Defined in [`protos/proto/vx/router/router.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/router/router.proto).
+
+<ProtoField name="type" type="AppId.Type">
+
+Matching mode:
+
+- `Keyword`: Substring match
+- `Prefix`: Prefix match
+- `Exact`: Exact match
+
+</ProtoField>
+
+<ProtoField name="value" type="string">
+
+Application package name or ID string (converted to lowercase when matching)
 
 </ProtoField>
 
 ## GeoRemoteFile
 
-Used under atomic sets for scheduled downloads:
+Scheduled download configuration for remote geo data files, used in `AtomicDomainSetConfig.remoteGeoFiles` and `AtomicIPSetConfig.remoteGeoFiles`.
 
-<ProtoField name="filepath">
+<ProtoField name="filepath" type="string">
 
-Local path to write
-
-</ProtoField>
-
-<ProtoField name="sourceUrl">
-
-HTTPS URL
+Local path to write after download
 
 </ProtoField>
 
-<ProtoField name="refreshCron">
+<ProtoField name="sourceUrl" type="string">
 
-5-field cron; empty = fetch only at startup/reload
+HTTPS download URL
 
 </ProtoField>
+
+<ProtoField name="refreshCron" type="string">
+
+5-field cron (minute hour day month weekday). Empty means fetch once on startup / reload only
+
+</ProtoField>
+
+## Example
+
+Atomic domain set + composite set + router reference:
+
+```json
+{
+  "geo": {
+    "atomicDomainSets": [
+      {
+        "name": "gfw",
+        "geosite": {
+          "filepath": "geosite.dat",
+          "codes": ["gfw"]
+        }
+      },
+      {
+        "name": "custom-direct",
+        "domains": [
+          { "type": "Full", "value": "example.com" }
+        ]
+      }
+    ],
+    "greatDomainSets": [
+      {
+        "name": "proxy-domains",
+        "inNames": ["gfw"],
+        "exNames": ["custom-direct"]
+      }
+    ]
+  },
+  "router": {
+    "rules": [
+      {
+        "domainTags": ["proxy-domains"],
+        "matchAll": true,
+        "outboundTag": "proxy"
+      }
+    ]
+  }
+}
+```
 
 ## Related
 
-- [Router](/docs/vx-core/configuration/router) — `domainTags`, `dstIpTags`, `geoDomains`
-- [DNS](/docs/vx-core/configuration/dns) — `domainTags`, `ipTags` on DNS rules and servers
+- [Router](/docs/vx-core/configuration/router) — `domainTags`, `dstIpTags`, `geoDomains`, `appTags`
+- [DNS](/docs/vx-core/configuration/dns) — `domainTags`, `ipTags`
+- [Sets](/docs/vx/manual/customize/sets) — Set types and composition logic in the client

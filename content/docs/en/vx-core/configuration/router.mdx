@@ -1,239 +1,14 @@
----
+﻿---
 title: Router
 description: RouterConfig and RuleConfig
 ---
 
-Routing is configured in `ServerConfig.router` (`RouterConfig`). Schema: [`protos/proto/vx/router/router.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/router/router.proto).
+Routing is configured in `ServerConfig.router` (`RouterConfig`).
 
-Rules are evaluated in order. The first matching rule decides the outbound or selector.
+Schema definition: [`protos/proto/vx/router/router.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/router/router.proto).
 
-## RouterConfig
+Rules are evaluated in order; the first matching rule determines the outbound or selector. Subsequent rules are not considered after a match.
 
-<ProtoField name="rules" type="RuleConfig[]">
-
-Ordered routing rules
-
-</ProtoField>
-
-## RuleConfig
-
-**Destination:** set exactly one of `outboundTag` or `selectorTag`. If both are empty, the connection is **blocked**.
-
-<ProtoField name="outboundTag">
-
-Send to this outbound handler
-
-</ProtoField>
-
-<ProtoField name="selectorTag">
-
-Send to a [selector](#selectorconfig) (client / load-balancing)
-
-</ProtoField>
-
-<ProtoField name="matchAll">
-
-Match every connection
-
-</ProtoField>
-
-<ProtoField name="inboundTags">
-
-Match inbound `tag`
-
-</ProtoField>
-
-<ProtoField name="usernames">
-
-Match authenticated user id
-
-</ProtoField>
-
-<ProtoField name="srcCidrs, srcIpTags">
-
-Source IP match
-
-</ProtoField>
-
-<ProtoField name="dstCidrs, dstIpTags">
-
-Destination IP match
-
-</ProtoField>
-
-<ProtoField name="geoDomains, domainTags">
-
-Domain match (uses [geo](/docs/vx-core/configuration/geo) sets)
-
-</ProtoField>
-
-
-<ProtoField name="networks">
-
-`TCP`, `UDP`, etc.
-
-</ProtoField>
-
-<ProtoField name="srcPortRanges, dstPortRanges">
-
-Port ranges
-
-</ProtoField>
-
-<ProtoField name="appIds, appTags">
-
-Application id match (client)
-
-</ProtoField>
-
-
-<ProtoField name="protocols">
-
-Protocol sniff result
-
-</ProtoField>
-
-<ProtoField name="ipv6">
-
-IPv6-only match
-
-</ProtoField>
-
-<ProtoField name="fakeIp">
-
-Match fake-IP destinations
-
-</ProtoField>
-
-<ProtoField name="resolveDomain">
-
-Resolve domain to IP; all IPs must be in `dstIpTags`
-
-</ProtoField>
-
-<ProtoField name="resolveSoftRewrite">
-
-Resolve and rewrite target to an IP in `dstIpTags`
-
-</ProtoField>
-
-<ProtoField name="resolveSoftNoRewrite">
-
-Resolve without rewriting target
-
-</ProtoField>
-
-<ProtoField name="skipSniff">
-
-Disable sniff for IP-target connections
-
-</ProtoField>
-
-<ProtoField name="condition">
-
-Nested `Condition` with the same matchers (composable)
-
-</ProtoField>
-
-<ProtoField name="fallbacks">
-
-Try alternate selector/outbound if primary fails
-
-</ProtoField>
-
-<ProtoField name="ruleName">
-
-Debug label
-
-</ProtoField>
-
-### Fallback
-
-<ProtoField name="selectorTag, outboundTag">
-
-Alternate destination
-
-</ProtoField>
-
-
-<ProtoField name="action" type="Action">
-
-Optional action when falling back
-
-</ProtoField>
-
-<ProtoField name="dstIpTags, domainTags, matchAll, condition">
-
-Extra match for this fallback
-
-</ProtoField>
-
-
-<ProtoField name="last">
-
-If condition matches, stop after this fallback
-
-</ProtoField>
-
-### Action
-
-Fields on `Fallback.action`:
-
-<ProtoField name="ipToDomain" type="bool">
-
-Rewrite IP back to domain when falling back
-
-</ProtoField>
-
-## Condition
-
-Same matchers as `RuleConfig` but without `outboundTag` / `selectorTag` / `fallbacks`. Used inside `rule.condition` or `fallback.condition`. Includes `hasDomain` to match only when a domain is present.
-
-## SelectorConfig
-
-Selectors group outbounds by tag filters and picking strategy (mainly used on the **client**).
-
-<ProtoField name="tag">
-
-Referenced by `selectorTag` on rules
-
-</ProtoField>
-
-<ProtoField name="filter">
-
-`prefixes`, `tags`, `subStrings`, `inverse`, `groupTags`, `countryCodes`, …
-
-</ProtoField>
-
-<ProtoField name="strategy">
-
-`ALL`, `ALL_OK`, `LEAST_PING`, `MOST_THROUGHPUT`, `TOP_PING`, `TOP_THROUGHPUT`
-
-</ProtoField>
-
-<ProtoField name="balanceStrategy">
-
-`RANDOM` or `MEMORY`
-
-</ProtoField>
-
-<ProtoField name="landHandlers">
-
-Landing handler ids
-
-</ProtoField>
-
-<ProtoField name="selectFromOm">
-
-Select from outbound manager (non-DB mode)
-
-</ProtoField>
-
-<ProtoField name="speedTestSize, speedTestInterval, pingTestInterval, …">
-
-Health and speed tests
-
-</ProtoField>
 
 ## Examples
 
@@ -249,7 +24,7 @@ Route everything to direct:
 }
 ```
 
-Route one inbound to an outbound:
+Route a specific inbound to a specific outbound:
 
 ```json
 {
@@ -265,8 +40,342 @@ Route one inbound to an outbound:
 }
 ```
 
+## RouterConfig
+
+<ProtoField name="rules" type="RuleConfig[]">
+
+Ordered routing rules
+
+</ProtoField>
+
+## RuleConfig
+
+**Target:** Exactly one of `outboundTag` and `selectorTag` must be set. If both are empty, the connection will be **blocked**.
+
+<ProtoField name="outboundTag" type="string">
+
+Send to this outbound handler
+
+</ProtoField>
+
+<ProtoField name="selectorTag" type="string">
+
+Send to a [selector](#selectorconfig) (client / load balancing)
+
+</ProtoField>
+
+<ProtoField name="condition" type="Condition">
+
+Metadata used to match connections
+
+</ProtoField>
+
+<ProtoField name="fallbacks" type="Fallback[]">
+
+Try alternate selectors/outbounds when the primary target fails
+
+</ProtoField>
+
+<ProtoField name="ruleName" type="string">
+
+Name
+
+</ProtoField>
+
+### Fallback
+
+<ProtoField name="selectorTag" type="string">
+
+Fallback selector (mutually exclusive with `outboundTag`)
+
+</ProtoField>
+
+<ProtoField name="outboundTag" type="string">
+
+Fallback outbound (mutually exclusive with `selectorTag`)
+
+</ProtoField>
+
+<ProtoField name="action" type="Action">
+
+Additional action on fallback
+
+</ProtoField>
+
+<ProtoField name="condition" type="Condition">
+
+Condition for this fallback; the fallback applies only when it matches
+
+</ProtoField>
+
+<ProtoField name="last" type="bool">
+
+If the condition matches, this fallback is final and later fallbacks are not considered
+
+</ProtoField>
+
+#### Action
+
+Fields for `Fallback.action`:
+
+<ProtoField name="ipToDomain" type="bool">
+
+Rewrite the IP back to a domain on fallback
+
+</ProtoField>
+
+## Condition
+
+Used in `rule.condition` or `fallback.condition`.
+
+<ProtoField name="matchAll" type="bool">
+
+Match all connections
+
+</ProtoField>
+
+<ProtoField name="usernames" type="string[]">
+
+Match authenticated user IDs
+
+</ProtoField>
+
+<ProtoField name="srcCidrs" type="string[]">
+
+Source IP match
+
+</ProtoField>
+
+<ProtoField name="srcIpTags" type="string[]">
+
+Source IP match using set names from Geo
+
+</ProtoField>
+
+<ProtoField name="dstCidrs" type="string[]">
+
+Destination IP match
+
+</ProtoField>
+
+<ProtoField name="dstIpTags" type="string[]">
+
+Destination IP match using set names from Geo
+
+</ProtoField>
+
+<ProtoField name="resolveDomain" type="bool">
+
+Resolve the domain; all IPs must be in `dstIpTags` or `dstCidrs`
+
+</ProtoField>
+
+<ProtoField name="resolveSoftRewrite" type="bool">
+
+Resolve the domain; any IP in `dstIpTags` or `dstCidrs` matches, and rewrite the destination to that IP
+
+</ProtoField>
+
+<ProtoField name="resolveSoftNoRewrite" type="bool">
+
+Resolve the domain; any IP in `dstIpTags` or `dstCidrs` matches, but do not rewrite the destination
+
+</ProtoField>
+
+<ProtoField name="geoDomains" type="Domain[]">
+
+Inline [Domain](/docs/vx-core/configuration/geo#domain) entries for domain matching
+
+</ProtoField>
+
+<ProtoField name="domainTags" type="string[]">
+
+Domain match (references [geo](/docs/vx-core/configuration/geo) sets)
+
+</ProtoField>
+
+<ProtoField name="networks" type="Network[]">
+
+`TCP`, `UDP`, etc.
+
+</ProtoField>
+
+<ProtoField name="srcPortRanges" type="PortRange[]">
+
+Source port ranges
+
+</ProtoField>
+
+<ProtoField name="dstPortRanges" type="PortRange[]">
+
+Destination port ranges
+
+</ProtoField>
+
+<ProtoField name="appIds" type="AppId[]">
+
+Application ID match
+
+</ProtoField>
+
+<ProtoField name="appTags" type="string[]">
+
+Application set match (references [geo](/docs/vx-core/configuration/geo) sets)
+
+</ProtoField>
+
+<ProtoField name="protocols" type="string[]">
+
+Protocol sniffing results
+
+</ProtoField>
+
+<ProtoField name="ipv6" type="bool">
+
+Match IPv6 only
+
+</ProtoField>
+
+<ProtoField name="fakeIp" type="bool">
+
+Match Fake IP destinations
+
+</ProtoField>
+
+
+<ProtoField name="skipSniff" type="bool">
+
+Disable sniffing for connections to IP destinations
+
+</ProtoField>
+
+<ProtoField name="inboundTags" type="string[]">
+
+Match inbound `tag`
+
+</ProtoField>
+
+## SelectorConfig
+
+Selectors filter candidate nodes from a group of outbounds, then pick the node actually used for the connection according to a strategy. Defined in `ClientConfig.selectors` (`SelectorsConfig`); primarily used by the **VX client**. [Router](/docs/vx-core/configuration/router) rules reference them via `selectorTag`.
+
+For client UI behavior, see [Selectors](/docs/vx/manual/customize/selectors).
+
+<ProtoField name="tag" type="string">
+
+Selector name. Referenced by `RuleConfig.selectorTag` and `Fallback.selectorTag`.
+
+</ProtoField>
+
+<ProtoField name="filter" type="Filter">
+
+Filter for the candidate outbound pool; see [Filter](#filter).
+
+</ProtoField>
+
+<ProtoField name="strategy" type="SelectingStrategy">
+
+Which nodes to **actually use** from the filtered pool:
+
+- `ALL`: All nodes in the pool
+- `ALL_OK`: All available nodes (falls back to untested nodes if none are available)
+- `LEAST_PING`: Single node with lowest ping
+- `MOST_THROUGHPUT`: Single node with highest speed-test throughput
+- `TOP_PING`: All nodes within **30%** of the lowest ping (e.g. lowest 100 ms → includes ≤ 130 ms)
+- `TOP_THROUGHPUT`: All nodes with throughput ≥ **70%** of the highest (e.g. highest 100 → includes ≥ 70)
+
+Single-node strategies (`LEAST_PING`, `MOST_THROUGHPUT`) do not use `balanceStrategy`; multi-node strategies require load balancing.
+
+</ProtoField>
+
+<ProtoField name="balanceStrategy" type="BalanceStrategy">
+
+For multi-node strategies, which node handles each connection:
+
+- `RANDOM` (default): Random choice from the active set; IPv6 connections prefer nodes that support IPv6
+- `MEMORY`: Sticky reuse of the same node per app or root domain; assigns randomly on first use and remembers the mapping
+
+</ProtoField>
+
+<ProtoField name="selectFromOm" type="bool">
+
+On the server, this should be `true`
+
+</ProtoField>
+
+<ProtoField name="speedTestSize" type="uint32">
+
+Download bytes per speed test. When `speedTestSizeRange` is not set and this is `0`, the core defaults to **1 MiB**.
+
+</ProtoField>
+
+<ProtoField name="speedTestInterval" type="uint32">
+
+Interval for speed-testing filtered nodes (**minutes**). Only `MOST_THROUGHPUT` and `TOP_THROUGHPUT` run periodic speed tests.
+
+</ProtoField>
+
+<ProtoField name="pingTestInterval" type="uint32">
+
+Interval for pinging filtered nodes (**minutes**). Only `LEAST_PING` and `TOP_PING` run periodic pings.
+
+</ProtoField>
+
+<ProtoField name="unusableTestInterval" type="uint32">
+
+Interval for re-checking nodes marked unusable (**minutes**). All strategies except `ALL` check availability.
+
+</ProtoField>
+
+<ProtoField name="speedTestSizeRange" type="SpeedTestSizeRange">
+
+Random range for speed-test download size (bytes). When `0 < min ≤ max`, each test picks a random value in `[min, max]`; otherwise `speedTestSize` is used.
+
+</ProtoField>
+
+### Filter
+
+<ProtoField name="prefixes" type="string[]">
+
+Outbound `tag` matches if it starts with any prefix
+
+</ProtoField>
+
+<ProtoField name="tags" type="string[]">
+
+Outbound `tag` matches if it equals any value in the list
+
+</ProtoField>
+
+<ProtoField name="subStrings" type="string[]">
+
+Outbound `tag` matches if it contains any substring (database mode only)
+
+</ProtoField>
+
+<ProtoField name="inverse" type="bool">
+
+When `true`, invert: only outbounds that do **not** match `prefixes` / `tags` are included (outbound manager mode)
+
+</ProtoField>
+
+### SpeedTestSizeRange
+
+<ProtoField name="min" type="uint32">
+
+Lower bound for random speed-test size (bytes)
+
+</ProtoField>
+
+<ProtoField name="max" type="uint32">
+
+Upper bound for random speed-test size (bytes)
+
+</ProtoField>
+
+
 ## Related
 
 - [Geo](/docs/vx-core/configuration/geo) — `domainTags`, `dstIpTags`, `geoDomains`
-- [DNS](/docs/vx-core/configuration/dns) — resolution for `resolveDomain` rules
-- [Dispatcher](/docs/vx-core/configuration/dispatcher) — sniffing affects protocol/domain matching
+- [DNS](/docs/vx-core/configuration/dns) — Resolution for `resolveDomain` rules
+- [Dispatcher](/docs/vx-core/configuration/dispatcher) — Sniffing affects protocol/domain matching

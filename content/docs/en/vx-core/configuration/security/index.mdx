@@ -1,9 +1,9 @@
----
+﻿---
 title: Security
 description: TLS and REALITY on TransportConfig
 ---
 
-Security layers encrypt or disguise the connection under the wire protocol. They are set on [`TransportConfig`](/docs/vx-core/configuration/transport) as `tls` or `reality` (oneof with the transport protocol).
+The security layer encrypts or disguises connections beneath the wire protocol. Configure it on [`TransportConfig`](/docs/vx-core/configuration/transport) via `tls` or `reality` (oneof with the transport protocol).
 
 ```json
 {
@@ -19,7 +19,7 @@ Security layers encrypt or disguise the connection under the wire protocol. They
 }
 ```
 
-Hysteria2 uses inline `tlsConfig` on the [protocol message](/docs/vx-core/configuration/protocols/hysteria) instead of `TransportConfig`.
+Hysteria2 uses an inline `tlsConfig` inside the [protocol message](/docs/vx-core/configuration/protocols/hysteria), not `TransportConfig`.
 
 ## Sections
 

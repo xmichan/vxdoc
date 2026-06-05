@@ -1,45 +1,37 @@
----
+﻿---
 title: Dispatcher
 description: DispatcherConfig — sniffing and overrides
 ---
 
-The dispatcher is configured in `ServerConfig.dispatcher` (`DispatcherConfig`). Schema: [`protos/proto/vx/dispatcher/dispatcher.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/dispatcher/dispatcher.proto).
+The dispatcher is configured in `ServerConfig.dispatcher` (`DispatcherConfig`). Schema definition: [`protos/proto/vx/dispatcher/dispatcher.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/dispatcher/dispatcher.proto).
 
-It controls protocol sniffing, destination override, and some client-only behaviors.
+All inbound and DNS server traffic passes through the dispatcher. The dispatcher selects an outbound via routing, then hands the traffic to that outbound for processing.
 
 ## DispatcherConfig
 
 <ProtoField name="destinationOverride" type="string[]">
 
-If non-empty, sniff connections and override destination with sniffed domain when protocol matches
+When non-empty, sniff connections and override the destination with the sniffed domain when the protocol matches
 
 </ProtoField>
 
 <ProtoField name="sniff" type="bool">
 
-Enable sniffing for extra connection metadata (logging / routing)
-
-</ProtoField>
-
-<ProtoField name="ipv6UseDomain" type="bool">
-
-**Client only** — IPv6 handling preference
+Sniff all connections to obtain additional connection metadata, which can make logs more complete
 
 </ProtoField>
 
 <ProtoField name="fallbackTimeout" type="uint32">
 
-Wait time (ms) for response data before treating connection as failed
+Time to wait for response data (milliseconds). If no response data is received within this period, the connection is treated as failed and fallback begins
 
 </ProtoField>
 
 <ProtoField name="sessionStats" type="bool">
 
-Meter per-session statistics
+Enable session metering statistics, shown in logs
 
 </ProtoField>
-
-When `destinationOverride` lists protocols (for example `http`, `tls`), vx-core may replace the connection target with the sniffed hostname so [router](/docs/vx-core/configuration/router) domain rules apply to IP-based connections.
 
 ## Example
 
@@ -55,5 +47,5 @@ When `destinationOverride` lists protocols (for example `http`, `tls`), vx-core 
 
 ## Related
 
-- [Router](/docs/vx-core/configuration/router) — `skipSniff`, `protocols`, domain rules after sniff
-- [DNS](/docs/vx-core/configuration/dns) — resolution when rules use `resolveDomain`
+- [Router](/docs/vx-core/configuration/router) — `skipSniff`, `protocols`, domain rules after sniffing
+- [DNS](/docs/vx-core/configuration/dns) — resolution when using `resolveDomain` rules

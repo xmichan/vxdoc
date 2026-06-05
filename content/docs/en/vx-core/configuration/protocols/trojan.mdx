@@ -1,4 +1,4 @@
----
+﻿---
 title: Trojan
 description: TrojanServerConfig and TrojanClientConfig
 ---
@@ -9,13 +9,13 @@ Proto: [`protos/proto/vx/proxy/trojan/trojan.proto`](https://github.com/5vnetwor
 
 <ProtoField name="users" type="UserConfig[]">
 
-Password in `secret`
+Password is in `secret`
 
 </ProtoField>
 
 <ProtoField name="vision" type="bool">
 
-Enable Trojan Vision
+Enable **Trojan Vision** (similar to VLESS `xtls-rprx-vision`). Both client and server must be enabled **at the same time**.
 
 </ProtoField>
 
@@ -35,16 +35,8 @@ Trojan password
 
 </ProtoField>
 
-<ProtoField name="special" type="bool">
-
-Internal / extended use
-
-</ProtoField>
-
 <ProtoField name="vision" type="bool">
 
 Enable Trojan Vision
 
 </ProtoField>
-
-Often used with [TLS](/docs/vx-core/configuration/security/tls) on port 443.

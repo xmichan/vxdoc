@@ -1,40 +1,97 @@
----
+﻿---
 title: Transport
-description: TransportConfig — wire protocols and socket options
+description: TransportConfig — link protocols and socket options
 ---
 
-Transport settings wrap proxy protocols on [inbounds](/docs/vx-core/configuration/inbounds) and [outbounds](/docs/vx-core/configuration/outbounds) via `transport: { ... }`.
+Transport settings wrap proxy protocols via `transport: { ... }` on [inbounds](/docs/vx-core/configuration/inbounds) and [outbounds](/docs/vx-core/configuration/outbounds).
 
-Root message: [`TransportConfig`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/transport/transport.proto) in `protos/proto/vx/transport/transport.proto`.
+Root message: [`TransportConfig`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/transport/transport.proto), in `protos/proto/vx/transport/transport.proto`.
 
 ## TransportConfig
 
 <ProtoField name="socket" type="SocketConfig">
 
-Marks, TFO, bind, buffers
+Socket options (mark, TFO, bind, buffers, etc.). See [Socket](/docs/vx-core/configuration/transport/socket).
 
 </ProtoField>
 
-<ProtoField name="tcp, kcp, websocket, http, grpc, httpupgrade, splithttp">
+### Link protocols (oneof)
 
-Wire protocol (oneof)
+`tcp`, `kcp`, `websocket`, `http`, `grpc`, `httpupgrade`, and `splithttp` are mutually exclusive; each `TransportConfig` may set only one.
 
-</ProtoField>
+<ProtoField name="tcp" type="TcpConfig">
 
-<ProtoField name="tls, reality">
-
-Security layer (oneof); see [Security](/docs/vx-core/configuration/security)
+Plain TCP transport. See [TCP](/docs/vx-core/configuration/transport/tcp).
 
 </ProtoField>
 
-<ProtoField name="transportProtocol, securityProtocol, Any">
+<ProtoField name="kcp" type="KcpConfig">
 
-`Any` escape hatch for extended types
+UDP-based KCP transport. See [KCP](/docs/vx-core/configuration/transport/kcp).
 
 </ProtoField>
 
+<ProtoField name="websocket" type="WebsocketConfig">
 
-Only one **protocol** and one **security** field should be set per config.
+WebSocket transport. See [WebSocket](/docs/vx-core/configuration/transport/websocket).
+
+</ProtoField>
+
+<ProtoField name="http" type="HttpConfig">
+
+HTTP/2 transport camouflage. See [HTTP transport](/docs/vx-core/configuration/transport/http).
+
+</ProtoField>
+
+<ProtoField name="grpc" type="GrpcConfig">
+
+gRPC transport. See [gRPC](/docs/vx-core/configuration/transport/grpc).
+
+</ProtoField>
+
+<ProtoField name="httpupgrade" type="HttpUpgradeConfig">
+
+HTTP Upgrade transport. See [HTTPUpgrade](/docs/vx-core/configuration/transport/httpupgrade).
+
+</ProtoField>
+
+<ProtoField name="splithttp" type="SplitHttpConfig">
+
+Split HTTP (XHTTP) transport. See [SplitHTTP](/docs/vx-core/configuration/transport/splithttp).
+
+</ProtoField>
+
+### Security layer (oneof)
+
+`tls` and `reality` are mutually exclusive. See [Security](/docs/vx-core/configuration/security).
+
+<ProtoField name="tls" type="TlsConfig">
+
+TLS certificates, SNI, uTLS, ECH
+
+</ProtoField>
+
+<ProtoField name="reality" type="RealityConfig">
+
+REALITY camouflage
+
+</ProtoField>
+
+### Extensions
+
+<ProtoField name="transportProtocol" type="Any">
+
+`Any` escape hatch for custom transport protocols
+
+</ProtoField>
+
+<ProtoField name="securityProtocol" type="Any">
+
+`Any` escape hatch for custom security protocols
+
+</ProtoField>
+
+Each configuration should set at most one **link protocol** and one **security** field (or neither).
 
 ## Example (VLESS + WebSocket + TLS)
 
@@ -58,7 +115,7 @@ Only one **protocol** and one **security** field should be set per config.
 }
 ```
 
-## Wire protocols
+## Link protocols
 
 <Cards>
   <Card title="TCP" href="/docs/vx-core/configuration/transport/tcp" />
@@ -73,4 +130,4 @@ Only one **protocol** and one **security** field should be set per config.
 
 ## Multi-inbound transport matrix
 
-On `MultiProxyInboundConfig`, transport protocols are selected per ALPN/SNI/path in `transportProtocols[]` instead of a single `TransportConfig`. Security blocks work the same way in `securityConfigs[]`. See [Inbounds](/docs/vx-core/configuration/inbounds).
+On `MultiProxyInboundConfig`, transport protocols are selected via `transportProtocols[]` by ALPN/SNI/path, rather than a single `TransportConfig`. Security blocks in `securityConfigs[]` work the same way. See [Inbounds](/docs/vx-core/configuration/inbounds).

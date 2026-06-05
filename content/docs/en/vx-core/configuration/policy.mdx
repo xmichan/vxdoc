@@ -1,53 +1,53 @@
----
+﻿---
 title: Policy
 description: PolicyConfig — connection timeouts and buffers
 ---
 
-Connection policy is set in `ServerConfig.policy` (`PolicyConfig`). Schema: [`protos/proto/vx/policy.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/policy.proto).
+Connection policy is set in `ServerConfig.policy` (`PolicyConfig`). Schema definition: [`protos/proto/vx/policy.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/policy.proto).
 
-All timeout values are in **seconds** unless noted otherwise in your deployment tooling.
+All timeout values are in **seconds**.
 
 ## PolicyConfig
 
 <ProtoField name="handshakeTimeout" type="int32">
 
-Close if no data is received after connect
+Close if no data after connection
 
 </ProtoField>
 
 <ProtoField name="connectionIdleTimeout" type="int32">
 
-Close when idle (no transfer in either direction)
+Close when idle (no traffic in either direction)
 
 </ProtoField>
 
 <ProtoField name="udpIdleTimeout" type="int32">
 
-Close UDP when no uplink data
+Close when there is no upstream UDP data
 
 </ProtoField>
 
 <ProtoField name="upLinkOnlyTimeout" type="int32">
 
-After downlink finished, close if no uplink data
+After downstream ends, close if there is no upstream data
 
 </ProtoField>
 
 <ProtoField name="downLinkOnlyTimeout" type="int32">
 
-After uplink finished, close if no downlink data
+After upstream ends, close if there is no downstream data
 
 </ProtoField>
 
 <ProtoField name="defaultBufferSize" type="int32">
 
-Default per-connection buffer (not all protocols honor this)
+Default per-connection buffer
 
 </ProtoField>
 
 <ProtoField name="userPolicyMap" type="map&lt;uint32, UserPolicy&gt;">
 
-Per `userLevel` overrides
+Overrides by `userLevel`
 
 </ProtoField>
 
@@ -59,7 +59,7 @@ Buffer size for users at this level
 
 </ProtoField>
 
-User levels come from [UserConfig](/docs/vx-core/configuration/users) `userLevel` on each account.
+User levels come from each account's `userLevel` in [UserConfig](/docs/vx-core/configuration/users).
 
 ## Example
 
@@ -78,4 +78,4 @@ User levels come from [UserConfig](/docs/vx-core/configuration/users) `userLevel
 
 ## Related
 
-- [Users](/docs/vx-core/configuration/users) — `userLevel` per account
+- [Users](/docs/vx-core/configuration/users) — Per-account `userLevel`

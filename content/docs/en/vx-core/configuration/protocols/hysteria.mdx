@@ -1,146 +1,53 @@
----
+﻿---
 title: Hysteria2
 description: Hysteria2ServerConfig and Hysteria2ClientConfig
 ---
 
 Proto: [`protos/proto/vx/proxy/hysteria/hysteria.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/proxy/hysteria/hysteria.proto)
 
-Hysteria2 runs over QUIC. TLS is configured inside the protocol via `tlsConfig` ([TlsConfig](/docs/vx-core/configuration/security/tls)).
+Hysteria2 is built on QUIC. TLS is configured inside the protocol via `tlsConfig` ([TlsConfig](/docs/vx-core/configuration/security/tls)), not via `TransportConfig.tls`.
 
 ## Hysteria2ServerConfig
 
-<ProtoField name="users">
+<ProtoField name="users" type="UserConfig[]">
 
-`UserConfig[]` — auth string in `secret`
-
-</ProtoField>
-
-<ProtoField name="obfs">
-
-`ObfsConfig` (Salamander)
+Allowed users; the authentication password is in `secret`
 
 </ProtoField>
 
-<ProtoField name="bandwidth">
+<ProtoField name="obfs" type="ObfsConfig">
 
-`maxTx` / `maxRx` caps
-
-</ProtoField>
-
-<ProtoField name="quic">
-
-QUIC window and timeout settings
+Traffic obfuscation; see [ObfsConfig](#obfsconfig)
 
 </ProtoField>
 
-<ProtoField name="ignoreClientBandwidth">
+<ProtoField name="bandwidth" type="BandwidthConfig">
 
-Ignore client bandwidth hints
-
-</ProtoField>
-
-<ProtoField name="tlsConfig">
-
-Server TLS
+Server-side bandwidth limits; see [BandwidthConfig](#bandwidthconfig)
 
 </ProtoField>
 
-<ProtoField name="addresses">
+<ProtoField name="quic" type="QuicConfig">
 
-Listen / announce addresses
-
-</ProtoField>
-
-## Hysteria2ClientConfig
-
-<ProtoField name="auth">
-
-Auth password
+QUIC tuning; see [QuicConfig](#quicconfig)
 
 </ProtoField>
 
-<ProtoField name="tlsConfig">
+<ProtoField name="ignoreClientBandwidth" type="bool">
 
-Client TLS (SNI, pins, ECH, …)
-
-</ProtoField>
-
-<ProtoField name="quic">
-
-QUIC tuning
+Ignore bandwidth hints reported by the client
 
 </ProtoField>
 
-<ProtoField name="fastOpen">
+<ProtoField name="tlsConfig" type="TlsConfig">
 
-QUIC fast open
-
-</ProtoField>
-
-<ProtoField name="bandwidth">
-
-Client upload/download limits
+Server TLS certificates and settings
 
 </ProtoField>
 
-<ProtoField name="obfs">
+<ProtoField name="addresses" type="string[]">
 
-Obfuscation
-
-</ProtoField>
-
-### QuicConfig (shared)
-
-<ProtoField name="initialStreamReceiveWindow, maxStreamReceiveWindow, …">
-
-Stream windows (MB or `*Bytes` variants)
-
-</ProtoField>
-
-<ProtoField name="initialConnectionReceiveWindow, maxConnectionReceiveWindow, …">
-
-Connection windows
-
-</ProtoField>
-
-<ProtoField name="maxIdleTimeout, keepAlivePeriod">
-
-QUIC timeouts
-
-</ProtoField>
-
-
-<ProtoField name="disablePathMtuDiscovery">
-
-Disable PMTUD
-
-</ProtoField>
-
-<ProtoField name="maxIncomingStreams">
-
-Server-only stream limit
-
-</ProtoField>
-
-### ObfsConfig
-
-<ProtoField name="salamander">
-
-`SalamanderConfig` with `password`
-
-</ProtoField>
-
-### BandwidthConfig
-
-<ProtoField name="maxTx">
-
-Upload cap (client: upload)
-
-</ProtoField>
-
-<ProtoField name="maxRx">
-
-Download cap (client: download)
+Listen / advertised addresses
 
 </ProtoField>
 
@@ -153,3 +60,164 @@ Download cap (client: download)
   }
 }
 ```
+
+## Hysteria2ClientConfig
+
+<ProtoField name="auth" type="string">
+
+Authentication password; must match a server `users[].secret`
+
+</ProtoField>
+
+<ProtoField name="tlsConfig" type="TlsConfig">
+
+Client TLS (SNI, `allowInsecure`, ECH, certificate pinning, etc.)
+
+</ProtoField>
+
+<ProtoField name="quic" type="QuicConfig">
+
+QUIC tuning
+
+</ProtoField>
+
+<ProtoField name="fastOpen" type="bool">
+
+Enable QUIC 0-RTT fast open
+
+</ProtoField>
+
+<ProtoField name="bandwidth" type="BandwidthConfig">
+
+Client bandwidth declaration (upload `maxTx`, download `maxRx`)
+
+</ProtoField>
+
+<ProtoField name="obfs" type="ObfsConfig">
+
+Salamander obfuscation
+
+</ProtoField>
+
+```json
+{
+  "@type": "type.googleapis.com/vx.proxy.hysteria.Hysteria2ClientConfig",
+  "auth": "auth-password",
+  "tlsConfig": { "serverName": "example.com" }
+}
+```
+
+## QuicConfig
+
+Window fields come in two groups: **MB** fields (`initialStreamReceiveWindow`, etc., `uint32`, internally × 1 MiB) and **bytes** fields (`initialStreamReceiveWindowBytes`, etc., `uint64`). MB fields take precedence when non-zero; when both are zero, the bytes fields or platform defaults are used.
+
+<ProtoField name="initialStreamReceiveWindow" type="uint32">
+
+Initial stream receive window (MiB)
+
+</ProtoField>
+
+<ProtoField name="maxStreamReceiveWindow" type="uint32">
+
+Maximum stream receive window (MiB)
+
+</ProtoField>
+
+<ProtoField name="initialConnectionReceiveWindow" type="uint32">
+
+Initial connection receive window (MiB)
+
+</ProtoField>
+
+<ProtoField name="maxConnectionReceiveWindow" type="uint32">
+
+Maximum connection receive window (MiB)
+
+</ProtoField>
+
+<ProtoField name="initialStreamReceiveWindowBytes" type="uint64">
+
+Initial stream receive window (bytes)
+
+</ProtoField>
+
+<ProtoField name="maxStreamReceiveWindowBytes" type="uint64">
+
+Maximum stream receive window (bytes)
+
+</ProtoField>
+
+<ProtoField name="initialConnectionReceiveWindowBytes" type="uint64">
+
+Initial connection receive window (bytes)
+
+</ProtoField>
+
+<ProtoField name="maxConnectionReceiveWindowBytes" type="uint64">
+
+Maximum connection receive window (bytes)
+
+</ProtoField>
+
+<ProtoField name="maxIdleTimeout" type="uint32">
+
+Idle timeout (**seconds**, default 30)
+
+</ProtoField>
+
+<ProtoField name="keepAlivePeriod" type="uint32">
+
+Keep-alive period (**seconds**, default 10)
+
+</ProtoField>
+
+<ProtoField name="disablePathMtuDiscovery" type="bool">
+
+Disable QUIC path MTU discovery
+
+</ProtoField>
+
+<ProtoField name="maxIncomingStreams" type="uint32">
+
+Maximum incoming streams (**server only**)
+
+</ProtoField>
+
+## ObfsConfig
+
+`salamander` is the only obfuscation type currently supported (oneof).
+
+<ProtoField name="salamander" type="SalamanderConfig">
+
+Salamander obfuscation configuration
+
+</ProtoField>
+
+### SalamanderConfig
+
+<ProtoField name="password" type="string">
+
+Obfuscation password
+
+</ProtoField>
+
+## BandwidthConfig
+
+`maxTx` / `maxRx` are in **Mbps** (internally converted to bytes per second).
+
+<ProtoField name="maxTx" type="uint32">
+
+Upload bandwidth limit. On the client, this is upload; on the server, the maximum allowed upload
+
+</ProtoField>
+
+<ProtoField name="maxRx" type="uint32">
+
+Download bandwidth limit. On the client, this is download; on the server, the maximum allowed download
+
+</ProtoField>
+
+## Related
+
+- [TLS](/docs/vx-core/configuration/security/tls) — `tlsConfig` field
+- [Outbounds](/docs/vx-core/configuration/outbounds) — UDP outbounds

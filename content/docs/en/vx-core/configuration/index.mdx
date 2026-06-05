@@ -1,18 +1,18 @@
----
+﻿---
 title: Configuration
 description: vx-core server configuration reference (ServerConfig)
 ---
 
-vx-core reads a single **server config** file. The root message is `ServerConfig` in [`protos/proto/vx/server.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/server.proto).
+vx-core reads a single **server configuration file**. The root message is `ServerConfig` in [`protos/proto/vx/server.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/server.proto).
 
-## Config format
+## Configuration format
 
-Configs are protobuf messages, serialized as either:
+The configuration is a protobuf message that can be serialized as:
 
-- **Binary protobuf** — compact; used internally in some paths
-- **ProtoJSON** — human-readable JSON; use this for hand-edited files
+- **Binary protobuf** — Compact; used in some internal paths
+- **ProtoJSON** — Human-readable JSON; suitable for manual editing
 
-Typed protocol and transport settings use `google.protobuf.Any`. In JSON, set `@type` to the message’s type URL:
+Typed settings for protocols and transports use `google.protobuf.Any`. In JSON, set `@type` to the message type URL:
 
 ```json
 {
@@ -21,73 +21,73 @@ Typed protocol and transport settings use `google.protobuf.Any`. In JSON, set `@
 }
 ```
 
-Field names in JSON use **camelCase** (for example `matchAll`, `outboundTag`, `multiInbounds`).
+JSON field names use **camelCase** (e.g. `matchAll`, `outboundTag`, `multiInbounds`).
 
 ## ServerConfig overview
 
 <ProtoField name="inbounds" type="ProxyInboundConfig[]">
 
-Single-protocol listeners
+Inbounds
 
 </ProtoField>
 
 <ProtoField name="multiInbounds" type="MultiProxyInboundConfig[]">
 
-Multi-protocol listeners (TLS/REALITY + transport matrix)
+Multi-inbounds
 
 </ProtoField>
 
 <ProtoField name="outbounds" type="OutboundHandlerConfig[]">
 
-Where traffic is sent (direct, proxy, block, …)
+Outbounds
 
 </ProtoField>
 
 <ProtoField name="router" type="RouterConfig">
 
-Rules that pick an outbound or selector per connection
+Routing configuration
 
 </ProtoField>
 
 <ProtoField name="dns" type="DnsConfig">
 
-DNS servers, resolvers, hijack, static records
+DNS configuration
 
 </ProtoField>
 
 <ProtoField name="geo" type="GeoConfig">
 
-Domain/IP/app sets used by routing and DNS
+Sets
 
 </ProtoField>
 
 <ProtoField name="policy" type="PolicyConfig">
 
-Timeouts and per-level buffer limits
+Timeout policy
 
 </ProtoField>
 
 <ProtoField name="log" type="LoggerConfig">
 
-Log level, file path, redaction
+Logging settings
 
 </ProtoField>
 
 <ProtoField name="users" type="UserConfig[]">
 
-Global users (also attachable per inbound)
+Users
 
 </ProtoField>
 
 <ProtoField name="dispatcher" type="DispatcherConfig">
 
-Sniffing and destination override
+Dispatcher
 
 </ProtoField>
 
 <ProtoField name="dialerFactory" type="DialerFactoryConfig">
 
-Outbound dial timeouts and resolver binding
+Outbound factory
 
 </ProtoField>
 
@@ -124,14 +124,14 @@ Minimal server example:
   <Card title="Inbounds" href="/docs/vx-core/configuration/inbounds" description="ProxyInboundConfig and MultiProxyInboundConfig" />
   <Card title="Outbounds" href="/docs/vx-core/configuration/outbounds" description="OutboundHandlerConfig and protocol Any" />
   <Card title="Router" href="/docs/vx-core/configuration/router" description="RuleConfig, conditions, selectors, fallbacks" />
-  <Card title="DNS" href="/docs/vx-core/configuration/dns" description="Servers, resolvers, hijack, fake DNS" />
-  <Card title="Geo" href="/docs/vx-core/configuration/geo" description="Domain/IP/app sets for rules" />
+  <Card title="DNS" href="/docs/vx-core/configuration/dns" description="Servers, resolvers, hijacking, Fake DNS" />
+  <Card title="Geo" href="/docs/vx-core/configuration/geo" description="Domain/IP/app sets used by rules" />
   <Card title="Policy" href="/docs/vx-core/configuration/policy" description="Timeouts and buffer sizes" />
   <Card title="Log" href="/docs/vx-core/configuration/log" description="LoggerConfig" />
   <Card title="Users" href="/docs/vx-core/configuration/users" description="UserConfig" />
   <Card title="Dispatcher" href="/docs/vx-core/configuration/dispatcher" description="Sniffing and session stats" />
-  <Card title="Dialer factory" href="/docs/vx-core/configuration/dialer-factory" description="Dial timeouts and device binding" />
-  <Card title="Proxy protocols" href="/docs/vx-core/configuration/protocols" description="VMess, VLESS, Trojan, Shadowsocks, …" />
+  <Card title="Dialer factory" href="/docs/vx-core/configuration/dialer-factory" description="Dial timeouts and interface binding" />
+  <Card title="Proxy protocols" href="/docs/vx-core/configuration/protocols" description="VMess, VLESS, Trojan, Shadowsocks, etc." />
   <Card title="Transport" href="/docs/vx-core/configuration/transport" description="TCP, WebSocket, gRPC, KCP, xhttp, socket" />
   <Card title="Security" href="/docs/vx-core/configuration/security" description="TLS and REALITY" />
 </Cards>
@@ -144,13 +144,13 @@ vx run --config config.json
 
 <ProtoField name="`--config`" type="default config.json">
 
-Path to the config file
+Path to the configuration file
 
 </ProtoField>
 
 When installed via the [install script](/docs/vx-core/quick-start), the default path is `/usr/local/etc/vx/config.json`.
 
-## Proto sources
+## Proto source files
 
 <ProtoField name="Root" type="protos/proto/vx/server.proto">
 </ProtoField>
@@ -187,18 +187,18 @@ When installed via the [install script](/docs/vx-core/quick-start), the default 
 
 <ProtoField name="Proxy protocols">
 
-`protos/proto/vx/proxy/*/` — [docs](/docs/vx-core/configuration/protocols)
+`protos/proto/vx/proxy/*/` — [Documentation](/docs/vx-core/configuration/protocols)
 
 </ProtoField>
 
 <ProtoField name="Transport">
 
-`protos/proto/vx/transport/` — [docs](/docs/vx-core/configuration/transport)
+`protos/proto/vx/transport/` — [Documentation](/docs/vx-core/configuration/transport)
 
 </ProtoField>
 
 <ProtoField name="Security (TLS/REALITY)">
 
-`protos/proto/vx/transport/security/` — [docs](/docs/vx-core/configuration/security)
+`protos/proto/vx/transport/security/` — [Documentation](/docs/vx-core/configuration/security)
 
 </ProtoField>

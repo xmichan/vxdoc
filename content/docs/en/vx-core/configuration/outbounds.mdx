@@ -1,11 +1,13 @@
----
+﻿---
 title: Outbounds
 description: OutboundHandlerConfig reference
 ---
 
-Outbound handlers are listed in `ServerConfig.outbounds`. Schema: [`protos/proto/vx/outbound/outbound.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/outbound/outbound.proto).
+Outbounds are configured in `ServerConfig.outbounds`.
 
-Each handler has a unique `tag` used by [router](/docs/vx-core/configuration/router) rules (`outboundTag`) or as a chain target.
+Schema definition: [`protos/proto/vx/outbound/outbound.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/outbound/outbound.proto).
+
+Each handler has a unique `tag` referenced by [router](/docs/vx-core/configuration/router) rules (`outboundTag`) or chain targets.
 
 ## OutboundHandlerConfig
 
@@ -17,7 +19,7 @@ Handler name for routing
 
 <ProtoField name="transport" type="TransportConfig">
 
-Client transport (TLS, WebSocket, …)
+Client transport (TLS, WebSocket, etc.)
 
 </ProtoField>
 
@@ -41,13 +43,13 @@ Multiple port ranges
 
 <ProtoField name="protocol" type="Any">
 
-Proxy client config (Freedom, Blackhole, VMess, …)
+Proxy client configuration (Freedom, Blackhole, VMess, etc.)
 
 </ProtoField>
 
 <ProtoField name="enableMux" type="bool">
 
-Enable connection mux
+Enable connection multiplexing
 
 </ProtoField>
 
@@ -63,15 +65,23 @@ UDP over TCP
 
 </ProtoField>
 
-<ProtoField name="domainStrategy" type="enum">
+<ProtoField name="domainStrategy" type="DomainStrategy">
 
-How to resolve domains when dialing (`PreferIPv4`, `PreferIPv6`, `IPv4Only`, `IPv6Only`, `Speed`)
+When `address` is a domain, resolve and select an IP using one of these strategies:
+
+- `PreferIPv4` (default): Query both A and AAAA records; prefer IPv4, fall back to IPv6 if no IPv4 is available.
+- `PreferIPv6`: Query both A and AAAA records; prefer IPv6, fall back to IPv4 if no IPv6 is available.
+- `IPv4Only`: Query A records only; use IPv4 only.
+- `IPv6Only`: Query AAAA records only; use IPv6 only.
+- `Speed`: Query A and AAAA in parallel and use whichever address family returns first; if the connection fails and the other family is available, try that one next.
+
+If the network interface does not support IPv6, `PreferIPv4`, `PreferIPv6`, and `Speed` automatically downgrade to `IPv4Only`.
 
 </ProtoField>
 
 <ProtoField name="random" type="RandomPortSelectStrategy">
 
-Use all ports in `ports` at once
+Use all ports in `ports` simultaneously
 
 </ProtoField>
 
@@ -81,9 +91,11 @@ Rotate a single port (`interval` or `minInterval` / `maxInterval`)
 
 </ProtoField>
 
-### Direct (freedom) outbound
+### Examples
 
-Required for a minimal server that forwards traffic without an upstream proxy:
+#### Direct (freedom) outbound
+
+A minimal server needs this to forward traffic without an upstream proxy:
 
 ```json
 {
@@ -94,7 +106,7 @@ Required for a minimal server that forwards traffic without an upstream proxy:
 }
 ```
 
-### Block outbound
+#### Block outbound
 
 ```json
 {
@@ -105,32 +117,9 @@ Required for a minimal server that forwards traffic without an upstream proxy:
 }
 ```
 
-Proxy client configs: [Proxy protocols](/docs/vx-core/configuration/protocols) (`*ClientConfig` messages). Wrap with [Transport](/docs/vx-core/configuration/transport) and [Security](/docs/vx-core/configuration/security) as needed.
-
-## OutboundConfig (client / advanced)
-
-`OutboundConfig` in the same proto file is used in richer client setups (handler lists, chains, stats). Server `ServerConfig` uses the flat `outbounds` repeated field of `OutboundHandlerConfig` only.
-
-<ProtoField name="handlers">
-
-`HandlerConfig[]` — single outbound or `ChainHandlerConfig`
-
-</ProtoField>
-
-<ProtoField name="hysteriaRejectQuic">
-
-Reject QUIC for Hysteria
-
-</ProtoField>
-
-<ProtoField name="handlerLinkStats, handlerMeter, totalCounter">
-
-Stats and metering
-
-</ProtoField>
-
+Proxy client configurations are in [Proxy protocols](/docs/vx-core/configuration/protocols) (`*ClientConfig` messages). Use with [Transport](/docs/vx-core/configuration/transport) and [Security](/docs/vx-core/configuration/security) as needed.
 
 ## Related
 
-- [Router](/docs/vx-core/configuration/router) — choose `outboundTag` or `selectorTag`
-- [Dialer factory](/docs/vx-core/configuration/dialer-factory) — dial timeouts when connecting out
+- [Router](/docs/vx-core/configuration/router) — Select `outboundTag` or `selectorTag`
+- [Dialer factory](/docs/vx-core/configuration/dialer-factory)

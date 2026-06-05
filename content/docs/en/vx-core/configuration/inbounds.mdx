@@ -1,13 +1,15 @@
----
+﻿---
 title: Inbounds
 description: ProxyInboundConfig and MultiProxyInboundConfig
 ---
 
-Inbound settings live in `ServerConfig.inbounds` and `ServerConfig.multiInbounds`. Schema: [`protos/proto/vx/inbound/inbound.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/inbound/inbound.proto).
+Inbound configuration lives in `ServerConfig.inbounds` and `ServerConfig.multiInbounds`.
+
+Schema definition: [`protos/proto/vx/inbound/inbound.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/inbound/inbound.proto).
 
 ## ProxyInboundConfig
 
-One listener per inbound. Use when each port runs a single proxy protocol (optionally with a shared `transport` layer).
+A standard inbound. You can specify multiple proxy protocols, but only one transport protocol and one security protocol may be active.
 
 <ProtoField name="tag" type="string">
 
@@ -17,19 +19,19 @@ Name referenced by [router](/docs/vx-core/configuration/router) `inboundTags`
 
 <ProtoField name="address" type="string">
 
-Listen address; empty = all interfaces
+Listen address; empty means all interfaces
 
 </ProtoField>
 
 <ProtoField name="port" type="uint32">
 
-Single port (combined with `ports` if both set)
+Single port (can be set alongside `ports`)
 
 </ProtoField>
 
 <ProtoField name="ports" type="uint32[]">
 
-Ports to listen on
+List of ports to listen on
 
 </ProtoField>
 
@@ -41,7 +43,7 @@ TLS, REALITY, WebSocket, gRPC, etc.
 
 <ProtoField name="protocol" type="Any">
 
-One proxy server config (VMess, VLESS, Trojan, …)
+One proxy server configuration (VMess, VLESS, Trojan, etc.)
 
 </ProtoField>
 
@@ -70,11 +72,13 @@ Example:
 }
 ```
 
-Protocol `@type` values are documented under [Proxy protocols](/docs/vx-core/configuration/protocols). Transport and TLS/REALITY: [Transport](/docs/vx-core/configuration/transport), [Security](/docs/vx-core/configuration/security).
+Protocol `@type` values are listed in [Proxy protocols](/docs/vx-core/configuration/protocols). Transport and TLS/REALITY: [Transport](/docs/vx-core/configuration/transport), [Security](/docs/vx-core/configuration/security).
+
+> **Note**: When multiple protocols support UDP, only one protocol's UDP will actually take effect. If Hysteria is present, it is preferred and UDP for other protocols will not be enabled.
 
 ## MultiProxyInboundConfig
 
-Use when one listener must accept **several transports and security profiles** (typical multi-protocol port behind TLS or REALITY).
+Multi-inbounds can use **multiple transport and security configurations** simultaneously.
 
 <ProtoField name="tag" type="string">
 
@@ -84,7 +88,7 @@ Inbound tag for routing
 
 <ProtoField name="address" type="string">
 
-Listen address; empty = all interfaces
+Listen address; empty means all interfaces
 
 </ProtoField>
 
@@ -96,25 +100,25 @@ Listen ports
 
 <ProtoField name="protocols" type="Any[]">
 
-Proxy protocol configs (same `Any` types as above)
+Proxy protocol configurations (same `Any` type as above)
 
 </ProtoField>
 
 <ProtoField name="securityConfigs" type="Security[]">
 
-TLS or REALITY per SNI/domain/regex
+Security protocols
 
 </ProtoField>
 
 <ProtoField name="transportProtocols" type="Protocol[]">
 
-WebSocket, HTTP, gRPC, TCP, SplitHTTP, HTTPUpgrade
+Transport protocols
 
 </ProtoField>
 
 <ProtoField name="socket" type="SocketConfig">
 
-Socket-level options
+Socket options
 
 </ProtoField>
 
@@ -126,82 +130,111 @@ Users for all handlers on this inbound
 
 <h3 id="inbound-security">Security</h3>
 
-Per entry in `securityConfigs`
+Each entry in `securityConfigs`
+
+Only one of `tls` or `reality` may be set per security block.
 
 <ProtoField name="tls" type="TlsConfig">
-
-Applied when this security block matches
 
 </ProtoField>
 
 <ProtoField name="reality" type="RealityConfig">
 
-Applied when this security block matches
+</ProtoField>
+
+<ProtoField name="domains" type="string[]">
+
+Use this security configuration for the specified SNI
 
 </ProtoField>
 
-<ProtoField name="domains">
+<ProtoField name="regularExpression" type="string">
 
-SNI hostnames handled by this block
-
-</ProtoField>
-
-<ProtoField name="regularExpression">
-
-SNI regex match
+Use this security configuration for SNI matching this regular expression
 
 </ProtoField>
 
-<ProtoField name="always">
+<ProtoField name="always"  type="bool">
 
-Use this security for every connection
+Use this security configuration for all connections
 
 </ProtoField>
 
 <h3 id="inbound-transport-protocol">Transport protocol</h3>
 
-Per entry in `transportProtocols`
+Each entry in `transportProtocols`
 
-<ProtoField name="websocket, http, grpc, httpupgrade, splithttp, tcp">
+Only one of `websocket`, `http`, `grpc`, `httpupgrade`, `splithttp`, or `tcp` may be set per transport block.
 
-Transport-specific config (oneof)
+<ProtoField name="websocket" type="WebsocketConfig">
+
+WebSocket transport. See [WebSocket](/docs/vx-core/configuration/transport/websocket).
 
 </ProtoField>
 
+<ProtoField name="http" type="HttpConfig">
 
-<ProtoField name="alpn">
+HTTP/2 transport camouflage. See [HTTP transport](/docs/vx-core/configuration/transport/http).
+
+</ProtoField>
+
+<ProtoField name="grpc" type="GrpcConfig">
+
+gRPC transport. See [gRPC](/docs/vx-core/configuration/transport/grpc).
+
+</ProtoField>
+
+<ProtoField name="httpupgrade" type="HttpUpgradeConfig">
+
+HTTP Upgrade transport. See [HTTPUpgrade](/docs/vx-core/configuration/transport/httpupgrade).
+
+</ProtoField>
+
+<ProtoField name="splithttp" type="SplitHttpConfig">
+
+Split HTTP (XHTTP) transport. See [SplitHTTP](/docs/vx-core/configuration/transport/splithttp).
+
+</ProtoField>
+
+<ProtoField name="tcp" type="TcpConfig">
+
+Plain TCP transport. See [TCP](/docs/vx-core/configuration/transport/tcp).
+
+</ProtoField>
+
+<ProtoField name="alpn" type="string">
 
 Match ALPN
 
 </ProtoField>
 
-<ProtoField name="sni">
+<ProtoField name="sni" type="string">
 
 Match connection SNI
 
 </ProtoField>
 
-<ProtoField name="path">
+<ProtoField name="path" type="string">
 
 HTTP/1 path
 
 </ProtoField>
 
-<ProtoField name="h2">
+<ProtoField name="h2" type="bool">
 
 Connection uses HTTP/2
 
 </ProtoField>
 
-<ProtoField name="always">
+<ProtoField name="always" type="bool">
 
-Use this transport for every connection
+Use this transport for all connections
 
 </ProtoField>
 
-See [Transport](/docs/vx-core/configuration/transport) and [Security](/docs/vx-core/configuration/security) for field reference.
+Field details are in [Transport](/docs/vx-core/configuration/transport) and [Security](/docs/vx-core/configuration/security).
 
 ## Related
 
-- [Outbounds](/docs/vx-core/configuration/outbounds) — where routed traffic is sent
-- [Router](/docs/vx-core/configuration/router) — match on `inboundTags`
+- [Outbounds](/docs/vx-core/configuration/outbounds) — Where routed traffic goes
+- [Router](/docs/vx-core/configuration/router) — Match by `inboundTags`

@@ -1,4 +1,4 @@
----
+﻿---
 title: HTTP transport
 description: HttpConfig (HTTP/2 camouflage)
 ---
@@ -11,7 +11,7 @@ HTTP/2 transport camouflage (not the [HTTP proxy](/docs/vx-core/configuration/pr
 
 <ProtoField name="host" type="string[]">
 
-Host header values (random choice)
+Host header values (one chosen at random)
 
 </ProtoField>
 
@@ -27,9 +27,23 @@ HTTP method
 
 </ProtoField>
 
-<ProtoField name="header" type="Header[]">
+<ProtoField name="header" type="HttpHeader[]">
 
-Custom headers (`name`, repeated `value`)
+Custom headers; see [HttpHeader](#httpheader)
+
+</ProtoField>
+
+### HttpHeader
+
+<ProtoField name="name" type="string">
+
+Header name (e.g. `Accept`, `Cookie`)
+
+</ProtoField>
+
+<ProtoField name="value" type="string[]">
+
+Header values; when multiple are set, one is chosen at random
 
 </ProtoField>
 

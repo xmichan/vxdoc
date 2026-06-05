@@ -1,15 +1,25 @@
----
+﻿---
 title: HTTP proxy
 description: HttpServerConfig and HttpClientConfig
 ---
 
-Proto: [`protos/proto/vx/proxy/http/http.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/proxy/http/http.proto)
+Standard HTTP proxy protocol (`CONNECT` tunneling and plain HTTP forwarding). Proto: [`protos/proto/vx/proxy/http/http.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/proxy/http/http.proto)
 
-Standard HTTP CONNECT proxy (not the HTTP *transport* — see [Transport HTTP](/docs/vx-core/configuration/transport/http)).
+This is not HTTP **transport** disguise (`TransportConfig.http`) — see [Transport HTTP](/docs/vx-core/configuration/transport/http).
+
+- **Inbound** (`HttpServerConfig`): accepts client HTTP proxy requests, supporting `CONNECT` and plain HTTP (absolute URL)
+- **Outbound** (`HttpClientConfig`): initiates `CONNECT` to an upstream HTTP proxy, establishing a TCP tunnel. UDP is not supported
 
 ## HttpServerConfig
 
-Empty message — no extra fields. Authentication is typically handled at the transport or routing layer.
+Empty message with no configuration fields.
+
+The inbound handler supports:
+
+- **`CONNECT`** — relays the TCP stream after returning `200 Connection established`
+- **Plain HTTP** — forwards HTTP/1.1 requests with absolute URLs (not `CONNECT`)
+
+Only TCP (and UNIX socket) inbounds are supported. `HttpServerConfig` itself has no authentication fields.
 
 ```json
 {
@@ -21,26 +31,47 @@ Empty message — no extra fields. Authentication is typically handled at the tr
 
 <ProtoField name="account" type="Account">
 
-Optional `username` / `password`
+Optional HTTP proxy authentication. When non-empty, sends a `Proxy-Authorization: Basic ...` header in the `CONNECT` request.
 
 </ProtoField>
 
 <ProtoField name="h1SkipWaitForReply" type="bool">
 
-HTTP/1 optimization
+HTTP/1 `CONNECT` optimization, default `false`.
+
+- `false`: send the `CONNECT` request first, wait for the proxy to return `200`, then send the first payload
+- `true`: write the first payload in the same write as the `CONNECT` request (for upstreams that require the first packet with the handshake); also extends the timeout for waiting for the first payload to 1 second
+
+No effect on HTTP/2 `CONNECT` (HTTP/2 can already carry the first payload in the request body).
 
 </ProtoField>
 
-### Account
+```json
+{
+  "@type": "type.googleapis.com/vx.proxy.http.HttpClientConfig",
+  "account": {
+    "username": "user",
+    "password": "pass"
+  }
+}
+```
 
-<ProtoField name="username">
+## Account
 
-Proxy auth user
+<ProtoField name="username" type="string">
+
+Proxy authentication username
 
 </ProtoField>
 
-<ProtoField name="password">
+<ProtoField name="password" type="string">
 
-Proxy auth password
+Proxy authentication password
 
 </ProtoField>
+
+## Related
+
+- [Transport HTTP](/docs/vx-core/configuration/transport/http) — HTTP/2 transport disguise (different purpose)
+- [Outbounds](/docs/vx-core/configuration/outbounds) — embed `HttpClientConfig` in `protocol`
+- [Inbounds](/docs/vx-core/configuration/inbounds) — embed `HttpServerConfig` in `protocol`

@@ -1,4 +1,4 @@
----
+﻿---
 title: VMess
 description: VmessServerConfig and VmessClientConfig
 ---
@@ -31,7 +31,7 @@ Reject legacy encryption
 
 <ProtoField name="id" type="string">
 
-Account UUID
+Like a password; can be any string
 
 </ProtoField>
 
@@ -41,11 +41,6 @@ See below
 
 </ProtoField>
 
-<ProtoField name="special" type="bool">
-
-Internal / extended use
-
-</ProtoField>
 
 <ProtoField name="alterId" type="uint32">
 
@@ -69,7 +64,7 @@ Legacy alterId (usually 0)
 
 <ProtoField name="ZERO" type="6" />
 
-In JSON use enum names (for example `"security": "CHACHA20_POLY1305"`).
+Use enum names in JSON (for example `"security": "CHACHA20_POLY1305"`).
 
 ## Related
 

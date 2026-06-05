@@ -1,4 +1,4 @@
----
+﻿---
 title: WebSocket
 description: WebsocketConfig
 ---
@@ -29,7 +29,7 @@ Extra headers (`key`, `value`)
 
 <ProtoField name="maxEarlyData" type="int32">
 
-Max early data bytes
+Maximum early data bytes
 
 </ProtoField>
 
@@ -41,7 +41,21 @@ Browser forwarding mode
 
 <ProtoField name="earlyDataHeaderName" type="string">
 
-Header carrying early data
+Header that carries early data
+
+</ProtoField>
+
+### Header
+
+<ProtoField name="key" type="string">
+
+Header name
+
+</ProtoField>
+
+<ProtoField name="value" type="string">
+
+Header value
 
 </ProtoField>
 

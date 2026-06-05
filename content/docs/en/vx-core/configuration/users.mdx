@@ -1,17 +1,17 @@
----
+﻿---
 title: Users
 description: UserConfig — authentication accounts
 ---
 
-Global user accounts are listed in `ServerConfig.users` (`UserConfig[]`). The same message can be attached per [inbound](/docs/vx-core/configuration/inbounds) in `users`.
+This message is used in `ServerConfig.users` (`UserConfig[]`). It is also used in the `users` field of [inbounds](/docs/vx-core/configuration/inbounds).
 
-Schema: [`protos/proto/vx/user/user.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/user/user.proto).
+Schema definition: [`protos/proto/vx/user/user.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/user/user.proto).
 
 ## UserConfig
 
 <ProtoField name="id" type="string">
 
-User identifier (used in routing `usernames`)
+User identifier (used for routing `usernames`)
 
 </ProtoField>
 
@@ -23,7 +23,7 @@ Policy level for [PolicyConfig](/docs/vx-core/configuration/policy) `userPolicyM
 
 <ProtoField name="secret" type="string">
 
-Shared secret / UUID depending on protocol
+Password of arbitrary length
 
 </ProtoField>
 
@@ -57,9 +57,9 @@ Shared secret / UUID depending on protocol
 }
 ```
 
-Inbound-level `users` are added to all proxy handlers on that inbound. Global `users` apply across the server where the protocol supports a shared user store.
+Inbound-level `users` are added to all proxy handlers on that inbound. Global `users` are added to all proxy handlers on every inbound.
 
 ## Related
 
 - [Router](/docs/vx-core/configuration/router) — match `usernames`
-- [Policy](/docs/vx-core/configuration/policy) — `userLevel` → buffer and limits
+- [Policy](/docs/vx-core/configuration/policy) — `userLevel` → buffers and limits

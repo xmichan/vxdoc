@@ -1,63 +1,51 @@
 ---
 title: Shadowsocks
-description: Shadowsocks and Shadowsocks 2022 configs
+description: Shadowsocks and Shadowsocks 2022 configuration
 ---
+
+Classic Shadowsocks and Shadowsocks 2022 use different protobuf messages, configured via the `Any` field in [inbound](/docs/vx-core/configuration/inbounds) `protocol` / [outbound](/docs/vx-core/configuration/outbounds) `protocol`.
 
 ## Shadowsocks (classic)
 
-Proto: [`shadowsocks.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/proxy/shadowsocks/shadowsocks.proto)
+Proto: [`protos/proto/vx/proxy/shadowsocks/shadowsocks.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/proxy/shadowsocks/shadowsocks.proto)
+
+Supports TCP and UDP.
 
 ### ShadowsocksCipherType
 
-<ProtoField name="0" type="AES_128_GCM">
-</ProtoField>
+<ProtoField name="AES_128_GCM" type="0" />
 
-<ProtoField name="1" type="AES_256_GCM">
-</ProtoField>
+<ProtoField name="AES_256_GCM" type="1" />
 
-<ProtoField name="2" type="CHACHA20_POLY1305">
-</ProtoField>
+<ProtoField name="CHACHA20_POLY1305" type="2" />
 
-<ProtoField name="3" type="NONE">
-</ProtoField>
+<ProtoField name="NONE" type="3" />
+
+Use enum names in JSON (for example `"cipherType": "CHACHA20_POLY1305"`). `NONE` means no payload encryption, typically used only when combined with outer TLS, etc.
 
 ### ShadowsocksServerConfig
 
-<ProtoField name="cipherType">
+<ProtoField name="cipherType" type="ShadowsocksCipherType">
 
-Cipher enum
-
-</ProtoField>
-
-<ProtoField name="ivCheck">
-
-IV validation
+Encryption algorithm
 
 </ProtoField>
 
-<ProtoField name="user">
+<ProtoField name="ivCheck" type="bool">
 
-Single `UserConfig` (`secret` = password)
-
-</ProtoField>
-
-<ProtoField name="experimentReducedIvHeadEntropy">
-
-Experimental option
+When `true`, enable IV replay detection (Bloom filter) and reject duplicate IVs
 
 </ProtoField>
 
-### ShadowsocksClientConfig
+<ProtoField name="user" type="UserConfig">
 
-<ProtoField name="cipherType">
-
-Cipher enum
+Single user; `secret` is the Shadowsocks password
 
 </ProtoField>
 
-<ProtoField name="password">
+<ProtoField name="experimentReducedIvHeadEntropy" type="bool">
 
-PSK
+Experimental option: map the first 6 bytes of the IV to printable characters, reducing IV entropy for certain traffic disguise scenarios
 
 </ProtoField>
 
@@ -65,7 +53,30 @@ PSK
 {
   "@type": "type.googleapis.com/vx.proxy.shadowsocks.ShadowsocksServerConfig",
   "cipherType": "CHACHA20_POLY1305",
+  "ivCheck": true,
   "user": { "secret": "your-password" }
+}
+```
+
+### ShadowsocksClientConfig
+
+<ProtoField name="cipherType" type="ShadowsocksCipherType">
+
+Must match the server `cipherType`
+
+</ProtoField>
+
+<ProtoField name="password" type="string">
+
+Pre-shared key (PSK), same as the server `user.secret`
+
+</ProtoField>
+
+```json
+{
+  "@type": "type.googleapis.com/vx.proxy.shadowsocks.ShadowsocksClientConfig",
+  "cipherType": "CHACHA20_POLY1305",
+  "password": "your-password"
 }
 ```
 
@@ -73,39 +84,33 @@ PSK
 
 ## Shadowsocks 2022
 
-Proto: [`shadowsocks2022.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/proxy/shadowsocks2022/shadowsocks2022.proto)
+Proto: [`protos/proto/vx/proxy/shadowsocks2022/shadowsocks2022.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/proxy/shadowsocks2022/shadowsocks2022.proto)
+
+AEAD 2022 implementation based on sing-shadowsocks. Supported `method` values:
+
+- `2022-blake3-aes-128-gcm` — PSK 16 bytes
+- `2022-blake3-aes-256-gcm` — PSK 32 bytes
+- `2022-blake3-chacha20-poly1305` — PSK 32 bytes
+
+The PSK can be valid base64 (with the required length); otherwise the core derives the required length from the plaintext password using BLAKE3.
 
 ### Shadowsocks2022ServerConfig
 
-<ProtoField name="method">
+<ProtoField name="method" type="string">
 
-Cipher suite string (e.g. `2022-blake3-aes-128-gcm`)
-
-</ProtoField>
-
-<ProtoField name="user">
-
-`UserConfig` with PSK in `secret`
+Cipher suite string (see supported list above)
 
 </ProtoField>
 
-<ProtoField name="networks">
+<ProtoField name="user" type="UserConfig">
 
-Allowed networks (`TCP`, `UDP`, …)
-
-</ProtoField>
-
-### Shadowsocks2022ClientConfig
-
-<ProtoField name="method">
-
-Cipher suite string
+Single user; `secret` is the PSK (base64 or plaintext; client-side handling is the same)
 
 </ProtoField>
 
-<ProtoField name="key">
+<ProtoField name="networks" type="Network[]">
 
-PSK / key material
+Allowed networks (`TCP`, `UDP`, etc.). When empty, defaults to `TCP` and `UDP`.
 
 </ProtoField>
 
@@ -116,3 +121,30 @@ PSK / key material
   "user": { "secret": "base64-or-raw-key" }
 }
 ```
+
+### Shadowsocks2022ClientConfig
+
+<ProtoField name="method" type="string">
+
+Must match the server `method`
+
+</ProtoField>
+
+<ProtoField name="key" type="string">
+
+PSK / key material, same as the server `user.secret`
+
+</ProtoField>
+
+```json
+{
+  "@type": "type.googleapis.com/vx.proxy.shadowsocks2022.Shadowsocks2022ClientConfig",
+  "method": "2022-blake3-aes-128-gcm",
+  "key": "base64-or-raw-key"
+}
+```
+
+## Related
+
+- [Transport](/docs/vx-core/configuration/transport) — WebSocket, TLS, etc.
+- [Users](/docs/vx-core/configuration/users) — `UserConfig`

@@ -1,4 +1,4 @@
----
+﻿---
 title: REALITY
 description: RealityConfig
 ---
@@ -7,112 +7,119 @@ Proto: [`protos/proto/vx/transport/security/reality/config.proto`](https://githu
 
 Set on `TransportConfig.reality` or `MultiProxyInboundConfig.securityConfigs[].reality`.
 
+**Mutually exclusive** with `tls` (only one per transport block).
+
 ## RealityConfig
 
-### Server-only
+### Server only
 
-<ProtoField name="dest">
+<ProtoField name="dest" type="string">
 
 Fallback destination (e.g. `www.microsoft.com:443`)
 
 </ProtoField>
 
-<ProtoField name="xver">
+<ProtoField name="xver" type="uint64">
 
-PROXY protocol version sent to dest
+PROXY protocol version sent to `dest` (0 = do not send)
 
 </ProtoField>
 
-<ProtoField name="serverNames">
+<ProtoField name="serverNames" type="string[]">
 
 Allowed SNI server names
 
 </ProtoField>
 
-<ProtoField name="privateKey">
+<ProtoField name="privateKey" type="bytes">
 
 X25519 private key
 
 </ProtoField>
 
-<ProtoField name="minClientVer, maxClientVer">
+<ProtoField name="minClientVer" type="bytes">
 
-Allowed client version bytes
-
-</ProtoField>
-
-
-<ProtoField name="maxTimeDiff">
-
-Max client clock skew (ms)
+Minimum allowed client version bytes
 
 </ProtoField>
 
-<ProtoField name="shortIds">
+<ProtoField name="maxClientVer" type="bytes">
 
-Allowed short IDs (list)
+Maximum allowed client version bytes
 
 </ProtoField>
 
-### Client / shared
+<ProtoField name="maxTimeDiff" type="uint64">
 
-<ProtoField name="show">
+Maximum client clock skew (**milliseconds**)
+
+</ProtoField>
+
+<ProtoField name="shortIds" type="bytes[]">
+
+Allowed short ID list (each entry up to 8 bytes)
+
+</ProtoField>
+
+### Client
+
+<ProtoField name="show" type="bool">
 
 Debug output
 
 </ProtoField>
 
-<ProtoField name="Fingerprint">
+<ProtoField name="Fingerprint" type="string">
 
-uTLS fingerprint
-
-</ProtoField>
-
-<ProtoField name="serverName">
-
-SNI to present
+uTLS fingerprint (e.g. `chrome`, `firefox`)
 
 </ProtoField>
 
-<ProtoField name="publicKey">
+<ProtoField name="serverName" type="string">
+
+Presented SNI
+
+</ProtoField>
+
+<ProtoField name="publicKey" type="bytes">
 
 Server public key (bytes)
 
 </ProtoField>
 
-<ProtoField name="pbk">
+<ProtoField name="pbk" type="string">
 
-Public key (string form)
-
-</ProtoField>
-
-<ProtoField name="shortId">
-
-Client short ID (bytes)
+Public key (Base64 string; equivalent to `publicKey`)
 
 </ProtoField>
 
-<ProtoField name="sid">
+<ProtoField name="shortId" type="bytes">
 
-Short ID string (8 bytes)
+Client short ID (bytes; must be 8 bytes)
 
 </ProtoField>
 
-<ProtoField name="spiderX">
+<ProtoField name="sid" type="string">
+
+Short ID hex string (8 bytes)
+
+</ProtoField>
+
+<ProtoField name="spiderX" type="string">
 
 Spider X path
 
 </ProtoField>
 
-<ProtoField name="spiderY">
+<ProtoField name="spiderY" type="int64[]">
 
-Spider Y values
+Spider Y value list
 
 </ProtoField>
 
-<ProtoField name="masterKeyLog">
+<ProtoField name="masterKeyLog" type="string">
 
-Key log path (debug)
+Key log path (debugging)
 
 </ProtoField>
 
@@ -134,28 +141,8 @@ Key log path (debug)
 }
 ```
 
-Client outbound example fields:
-
-```json
-{
-  "transport": {
-    "tcp": {},
-    "reality": {
-      "serverName": "www.example.com",
-      "publicKey": "...",
-      "shortId": "...",
-      "fingerprint": "chrome"
-    }
-  },
-  "protocol": {
-    "@type": "type.googleapis.com/vx.proxy.vless.VlessClientConfig",
-    "id": "uuid",
-    "flow": "xtls-rprx-vision"
-  }
-}
-```
-
 ## Related
 
-- [VLESS](/docs/vx-core/configuration/protocols/vless) — Vision flow
-- [Inbounds](/docs/vx-core/configuration/inbounds) — `securityConfigs` on multi-inbound
+- [TLS](/docs/vx-core/configuration/security/tls) — mutually exclusive with REALITY
+- [VLESS](/docs/vx-core/configuration/protocols/vless) — Vision flow control
+- [Inbounds](/docs/vx-core/configuration/inbounds) — `securityConfigs` on multi-inbounds

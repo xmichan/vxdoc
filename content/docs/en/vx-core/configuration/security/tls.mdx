@@ -1,4 +1,4 @@
----
+﻿---
 title: TLS
 description: TlsConfig and Certificate
 ---
@@ -10,105 +10,107 @@ Protos:
 
 Set on `TransportConfig.tls`, `MultiProxyInboundConfig.securityConfigs[].tls`, Hysteria2 `tlsConfig`, and SplitHTTP `downloadSettings.tls`.
 
+**Mutually exclusive** with `reality` (only one per transport block).
+
 ## TlsConfig
 
-<ProtoField name="certificates">
+<ProtoField name="certificates" type="Certificate[]">
 
-Server/client cert chain (`Certificate[]`)
-
-</ProtoField>
-
-<ProtoField name="rootCas">
-
-Custom root CA PEM blobs
+Server/client certificate chain
 
 </ProtoField>
 
-<ProtoField name="issueCas">
+<ProtoField name="rootCas" type="bytes[]">
 
-CAs used to issue certs to peers
-
-</ProtoField>
-
-<ProtoField name="serverName">
-
-SNI; default = destination domain when dialing
+Custom root CA PEM (each entry is a PEM byte blob)
 
 </ProtoField>
 
-<ProtoField name="disableSystemRoot">
+<ProtoField name="issueCas" type="Certificate[]">
+
+CAs used to issue certificates to peers
+
+</ProtoField>
+
+<ProtoField name="serverName" type="string">
+
+SNI; defaults to the target domain when dialing
+
+</ProtoField>
+
+<ProtoField name="disableSystemRoot" type="bool">
 
 Do not use system root CAs
 
 </ProtoField>
 
-<ProtoField name="allowInsecure">
+<ProtoField name="allowInsecure" type="bool">
 
-Skip certificate verification (client)
-
-</ProtoField>
-
-<ProtoField name="nextProtocol">
-
-ALPN list
+Skip certificate verification (**client**)
 
 </ProtoField>
 
-<ProtoField name="enableSessionResumption">
+<ProtoField name="nextProtocol" type="string[]">
 
-TLS session tickets / resumption
-
-</ProtoField>
-
-<ProtoField name="pinnedPeerCertificateChainSha256">
-
-Pin peer cert chain hashes
+ALPN list (e.g. `h2`, `http/1.1`)
 
 </ProtoField>
 
-<ProtoField name="verifyClientCertificate">
+<ProtoField name="enableSessionResumption" type="bool">
 
-Require valid client cert (server)
-
-</ProtoField>
-
-<ProtoField name="imitate">
-
-uTLS client fingerprint name
+Enable TLS session tickets / resumption
 
 </ProtoField>
 
-<ProtoField name="noSNI">
+<ProtoField name="pinnedPeerCertificateChainSha256" type="bytes[]">
+
+Pinned peer certificate chain SHA-256 hashes (each entry is 32 bytes)
+
+</ProtoField>
+
+<ProtoField name="verifyClientCertificate" type="bool">
+
+Require a valid client certificate (**server**)
+
+</ProtoField>
+
+<ProtoField name="imitate" type="string">
+
+uTLS client fingerprint name (e.g. `chrome`)
+
+</ProtoField>
+
+<ProtoField name="noSNI" type="bool">
 
 Do not send SNI (uTLS)
 
 </ProtoField>
 
-<ProtoField name="forceAlpn">
+<ProtoField name="forceAlpn" type="ForceALPN">
 
-`TRANSPORT_PREFERENCE_TAKE_PRIORITY`, `NO_ALPN`, `UTLS_PRESET`
-
-</ProtoField>
-
-<ProtoField name="masterKeyLog">
-
-NSS key log path (debug)
+ALPN behavior; see [ForceALPN](#forcealpn)
 
 </ProtoField>
 
-<ProtoField name="echKey">
+<ProtoField name="masterKeyLog" type="string">
+
+NSS key log path (debugging)
+
+</ProtoField>
+
+<ProtoField name="echKey" type="bytes">
 
 Server ECH key
 
 </ProtoField>
 
-<ProtoField name="echConfig">
+<ProtoField name="echConfig" type="bytes">
 
 Client ECH config blob
 
 </ProtoField>
 
-<ProtoField name="enableEch">
+<ProtoField name="enableEch" type="bool">
 
 Client: enable ECH
 
@@ -116,19 +118,19 @@ Client: enable ECH
 
 ### ForceALPN
 
-<ProtoField name="TRANSPORT_PREFERENCE_TAKE_PRIORITY">
+<ProtoField name="TRANSPORT_PREFERENCE_TAKE_PRIORITY" type="0">
 
-User ALPN if set, else transport default
+Use user-configured ALPN if set; otherwise transport default
 
 </ProtoField>
 
-<ProtoField name="NO_ALPN">
+<ProtoField name="NO_ALPN" type="1">
 
 Do not send ALPN extension
 
 </ProtoField>
 
-<ProtoField name="UTLS_PRESET">
+<ProtoField name="UTLS_PRESET" type="2">
 
 Use uTLS preset ALPN
 
@@ -136,27 +138,29 @@ Use uTLS preset ALPN
 
 ## Certificate
 
-<ProtoField name="certificate">
+Certificates and private keys can be inline PEM bytes or loaded from file paths (paths take precedence over inline).
 
-PEM cert bytes
+<ProtoField name="certificate" type="bytes">
+
+PEM certificate bytes
 
 </ProtoField>
 
-<ProtoField name="key">
+<ProtoField name="key" type="bytes">
 
 PEM private key bytes
 
 </ProtoField>
 
-<ProtoField name="certificateFilepath">
+<ProtoField name="certificateFilepath" type="string">
 
-Path to cert file
+Certificate file path
 
 </ProtoField>
 
-<ProtoField name="keyFilepath">
+<ProtoField name="keyFilepath" type="string">
 
-Path to key file
+Private key file path
 
 </ProtoField>
 
@@ -180,5 +184,6 @@ Path to key file
 
 ## Related
 
-- [WebSocket](/docs/vx-core/configuration/transport/websocket) / [gRPC](/docs/vx-core/configuration/transport/grpc) — often paired with TLS on 443
+- [REALITY](/docs/vx-core/configuration/security/reality) — alternative security layer mutually exclusive with TLS
+- [WebSocket](/docs/vx-core/configuration/transport/websocket) / [gRPC](/docs/vx-core/configuration/transport/grpc) — commonly paired with TLS on port 443
 - [VLESS Vision](/docs/vx-core/configuration/protocols/vless) — `flow` with TLS or REALITY

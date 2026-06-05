@@ -3,7 +3,7 @@ title: Log
 description: LoggerConfig
 ---
 
-Logging is configured in `ServerConfig.log` (`LoggerConfig`). Schema: [`protos/proto/vx/log/logger.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/log/logger.proto).
+Logging is configured in `ServerConfig.log` (`LoggerConfig`). Schema definition: [`protos/proto/vx/log/logger.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/log/logger.proto).
 
 ## LoggerConfig
 
@@ -21,7 +21,7 @@ Log file path
 
 <ProtoField name="logFileDir" type="string">
 
-If `filePath` is empty, write timestamped files here (`2006-01-02T15:04:05.txt`)
+When `filePath` is empty, write timestamped files in this directory (`2006-01-02T15:04:05.txt`)
 
 </ProtoField>
 
@@ -33,7 +33,7 @@ Human-readable console output
 
 <ProtoField name="showColor" type="bool">
 
-Colorized logs (with console writer)
+Colored logs (with console output)
 
 </ProtoField>
 
@@ -60,7 +60,3 @@ Redact domains and IPs in log lines
   }
 }
 ```
-
-## UserLoggerConfig
-
-`UserLoggerConfig` in the same proto file is for **VX client** session logging (`enable`, `logAppId`, `logSessionEnd`, `logRealtimeUsage`). It is not part of `ServerConfig`; the client wires it separately.

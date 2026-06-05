@@ -5,87 +5,49 @@ description: DeviceConfig and PeerConfig
 
 Proto: [`protos/proto/vx/proxy/wireguard/config.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/proxy/wireguard/config.proto)
 
-WireGuard is configured as an outbound `DeviceConfig` (no separate `*ServerConfig` in this proto).
+WireGuard is used only as an **outbound** `DeviceConfig` (this proto has no `*ServerConfig`).
 
 ## DeviceConfig
 
 <ProtoField name="secretKey" type="string">
 
-Local private key
+Local interface private key (WireGuard key format)
 
 </ProtoField>
 
 <ProtoField name="endpoint" type="string[]">
 
-Endpoint host(s)
+Device-level endpoint host list (optional)
 
 </ProtoField>
 
 <ProtoField name="peers" type="PeerConfig[]">
 
-Remote peers
+Remote peers; see [PeerConfig](#peerconfig)
 
 </ProtoField>
 
 <ProtoField name="mtu" type="int32">
 
-Interface MTU
+TUN interface MTU
 
 </ProtoField>
 
 <ProtoField name="numWorkers" type="int32">
 
-Worker count
+Number of encryption worker threads
 
 </ProtoField>
 
 <ProtoField name="reserved" type="bytes">
 
-WireGuard reserved bytes (3)
-
-</ProtoField>
-
-<ProtoField name="isClient" type="bool">
-
-Client mode
+WireGuard protocol reserved bytes (3 bytes, used to bypass blocking)
 
 </ProtoField>
 
 <ProtoField name="noKernelTun" type="bool">
 
-Userspace tun only
-
-</ProtoField>
-
-## PeerConfig
-
-<ProtoField name="publicKey">
-
-Peer public key
-
-</ProtoField>
-
-<ProtoField name="preSharedKey">
-
-Optional PSK
-
-</ProtoField>
-
-<ProtoField name="endpoint">
-
-Peer endpoint `host:port`
-
-</ProtoField>
-
-<ProtoField name="keepAlive">
-
-Persistent keepalive (seconds)
-
-</ProtoField>
-
-<ProtoField name="allowedIps">
-
-Allowed IP CIDRs for this peer
+When `true`, use userspace TUN only; do not use kernel WireGuard
 
 </ProtoField>
 
@@ -103,3 +65,40 @@ Allowed IP CIDRs for this peer
   ]
 }
 ```
+
+## PeerConfig
+
+<ProtoField name="publicKey" type="string">
+
+Peer public key
+
+</ProtoField>
+
+<ProtoField name="preSharedKey" type="string">
+
+Optional pre-shared key (PSK)
+
+</ProtoField>
+
+<ProtoField name="endpoint" type="string">
+
+Peer endpoint `host:port`
+
+</ProtoField>
+
+<ProtoField name="keepAlive" type="uint32">
+
+Persistent keepalive interval (**seconds**)
+
+</ProtoField>
+
+<ProtoField name="allowedIps" type="string[]">
+
+List of IP CIDRs routed through this peer
+
+</ProtoField>
+
+## Related
+
+- [Outbounds](/docs/vx-core/configuration/outbounds)
+- [TCP header masking](/docs/vx-core/configuration/transport/tcp) — `wireguard` header type

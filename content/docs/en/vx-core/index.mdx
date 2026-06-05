@@ -1,35 +1,35 @@
----
+﻿---
 title: Overview
-description: Proxy engine powering VX
+description: The proxy engine that powers VX
 ---
 
-vx-core is the proxy engine that powers [VX](https://github.com/5vnetwork/vx), [UmiVPN](https://github.com/5vnetwork/umivpn) and [努努加速器](https://github.com/5vnetwork/nunu).
-It can also be used as a proxy server on any OS.
+vx-core is the proxy engine that powers [VX](https://github.com/5vnetwork/vx), [UmiVPN](https://github.com/5vnetwork/umivpn), and [Nunu Accelerator](https://github.com/5vnetwork/nunu).
+It can also be used as a standalone proxy server on any operating system.
 
 <GitHubRepoButton repo="vx-core" />
 
-## Credit
+## Acknowledgments
 
-vx-core incorporates code from:
+vx-core includes code from the following projects:
 
 - [v2ray-core](https://github.com/v2fly/v2ray-core)
 - [Xray-core](https://github.com/XTLS/Xray-core)
 - [hysteria](https://github.com/apernet/hysteria)
 - [sing-box](https://github.com/SagerNet/sing-box)
 
-## Deployment Modes
+## Deployment modes
 
-vx-core runs in different contexts depending on the platform:
+vx-core runs in different scenarios depending on the platform:
 
 - **Server**: Standalone server program
 - **Client library**: Embedded in VX via gomobile/c-shared bindings
 
-## Recommended Setup
+## Recommended deployment
 
-We recommend using the [VX client](/docs/vx) to install and configure vx-core on a VPS. The client provides a GUI for server deployment, config editing, and monitoring over SSH.
+We recommend using the [VX client](/docs/vx) to install and configure vx-core on a VPS. The client provides a graphical interface for deploying servers over SSH, editing configuration, and monitoring.
 
-For manual server setup, see [Quick Start](/docs/vx-core/quick-start).
+For manual server deployment, see [Quick Start](/docs/vx-core/quick-start).
 
 ## License
 
-See the [LICENSE](https://github.com/5vnetwork/vx-core/blob/main/LICENSE) file in the vx-core repository. Code in certain directories (VLESS, REALITY, WireGuard, etc.) is derived from Xray-core and distributed under MPL 2.0.
+See the [LICENSE](https://github.com/5vnetwork/vx-core/blob/main/LICENSE) file in the vx-core repository. Code in some directories (VLESS, REALITY, WireGuard, etc.) is derived from Xray-core and distributed under MPL 2.0.

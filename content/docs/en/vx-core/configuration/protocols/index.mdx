@@ -1,9 +1,9 @@
----
-title: Proxy protocols
-description: Protocol configs used in inbound protocol and outbound protocol Any fields
+﻿---
+title: Proxy Protocols
+description: Protocol configuration in inbound protocol / protocols and outbound protocol Any fields
 ---
 
-Proxy protocol settings are embedded in [inbound](/docs/vx-core/configuration/inbounds) `protocol` / `protocols` and [outbound](/docs/vx-core/configuration/outbounds) `protocol` as `google.protobuf.Any`.
+Proxy protocol settings are embedded in [inbound](/docs/vx-core/configuration/inbounds) `protocol` / `protocols` and [outbound](/docs/vx-core/configuration/outbounds) `protocol`, with type `google.protobuf.Any`.
 
 In ProtoJSON, set `@type` to:
 
@@ -13,7 +13,7 @@ type.googleapis.com/<protobuf full name>
 
 Protobuf package names use dots (for example `vx.proxy.vmess.VmessServerConfig`).
 
-## Server vs client messages
+## Server and Client Messages
 
 - **VMess** — Server: `vx.proxy.vmess.VmessServerConfig`, Client: `vx.proxy.vmess.VmessClientConfig`
 - **VLESS** — Server: `vx.proxy.vless.VlessServerConfig`, Client: `vx.proxy.vless.VlessClientConfig`
@@ -25,15 +25,15 @@ Protobuf package names use dots (for example `vx.proxy.vmess.VmessServerConfig`)
 - **Hysteria2** — Server: `vx.proxy.hysteria.Hysteria2ServerConfig`, Client: `vx.proxy.hysteria.Hysteria2ClientConfig`
 - **AnyTLS** — Server: `vx.proxy.anytls.AnytlsServerConfig`, Client: `vx.proxy.anytls.AnytlsClientConfig`
 - **WireGuard** — Client: `vx.proxy.wireguard.DeviceConfig`
-- **Freedom** — Server: `vx.proxy.freedom.FreedomConfig`, Client: same
-- **Blackhole** — Server: `vx.proxy.blackhole.BlackholeConfig`, Client: same
-- **Dokodemo** — Server: `vx.proxy.dokodemo.DokodemoConfig`, Client: same
+- **Freedom** — Server: `vx.proxy.freedom.FreedomConfig`, Client: same as server
+- **Blackhole** — Server: `vx.proxy.blackhole.BlackholeConfig`, Client: same as server
+- **Dokodemo** — Server: `vx.proxy.dokodemo.DokodemoConfig`, Client: same as server
 
 ## Transport and TLS
 
-Most proxy protocols run over raw TCP or UDP. When you need TLS, WebSocket, gRPC, REALITY, etc., set `transport` on the inbound/outbound to a [TransportConfig](/docs/vx-core/configuration/transport) (or use [MultiProxyInboundConfig](/docs/vx-core/configuration/inbounds) for per-SNI matrices).
+Most proxy protocols run over raw TCP or UDP. When TLS, WebSocket, gRPC, REALITY, etc. are needed, set `transport` on the inbound/outbound to [TransportConfig](/docs/vx-core/configuration/transport) (or use [MultiProxyInboundConfig](/docs/vx-core/configuration/inbounds) for per-SNI matrix configuration).
 
-Hysteria2 embeds its own `tlsConfig` in the protocol message.
+Hysteria2 embeds `tlsConfig` inside the protocol message.
 
 ## Sections
 
