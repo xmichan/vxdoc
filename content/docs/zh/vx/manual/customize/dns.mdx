@@ -20,31 +20,25 @@ DNS 服务器由每个[路由模式](/zh/docs/vx/manual/customize/modes)内的 *
 
 添加 **DNS 服务器** 时，从下拉菜单选择类型。每种类型为单一解析器实现。
 
-| 类型 | 作用 |
-| --- | --- |
-| **Fake** | 从配置的 CIDR 池（通常为 `198.18.0.0/15`）返回假 IP。 |
-| **UDP/TCP** | 经典 DNS over UDP/TCP，指向一个或多个 `host:port`。多个地址可用逗号分隔；每次查询同时发往所有地址，使用 **首个回复**。 |
-| **HTTPS** | DNS over HTTPS (DoH)，指向解析器 URL（例如 `https://1.1.1.1/dns-query`）。 |
-| **TLS** | DNS over TLS (DoT)，指向一个或多个 `host:port`。 |
-| **QUIC** | DNS over QUIC。 |
-| **Go** | 使用 Go 运行时 / 系统 DNS 解析器（操作系统解析行为）。其流量不经过路由，通常用于服务器与非 TUN 模式。 |
-| **Empty** | 始终返回空 DNS 应答（无记录）。 |
+- **Fake**: 从配置的 CIDR 池（通常为 `198.18.0.0/15`）返回假 IP。
+- **UDP/TCP**: 经典 DNS over UDP/TCP，指向一个或多个 `host:port`。多个地址可用逗号分隔；每次查询同时发往所有地址，使用 **首个回复**。
+- **HTTPS**: DNS over HTTPS (DoH)，指向解析器 URL（例如 `https://1.1.1.1/dns-query`）。
+- **TLS**: DNS over TLS (DoT)，指向一个或多个 `host:port`。
+- **QUIC**: DNS over QUIC。
+- **Go**: 使用 Go 运行时 / 系统 DNS 解析器（操作系统解析行为）。其流量不经过路由，通常用于服务器与非 TUN 模式。
+- **Empty**: 始终返回空 DNS 应答（无记录）。
 
 ### 通用字段（多数类型）
 
-| 字段 | 用途 |
-| --- | --- |
-| **Name** | 在 DNS 规则与内部 DNS 服务器列表中使用的唯一标签。不可与其他服务器或组合名称重复。名称 `hijack` 保留。 |
-| **Client IP** | 可选 ECS (EDNS Client Subnet) 源地址，随查询发送，使上游解析器返回您所在位置的答案。 |
-| **Cache duration** | 缓存响应的秒数。若为空或 `0`，则缓存至记录 TTL 过期。 |
-| **Result IP set** | 解析后丢弃 A/AAAA 答案中 **不在** 所选 IP 集合内的 IP。可用于防止 DNS 污染 |
+- **Name**: 在 DNS 规则与内部 DNS 服务器列表中使用的唯一标签。不可与其他服务器或组合名称重复。名称 `hijack` 保留。
+- **Client IP**: 可选 ECS (EDNS Client Subnet) 源地址，随查询发送，使上游解析器返回您所在位置的答案。
+- **Cache duration**: 缓存响应的秒数。若为空或 `0`，则缓存至记录 TTL 过期。
+- **Result IP set**: 解析后丢弃 A/AAAA 答案中 **不在** 所选 IP 集合内的 IP。可用于防止 DNS 污染
 
 ### Fake DNS 字段
 
-| 字段 | 用途 |
-| --- | --- |
-| **Pool** | 假 IP 分配的逗号分隔 CIDR（例如 `198.18.0.0/15`）。 |
-| **LRU size** | 每个池保留的假 DNS 映射数量（表单默认 6666）。 |
+- **Pool**: 假 IP 分配的逗号分隔 CIDR（例如 `198.18.0.0/15`）。
+- **LRU size**: 每个池保留的假 DNS 映射数量（表单默认 6666）。
 
 ## 组合 DNS 服务器
 
@@ -69,11 +63,9 @@ DNS 服务器由每个[路由模式](/zh/docs/vx/manual/customize/modes)内的 *
 
 每条记录包含：
 
-| 字段 | 用途 |
-| --- | --- |
-| **Domain** | 要匹配的主机名（必填）。 |
-| **IP addresses** | 逗号分隔的 IPv4 和/或 IPv6 地址。生成 **A** 与 **AAAA** 答案。 |
-| **Proxied domain** | 可选 **CNAME** 目标 — 域名解析到该名称而非直接 IP。 |
+- **Domain**: 要匹配的主机名（必填）。
+- **IP addresses**: 逗号分隔的 IPv4 和/或 IPv6 地址。生成 **A** 与 **AAAA** 答案。
+- **Proxied domain**: 可选 **CNAME** 目标 — 域名解析到该名称而非直接 IP。
 
 ### 应用于所有 DNS 查询
 

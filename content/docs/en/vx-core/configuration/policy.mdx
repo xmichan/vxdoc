@@ -9,21 +9,55 @@ All timeout values are in **seconds** unless noted otherwise in your deployment 
 
 ## PolicyConfig
 
-| Field | Type | Description |
-| --- | --- | --- |
-| `handshakeTimeout` | int32 | Close if no data is received after connect |
-| `connectionIdleTimeout` | int32 | Close when idle (no transfer in either direction) |
-| `udpIdleTimeout` | int32 | Close UDP when no uplink data |
-| `upLinkOnlyTimeout` | int32 | After downlink finished, close if no uplink data |
-| `downLinkOnlyTimeout` | int32 | After uplink finished, close if no downlink data |
-| `defaultBufferSize` | int32 | Default per-connection buffer (not all protocols honor this) |
-| `userPolicyMap` | map&lt;uint32, UserPolicy&gt; | Per `userLevel` overrides |
+<ProtoField name="handshakeTimeout" type="int32">
+
+Close if no data is received after connect
+
+</ProtoField>
+
+<ProtoField name="connectionIdleTimeout" type="int32">
+
+Close when idle (no transfer in either direction)
+
+</ProtoField>
+
+<ProtoField name="udpIdleTimeout" type="int32">
+
+Close UDP when no uplink data
+
+</ProtoField>
+
+<ProtoField name="upLinkOnlyTimeout" type="int32">
+
+After downlink finished, close if no uplink data
+
+</ProtoField>
+
+<ProtoField name="downLinkOnlyTimeout" type="int32">
+
+After uplink finished, close if no downlink data
+
+</ProtoField>
+
+<ProtoField name="defaultBufferSize" type="int32">
+
+Default per-connection buffer (not all protocols honor this)
+
+</ProtoField>
+
+<ProtoField name="userPolicyMap" type="map&lt;uint32, UserPolicy&gt;">
+
+Per `userLevel` overrides
+
+</ProtoField>
 
 ## UserPolicy
 
-| Field | Description |
-| --- | --- |
-| `bufferSize` | Buffer size for users at this level |
+<ProtoField name="bufferSize">
+
+Buffer size for users at this level
+
+</ProtoField>
 
 User levels come from [UserConfig](/docs/vx-core/configuration/users) `userLevel` on each account.
 

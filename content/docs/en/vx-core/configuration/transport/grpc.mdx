@@ -9,16 +9,53 @@ Set on `TransportConfig.grpc`.
 
 ## GrpcConfig
 
-| Field | Type | Description |
-| --- | --- | --- |
-| `authority` | string | `:authority` pseudo-header |
-| `serviceName` | string | gRPC service name |
-| `multiMode` | bool | Multi-stream mode |
-| `idleTimeout` | int32 | Idle timeout (seconds) |
-| `healthCheckTimeout` | int32 | Health check timeout |
-| `permitWithoutStream` | bool | Allow pings without active stream |
-| `initialWindowsSize` | int32 | Initial window size |
-| `userAgent` | string | User-Agent override |
+<ProtoField name="authority" type="string">
+
+`:authority` pseudo-header
+
+</ProtoField>
+
+<ProtoField name="serviceName" type="string">
+
+gRPC service name
+
+</ProtoField>
+
+<ProtoField name="multiMode" type="bool">
+
+Multi-stream mode
+
+</ProtoField>
+
+<ProtoField name="idleTimeout" type="int32">
+
+Idle timeout (seconds)
+
+</ProtoField>
+
+<ProtoField name="healthCheckTimeout" type="int32">
+
+Health check timeout
+
+</ProtoField>
+
+<ProtoField name="permitWithoutStream" type="bool">
+
+Allow pings without active stream
+
+</ProtoField>
+
+<ProtoField name="initialWindowsSize" type="int32">
+
+Initial window size
+
+</ProtoField>
+
+<ProtoField name="userAgent" type="string">
+
+User-Agent override
+
+</ProtoField>
 
 ```json
 {

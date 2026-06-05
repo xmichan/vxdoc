@@ -7,27 +7,63 @@ Proto: [`protos/proto/vx/proxy/socks/socks.proto`](https://github.com/5vnetwork/
 
 ## AuthType
 
-| Value | Description |
-| --- | --- |
-| `NO_AUTH` | Anonymous |
-| `PASSWORD` | Username/password |
+<ProtoField name="NO_AUTH">
+
+Anonymous
+
+</ProtoField>
+
+<ProtoField name="PASSWORD">
+
+Username/password
+
+</ProtoField>
 
 ## SocksServerConfig
 
-| Field | Type | Description |
-| --- | --- | --- |
-| `authType` | `AuthType` | Authentication mode |
-| `accounts` | `UserConfig[]` | Users when `PASSWORD` |
-| `address` | string | BND.ADDR in SOCKS reply |
-| `udpEnabled` | bool | Enable UDP associate |
+<ProtoField name="authType" type="AuthType">
+
+Authentication mode
+
+</ProtoField>
+
+<ProtoField name="accounts" type="UserConfig[]">
+
+Users when `PASSWORD`
+
+</ProtoField>
+
+<ProtoField name="address" type="string">
+
+BND.ADDR in SOCKS reply
+
+</ProtoField>
+
+<ProtoField name="udpEnabled" type="bool">
+
+Enable UDP associate
+
+</ProtoField>
 
 ## SocksClientConfig
 
-| Field | Type | Description |
-| --- | --- | --- |
-| `name` | string | Username |
-| `password` | string | Password |
-| `delayAuthWrite` | bool | Delay auth write on connection |
+<ProtoField name="name" type="string">
+
+Username
+
+</ProtoField>
+
+<ProtoField name="password" type="string">
+
+Password
+
+</ProtoField>
+
+<ProtoField name="delayAuthWrite" type="bool">
+
+Delay auth write on connection
+
+</ProtoField>
 
 ```json
 {

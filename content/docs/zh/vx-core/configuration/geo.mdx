@@ -5,94 +5,410 @@ description: GeoConfig — 域名、IP 与应用集合
 
 地理数据集合在 `ServerConfig.geo`（`GeoConfig`）中定义。模式定义：[`protos/proto/vx/geo/geo.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/geo/geo.proto)。
 
-[路由](/zh/docs/vx-core/configuration/router)规则与 [DNS](/zh/docs/vx-core/configuration/dns) 通过 `domainTags`、`dstIpTags`、`srcIpTags` 按**名称**引用集合。
+**原子集合**（`atomic*`）直接持有域名、IP 或应用 ID。**大集合**（`great*`）通过 `inNames` / `exNames` 组合其他集合。大集合与原子集合的 `name` 在同一类别内须唯一。
+
+[路由](/zh/docs/vx-core/configuration/router)与 [DNS](/zh/docs/vx-core/configuration/dns) 通过 `domainTags`、`dstIpTags`、`srcIpTags`、`appTags` 按**名称**引用集合。客户端 UI 说明见[集合](/zh/docs/vx/manual/customize/sets)。
 
 ## GeoConfig
 
-| 字段 | 类型 | 说明 |
-| --- | --- | --- |
-| `greatDomainSets` | `GreatDomainSetConfig[]` | 大域名集合|
-| `atomicDomainSets` | `AtomicDomainSetConfig[]` | 小域名集合 |
-| `greatIpSets` | `GreatIPSetConfig[]` | 大IP集合 |
-| `atomicIpSets` | `AtomicIPSetConfig[]` | 小IP集合 |
-| `appSets` | `AppSetConfig[]` | 应用集合 |
+<ProtoField name="greatDomainSets" type="GreatDomainSetConfig[]">
+
+组合域名集合（包含 / 排除其他集合）
+
+</ProtoField>
+
+<ProtoField name="atomicDomainSets" type="AtomicDomainSetConfig[]">
+
+原子域名集合（内联域名、geosite、Clash 规则、远程文件等）
+
+</ProtoField>
+
+<ProtoField name="greatIpSets" type="GreatIPSetConfig[]">
+
+大IP集合
+
+</ProtoField>
+
+<ProtoField name="atomicIpSets" type="AtomicIPSetConfig[]">
+
+小IP集合
+
+</ProtoField>
+
+<ProtoField name="appSets" type="AppSetConfig[]">
+
+应用集合
+
+</ProtoField>
 
 各类别内名称须唯一（`greatDomainSets` 与 `atomicDomainSets` 之间不可重名，IP 集合同理）。
 
+## Domain
+
+单条域名匹配规则。定义于 [`protos/proto/vx/common/geo/geo.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/common/geo/geo.proto)。
+
+用于 [路由](/zh/docs/vx-core/configuration/router) 的 `geoDomains`、[DNS](/zh/docs/vx-core/configuration/dns) 的 `geoDomains`，以及 [AtomicDomainSetConfig](#atomicdomainsetconfig) 的 `domains`。
+
+<ProtoField name="type" type="Domain.Type">
+
+匹配方式：
+
+- `Plain`：子串匹配（关键词）
+- `Regex`：正则匹配
+- `RootDomain`：根域及其子域（后缀匹配）
+- `Full`：完整主机名精确匹配
+
+</ProtoField>
+
+<ProtoField name="value" type="string">
+
+要匹配的域名或模式
+
+</ProtoField>
+
+
+
+
+## CIDR
+
+单条 IP 网段。定义于 [`protos/proto/vx/common/geo/geo.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/common/geo/geo.proto)。
+
+用于 [AtomicIPSetConfig](#atomicipsetconfig) 的 `cidrs`。
+
+<ProtoField name="ip" type="bytes">
+
+IP 地址，4 字节（IPv4）或 16 字节（IPv6）。ProtoJSON 中通常为 base64 编码。
+
+</ProtoField>
+
+<ProtoField name="prefix" type="uint32">
+
+网络前缀长度（CIDR 掩码位数，如 `24` 表示 `/24`）
+
+</ProtoField>
+
 ## AtomicDomainSetConfig
 
-| 字段 | 说明 |
-| --- | --- |
-| `name` | `domainTags` 中使用的标签 |
-| `domains` | 一些单独的 `Domain` 列表 |
-| `geosite`、`geosites` | 从 geosite 文件或远程加载 |
-| `useBloomFilter` | 布隆过滤器优化，通常在iOS端开启以减少内存占用 |
-| `clashFiles` | Clash 格式规则文件 |
-| `inverse` | 反向匹配 |
-| `remoteGeoFiles` | 从URL下载文件  |
+小域名集合。`domains`、`geosite`、`geosites`、`clashFiles`、`remoteGeoFiles` 可组合使用。
 
-### GeositeConfig
+<ProtoField name="name" type="string">
 
-| 字段 | 说明 |
-| --- | --- |
-| `codes` | Geosite 分类代码 |
-| `attributes` | 属性过滤 |
-| `filepath` | 本地 geosite.dat 路径 |
-| `remoteUrl` | 远程文件URL  |
-| `refreshCron` | 多久更新一次文件 |
+集合名称，供 `domainTags` 引用
+
+</ProtoField>
+
+<ProtoField name="domains" type="Domain[]">
+
+内联 [Domain](#domain) 列表
+
+</ProtoField>
+
+<ProtoField name="geosite" type="GeositeConfig">
+
+从单个 geosite 配置加载域名
+
+</ProtoField>
+
+<ProtoField name="geosites" type="GeositeConfig[]">
+
+从多个 geosite 配置加载域名（与 `geosite` 可同时使用）
+
+</ProtoField>
+
+<ProtoField name="useBloomFilter" type="bool">
+
+对大集合启用布隆过滤器以降低内存占用（常见于 iOS）。有约 1% 误报率。
+
+</ProtoField>
+
+<ProtoField name="clashFiles" type="string[]">
+
+Clash 格式规则文件路径，从中提取域名规则
+
+</ProtoField>
+
+<ProtoField name="inverse" type="bool">
+
+反向匹配：域名**不在**本集合源中时才匹配
+
+</ProtoField>
+
+<ProtoField name="remoteGeoFiles" type="GeoRemoteFile[]">
+
+定时从 HTTPS 下载的远程 geo 文件（见 [GeoRemoteFile](#georemotefile)）
+
+</ProtoField>
+
+## GeositeConfig
+
+从 `geosite.dat`（或兼容格式）按分类代码加载域名。
+
+<ProtoField name="codes" type="string[]">
+
+geosite 分类代码（如 `cn`、`gfw`、`private`）
+
+</ProtoField>
+
+<ProtoField name="attributes" type="string[]">
+
+在已加载域名中按 `Domain.attribute.key` 进一步筛选（不区分大小写）
+
+</ProtoField>
+
+<ProtoField name="filepath" type="string">
+
+本地 `geosite.dat` 路径
+
+</ProtoField>
+
+<ProtoField name="remoteUrl" type="string">
+
+远程 `geosite.dat` 的 HTTPS URL；配合 `refreshCron` 定时更新。将下载至`filepath`
+
+</ProtoField>
+
+<ProtoField name="refreshCron" type="string">
+
+5 段 cron（分 时 日 月 周）。空表示仅在启动 / 重载时拉取
+
+</ProtoField>
 
 ## AtomicIPSetConfig
 
-| 字段 | 说明 |
-| --- | --- |
-| `name` | `IpTags` 中使用的标签 |
-| `cidrs` | CIDR 列表 |
-| `geoip` | `GeoIPConfig` |
-| `inverse` | 匹配集合外的 IP |
-| `clashFiles` | Clash文件 |
-| `remoteGeoFiles` | 从URL下载文件 |
+小IP集合。`cidrs`、`geoip`、`clashFiles`、`remoteGeoFiles` 可组合使用。
 
-### GeoIPConfig
+<ProtoField name="name" type="string">
 
-| 字段 | 说明 |
-| --- | --- |
-| `codes` | 国家代码 |
-| `filepath` | 文件路径，若为空，会从remoteUrl下载文件到此路径 |
-| `remoteUrl` | 远程文件URL |
-| `refreshCron` | 多久更新一次文件 |
+集合名称，供 `dstIpTags`、`srcIpTags`、`ipTags` 引用
 
-## GreatDomainSetConfig / GreatIPSetConfig
+</ProtoField>
 
-大集合：
+<ProtoField name="cidrs" type="CIDR[]">
 
-| 字段 | 说明 |
-| --- | --- |
-| `name` | 结果集合名称 |
-| `oppositeName` | 互斥集合名称 |
-| `inNames` | 包含这些集合 |
-| `exNames` | 排除这些集合 |
+内联 [CIDR](#cidr) 列表
 
-大集合由其他大集合或者小集合构成。
+</ProtoField>
+
+<ProtoField name="geoip" type="GeoIPConfig">
+
+从 geoip 文件按国家/地区代码加载 CIDR
+
+</ProtoField>
+
+<ProtoField name="inverse" type="bool">
+
+反向匹配：IP **不在**本集合源中时才匹配
+
+</ProtoField>
+
+<ProtoField name="clashFiles" type="string[]">
+
+Clash 格式规则文件路径，从中提取 IP / CIDR 规则
+
+</ProtoField>
+
+<ProtoField name="remoteGeoFiles" type="GeoRemoteFile[]">
+
+定时下载的远程 geo 文件
+
+</ProtoField>
+
+## GeoIPConfig
+
+从 `geoip.dat`（或兼容格式）按代码加载 IP 段。
+
+<ProtoField name="codes" type="string[]">
+
+geoip 分类 / 国家代码（如 `cn`、`private`）
+
+</ProtoField>
+
+<ProtoField name="filepath" type="string">
+
+本地 `geoip.dat` 路径
+
+</ProtoField>
+
+<ProtoField name="remoteUrl" type="string">
+
+远程 `geoip.dat` 的 HTTPS URL
+
+</ProtoField>
+
+<ProtoField name="refreshCron" type="string">
+
+5 段 cron。空表示仅在启动 / 重载时拉取
+
+</ProtoField>
+
+## GreatDomainSetConfig
+
+大域名集合，不直接持有域名，而是引用其他原子或大域名集合。
+
+匹配逻辑：先检查 `exNames`（命中则**不匹配**），再检查 `inNames`（命中任一则**匹配**）。
+
+<ProtoField name="name" type="string">
+
+组合集合名称
+
+</ProtoField>
+
+<ProtoField name="oppositeName" type="string">
+
+互斥配对集合名称。见 [集合](/zh/docs/vx/manual/customize/sets) 中的互斥集合说明
+
+</ProtoField>
+
+<ProtoField name="inNames" type="string[]">
+
+包含这些集合中的域名（命中任一即匹配）
+
+</ProtoField>
+
+<ProtoField name="exNames" type="string[]">
+
+排除这些集合中的域名（命中任一则不匹配）
+
+</ProtoField>
+
+不可在 `inNames` 或 `exNames` 中包含自身 `name`。
+
+## GreatIPSetConfig
+
+大IP集合，逻辑与 [GreatDomainSetConfig](#greatdomainsetconfig) 相同，但针对 IP。
+
+<ProtoField name="name" type="string">
+
+组合集合名称
+
+</ProtoField>
+
+<ProtoField name="oppositeName" type="string">
+
+互斥配对集合名称
+
+</ProtoField>
+
+<ProtoField name="inNames" type="string[]">
+
+包含这些 IP 集合中的地址
+
+</ProtoField>
+
+<ProtoField name="exNames" type="string[]">
+
+排除这些 IP 集合中的地址
+
+</ProtoField>
 
 ## AppSetConfig
 
-| 字段 | 说明 |
-| --- | --- |
-| `name` | 路由规则中 `appTags` 引用 |
-| `appIds` | `AppId` 条目（`keyword`、`prefix` 或 `exact`） |
-| `clashFiles` | Clash 规则文件 |
+应用集合，供路由 `appTags` 使用。
+
+<ProtoField name="name" type="string">
+
+集合名称
+
+</ProtoField>
+
+<ProtoField name="appIds" type="AppId[]">
+
+[AppId](#appid) 列表
+
+</ProtoField>
+
+<ProtoField name="clashFiles" type="string[]">
+
+Clash 格式规则文件，从中提取AppId 规则
+
+</ProtoField>
+
+## AppId
+
+单条应用 ID 匹配规则。定义于 [`protos/proto/vx/router/router.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/router/router.proto)。
+
+<ProtoField name="type" type="AppId.Type">
+
+匹配方式：
+
+- `Keyword`：子串匹配
+- `Prefix`：前缀匹配
+- `Exact`：精确匹配
+
+</ProtoField>
+
+<ProtoField name="value" type="string">
+
+应用包名或 ID 字符串（匹配时转为小写）
+
+</ProtoField>
 
 ## GeoRemoteFile
 
-用于 atomic 集合下的定时下载：
+远程 geo 数据文件的定时下载配置，用于 `AtomicDomainSetConfig.remoteGeoFiles` 与 `AtomicIPSetConfig.remoteGeoFiles`。
 
-| 字段 | 说明 |
-| --- | --- |
-| `filepath` | 写入的本地路径 |
-| `sourceUrl` | HTTPS URL |
-| `refreshCron` | 5 段 cron；空表示仅在启动/重载时拉取 |
+<ProtoField name="filepath" type="string">
+
+下载后写入的本地路径
+
+</ProtoField>
+
+<ProtoField name="sourceUrl" type="string">
+
+HTTPS 下载地址
+
+</ProtoField>
+
+<ProtoField name="refreshCron" type="string">
+
+5 段 cron（分 时 日 月 周）。空表示仅在启动 / 重载时拉取一次
+
+</ProtoField>
+
+## 示例
+
+原子域名集合 + 组合集合 + 路由引用：
+
+```json
+{
+  "geo": {
+    "atomicDomainSets": [
+      {
+        "name": "gfw",
+        "geosite": {
+          "filepath": "geosite.dat",
+          "codes": ["gfw"]
+        }
+      },
+      {
+        "name": "custom-direct",
+        "domains": [
+          { "type": "Full", "value": "example.com" }
+        ]
+      }
+    ],
+    "greatDomainSets": [
+      {
+        "name": "proxy-domains",
+        "inNames": ["gfw"],
+        "exNames": ["custom-direct"]
+      }
+    ]
+  },
+  "router": {
+    "rules": [
+      {
+        "domainTags": ["proxy-domains"],
+        "matchAll": true,
+        "outboundTag": "proxy"
+      }
+    ]
+  }
+}
+```
 
 ## 相关
 
-- [路由](/zh/docs/vx-core/configuration/router) — `domainTags`、`dstIpTags`、`geoDomains`
-- [DNS](/zh/docs/vx-core/configuration/dns) — DNS 规则与服务器上的 `domainTags`、`ipTags`
+- [路由](/zh/docs/vx-core/configuration/router) — `domainTags`、`dstIpTags`、`geoDomains`、`appTags`
+- [DNS](/zh/docs/vx-core/configuration/dns) — `domainTags`、`ipTags`
+- [集合](/zh/docs/vx/manual/customize/sets) — 客户端中的集合类型与组合逻辑

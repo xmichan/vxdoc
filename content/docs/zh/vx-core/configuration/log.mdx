@@ -7,15 +7,47 @@ description: LoggerConfig
 
 ## LoggerConfig
 
-| 字段 | 类型 | 说明 |
-| --- | --- | --- |
-| `logLevel` | `Level` | 最低级别：`DEBUG`、`INFO`、`WARN`、`ERROR`、`FATAL`、`DISABLED` |
-| `filePath` | string | 日志文件路径 |
-| `logFileDir` | string | `filePath` 为空时，在此目录写入带时间戳的文件（`2006-01-02T15:04:05.txt`） |
-| `consoleWriter` | bool | 人类可读的控制台输出 |
-| `showColor` | bool | 彩色日志（配合控制台输出） |
-| `showCaller` | bool | 包含调用位置 |
-| `redact` | bool | 在日志行中脱敏域名与 IP |
+<ProtoField name="logLevel" type="Level">
+
+最低级别：`DEBUG`、`INFO`、`WARN`、`ERROR`、`FATAL`、`DISABLED`
+
+</ProtoField>
+
+<ProtoField name="filePath" type="string">
+
+日志文件路径
+
+</ProtoField>
+
+<ProtoField name="logFileDir" type="string">
+
+`filePath` 为空时，在此目录写入带时间戳的文件（`2006-01-02T15:04:05.txt`）
+
+</ProtoField>
+
+<ProtoField name="consoleWriter" type="bool">
+
+人类可读的控制台输出
+
+</ProtoField>
+
+<ProtoField name="showColor" type="bool">
+
+彩色日志（配合控制台输出）
+
+</ProtoField>
+
+<ProtoField name="showCaller" type="bool">
+
+包含调用位置
+
+</ProtoField>
+
+<ProtoField name="redact" type="bool">
+
+在日志行中脱敏域名与 IP
+
+</ProtoField>
 
 ## 示例
 
@@ -28,7 +60,3 @@ description: LoggerConfig
   }
 }
 ```
-
-## UserLoggerConfig
-
-同一 proto 文件中的 `UserLoggerConfig` 用于 **VX 客户端**会话日志（`enable`、`logAppId`、`logSessionEnd`、`logRealtimeUsage`）。不属于 `ServerConfig`；由客户端单独接入。

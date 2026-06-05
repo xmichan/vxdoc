@@ -19,14 +19,28 @@ Empty message — no extra fields. Authentication is typically handled at the tr
 
 ## HttpClientConfig
 
-| Field | Type | Description |
-| --- | --- | --- |
-| `account` | `Account` | Optional `username` / `password` |
-| `h1SkipWaitForReply` | bool | HTTP/1 optimization |
+<ProtoField name="account" type="Account">
+
+Optional `username` / `password`
+
+</ProtoField>
+
+<ProtoField name="h1SkipWaitForReply" type="bool">
+
+HTTP/1 optimization
+
+</ProtoField>
 
 ### Account
 
-| Field | Description |
-| --- | --- |
-| `username` | Proxy auth user |
-| `password` | Proxy auth password |
+<ProtoField name="username">
+
+Proxy auth user
+
+</ProtoField>
+
+<ProtoField name="password">
+
+Proxy auth password
+
+</ProtoField>

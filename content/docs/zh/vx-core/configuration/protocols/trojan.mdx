@@ -7,10 +7,17 @@ Proto：[`protos/proto/vx/proxy/trojan/trojan.proto`](https://github.com/5vnetwo
 
 ## TrojanServerConfig
 
-| 字段 | 类型 | 说明 |
-| --- | --- | --- |
-| `users` | `UserConfig[]` | 密码在 `secret` 中 |
-| `vision` | bool | 启用 Trojan Vision |
+<ProtoField name="users" type="UserConfig[]">
+
+密码在 `secret` 中
+
+</ProtoField>
+
+<ProtoField name="vision" type="bool">
+
+启用 **Trojan Vision**（与 VLESS 的 `xtls-rprx-vision` 类似）。客户端与服务器须**同时**开启。
+
+</ProtoField>
 
 ```json
 {
@@ -22,10 +29,15 @@ Proto：[`protos/proto/vx/proxy/trojan/trojan.proto`](https://github.com/5vnetwo
 
 ## TrojanClientConfig
 
-| 字段 | 类型 | 说明 |
-| --- | --- | --- |
-| `password` | string | Trojan 密码 |
-| `special` | bool | 内部 / 扩展用途 |
-| `vision` | bool | 启用 Trojan Vision |
+<ProtoField name="password" type="string">
 
-常与 443 端口的 [TLS](/zh/docs/vx-core/configuration/security/tls) 一起使用。
+Trojan 密码
+
+</ProtoField>
+
+<ProtoField name="vision" type="bool">
+
+启用 Trojan Vision
+
+</ProtoField>
+

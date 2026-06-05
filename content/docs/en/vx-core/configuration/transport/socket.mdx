@@ -9,20 +9,80 @@ Proto: [`protos/proto/vx/transport/dlhelper.proto`](https://github.com/5vnetwork
 
 ## SocketConfig
 
-| Field | Description |
-| --- | --- |
-| `mark` | `SO_MARK` (non-zero) |
-| `tfo` | TCP fast open: `AsIs`, `Enable`, `Disable` |
-| `tproxy` | `Off`, `TProxy`, `Redirect` |
-| `receiveOriginalDestAddress` | UDP: receive original destination (IP_RECVORIGDSTADDR) |
-| `bindAddress`, `bindPort` | Bind local address (Linux) |
-| `acceptProxyProtocol` | Accept PROXY protocol v1/v2 |
-| `tcpKeepAliveInterval`, `tcpKeepAliveIdle` | TCP keepalive |
-| `tfoQueueLength` | TFO queue length |
-| `bindToDevice` | Bind to network interface index |
-| `rxBufSize`, `txBufSize`, `forceBufSize` | Socket buffer sizes |
-| `localAddr4`, `localAddr6` | Outbound local address (dial / UDP listen) |
-| `dialTimeout` | Dial timeout override |
+<ProtoField name="mark">
+
+`SO_MARK` (non-zero)
+
+</ProtoField>
+
+<ProtoField name="tfo">
+
+TCP fast open: `AsIs`, `Enable`, `Disable`
+
+</ProtoField>
+
+<ProtoField name="tproxy">
+
+`Off`, `TProxy`, `Redirect`
+
+</ProtoField>
+
+<ProtoField name="receiveOriginalDestAddress">
+
+UDP: receive original destination (IP_RECVORIGDSTADDR)
+
+</ProtoField>
+
+<ProtoField name="bindAddress, bindPort">
+
+Bind local address (Linux)
+
+</ProtoField>
+
+
+<ProtoField name="acceptProxyProtocol">
+
+Accept PROXY protocol v1/v2
+
+</ProtoField>
+
+<ProtoField name="tcpKeepAliveInterval, tcpKeepAliveIdle">
+
+TCP keepalive
+
+</ProtoField>
+
+
+<ProtoField name="tfoQueueLength">
+
+TFO queue length
+
+</ProtoField>
+
+<ProtoField name="bindToDevice">
+
+Bind to network interface index
+
+</ProtoField>
+
+<ProtoField name="rxBufSize, txBufSize, forceBufSize">
+
+Socket buffer sizes
+
+</ProtoField>
+
+<ProtoField name="localAddr4, localAddr6">
+
+Outbound local address (dial / UDP listen)
+
+</ProtoField>
+
+
+<ProtoField name="dialTimeout">
+
+Dial timeout override
+
+</ProtoField>
 
 ```json
 {

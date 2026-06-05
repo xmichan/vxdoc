@@ -9,16 +9,53 @@ Inbound settings live in `ServerConfig.inbounds` and `ServerConfig.multiInbounds
 
 One listener per inbound. Use when each port runs a single proxy protocol (optionally with a shared `transport` layer).
 
-| Field | Type | Description |
-| --- | --- | --- |
-| `tag` | string | Name referenced by [router](/docs/vx-core/configuration/router) `inboundTags` |
-| `address` | string | Listen address; empty = all interfaces |
-| `port` | uint32 | Single port (combined with `ports` if both set) |
-| `ports` | uint32[] | Ports to listen on |
-| `transport` | `TransportConfig` | TLS, REALITY, WebSocket, gRPC, etc. |
-| `protocol` | `Any` | One proxy server config (VMess, VLESS, Trojan, …) |
-| `protocols` | `Any[]` | Multiple protocols on the same listener |
-| `users` | `UserConfig[]` | Users for this inbound (see [Users](/docs/vx-core/configuration/users)) |
+<ProtoField name="tag" type="string">
+
+Name referenced by [router](/docs/vx-core/configuration/router) `inboundTags`
+
+</ProtoField>
+
+<ProtoField name="address" type="string">
+
+Listen address; empty = all interfaces
+
+</ProtoField>
+
+<ProtoField name="port" type="uint32">
+
+Single port (combined with `ports` if both set)
+
+</ProtoField>
+
+<ProtoField name="ports" type="uint32[]">
+
+Ports to listen on
+
+</ProtoField>
+
+<ProtoField name="transport" type="TransportConfig">
+
+TLS, REALITY, WebSocket, gRPC, etc.
+
+</ProtoField>
+
+<ProtoField name="protocol" type="Any">
+
+One proxy server config (VMess, VLESS, Trojan, …)
+
+</ProtoField>
+
+<ProtoField name="protocols" type="Any[]">
+
+Multiple protocols on the same listener
+
+</ProtoField>
+
+<ProtoField name="users" type="UserConfig[]">
+
+Users for this inbound (see [Users](/docs/vx-core/configuration/users))
+
+</ProtoField>
 
 Example:
 
@@ -39,37 +76,128 @@ Protocol `@type` values are documented under [Proxy protocols](/docs/vx-core/con
 
 Use when one listener must accept **several transports and security profiles** (typical multi-protocol port behind TLS or REALITY).
 
-| Field | Type | Description |
-| --- | --- | --- |
-| `tag` | string | Inbound tag for routing |
-| `address` | string | Listen address; empty = all interfaces |
-| `ports` | uint32[] | Listen ports |
-| `protocols` | `Any[]` | Proxy protocol configs (same `Any` types as above) |
-| `securityConfigs` | `Security[]` | TLS or REALITY per SNI/domain/regex |
-| `transportProtocols` | `Protocol[]` | WebSocket, HTTP, gRPC, TCP, SplitHTTP, HTTPUpgrade |
-| `socket` | `SocketConfig` | Socket-level options |
-| `users` | `UserConfig[]` | Users for all handlers on this inbound |
+<ProtoField name="tag" type="string">
 
-### Security (per entry in `securityConfigs`)
+Inbound tag for routing
 
-| Field | Description |
-| --- | --- |
-| `tls` | `TlsConfig` when this security block applies |
-| `reality` | `RealityConfig` when this security block applies |
-| `domains` | SNI hostnames handled by this block |
-| `regularExpression` | SNI regex match |
-| `always` | Use this security for every connection |
+</ProtoField>
 
-### Transport protocol (per entry in `transportProtocols`)
+<ProtoField name="address" type="string">
 
-| Field | Description |
-| --- | --- |
-| `websocket`, `http`, `grpc`, `httpupgrade`, `splithttp`, `tcp` | Transport-specific config (oneof) |
-| `alpn` | Match ALPN |
-| `sni` | Match connection SNI |
-| `path` | HTTP/1 path |
-| `h2` | Connection uses HTTP/2 |
-| `always` | Use this transport for every connection |
+Listen address; empty = all interfaces
+
+</ProtoField>
+
+<ProtoField name="ports" type="uint32[]">
+
+Listen ports
+
+</ProtoField>
+
+<ProtoField name="protocols" type="Any[]">
+
+Proxy protocol configs (same `Any` types as above)
+
+</ProtoField>
+
+<ProtoField name="securityConfigs" type="Security[]">
+
+TLS or REALITY per SNI/domain/regex
+
+</ProtoField>
+
+<ProtoField name="transportProtocols" type="Protocol[]">
+
+WebSocket, HTTP, gRPC, TCP, SplitHTTP, HTTPUpgrade
+
+</ProtoField>
+
+<ProtoField name="socket" type="SocketConfig">
+
+Socket-level options
+
+</ProtoField>
+
+<ProtoField name="users" type="UserConfig[]">
+
+Users for all handlers on this inbound
+
+</ProtoField>
+
+<h3 id="inbound-security">Security</h3>
+
+Per entry in `securityConfigs`
+
+<ProtoField name="tls" type="TlsConfig">
+
+Applied when this security block matches
+
+</ProtoField>
+
+<ProtoField name="reality" type="RealityConfig">
+
+Applied when this security block matches
+
+</ProtoField>
+
+<ProtoField name="domains">
+
+SNI hostnames handled by this block
+
+</ProtoField>
+
+<ProtoField name="regularExpression">
+
+SNI regex match
+
+</ProtoField>
+
+<ProtoField name="always">
+
+Use this security for every connection
+
+</ProtoField>
+
+<h3 id="inbound-transport-protocol">Transport protocol</h3>
+
+Per entry in `transportProtocols`
+
+<ProtoField name="websocket, http, grpc, httpupgrade, splithttp, tcp">
+
+Transport-specific config (oneof)
+
+</ProtoField>
+
+
+<ProtoField name="alpn">
+
+Match ALPN
+
+</ProtoField>
+
+<ProtoField name="sni">
+
+Match connection SNI
+
+</ProtoField>
+
+<ProtoField name="path">
+
+HTTP/1 path
+
+</ProtoField>
+
+<ProtoField name="h2">
+
+Connection uses HTTP/2
+
+</ProtoField>
+
+<ProtoField name="always">
+
+Use this transport for every connection
+
+</ProtoField>
 
 See [Transport](/docs/vx-core/configuration/transport) and [Security](/docs/vx-core/configuration/security) for field reference.
 

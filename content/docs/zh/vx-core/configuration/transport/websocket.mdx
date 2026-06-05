@@ -9,14 +9,55 @@ Proto：[`protos/proto/vx/transport/protocols/websocket/config.proto`](https://g
 
 ## WebsocketConfig
 
-| 字段 | 类型 | 说明 |
-| --- | --- | --- |
-| `host` | string | Host 头 / authority |
-| `path` | string | URL 路径；空 = `/` |
-| `header` | `Header[]` | 额外头（`key`、`value`） |
-| `maxEarlyData` | int32 | 最大 early data 字节数 |
-| `useBrowserForwarding` | bool | 浏览器转发模式 |
-| `earlyDataHeaderName` | string | 携带 early data 的头 |
+<ProtoField name="host" type="string">
+
+Host 头 / authority
+
+</ProtoField>
+
+<ProtoField name="path" type="string">
+
+URL 路径；空 = `/`
+
+</ProtoField>
+
+<ProtoField name="header" type="Header[]">
+
+额外头（`key`、`value`）
+
+</ProtoField>
+
+<ProtoField name="maxEarlyData" type="int32">
+
+最大 early data 字节数
+
+</ProtoField>
+
+<ProtoField name="useBrowserForwarding" type="bool">
+
+浏览器转发模式
+
+</ProtoField>
+
+<ProtoField name="earlyDataHeaderName" type="string">
+
+携带 early data 的头
+
+</ProtoField>
+
+### Header
+
+<ProtoField name="key" type="string">
+
+头名称
+
+</ProtoField>
+
+<ProtoField name="value" type="string">
+
+头值
+
+</ProtoField>
 
 ```json
 {

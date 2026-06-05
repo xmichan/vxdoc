@@ -3,22 +3,61 @@ title: 入站
 description: ProxyInboundConfig 与 MultiProxyInboundConfig
 ---
 
-入站配置位于 `ServerConfig.inbounds` 与 `ServerConfig.multiInbounds`。模式定义：[`protos/proto/vx/inbound/inbound.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/inbound/inbound.proto)。
+入站配置位于 `ServerConfig.inbounds` 与 `ServerConfig.multiInbounds`。
+
+模式定义：[`protos/proto/vx/inbound/inbound.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/inbound/inbound.proto)。
 
 ## ProxyInboundConfig
 
-每个入站一个监听器。适用于每个端口只运行一种代理协议（可选共享 `transport` 层）的场景。
+普通的入站。可以指定多个代理协议，但只可以由一个传输协议和安全协议。
 
-| 字段 | 类型 | 说明 |
-| --- | --- | --- |
-| `tag` | string | 供[路由](/zh/docs/vx-core/configuration/router) `inboundTags` 引用的名称 |
-| `address` | string | 监听地址；空表示所有网卡 |
-| `port` | uint32 | 单个端口（可与 `ports` 同时设置） |
-| `ports` | uint32[] | 监听的端口列表 |
-| `transport` | `TransportConfig` | TLS、REALITY、WebSocket、gRPC 等 |
-| `protocol` | `Any` | 一种代理服务器配置（VMess、VLESS、Trojan 等） |
-| `protocols` | `Any[]` | 同一监听器上的多种协议 |
-| `users` | `UserConfig[]` | 本入站用户（见[用户](/zh/docs/vx-core/configuration/users)） |
+<ProtoField name="tag" type="string">
+
+供[路由](/zh/docs/vx-core/configuration/router) `inboundTags` 引用的名称
+
+</ProtoField>
+
+<ProtoField name="address" type="string">
+
+监听地址；空表示所有网卡
+
+</ProtoField>
+
+<ProtoField name="port" type="uint32">
+
+单个端口（可与 `ports` 同时设置）
+
+</ProtoField>
+
+<ProtoField name="ports" type="uint32[]">
+
+监听的端口列表
+
+</ProtoField>
+
+<ProtoField name="transport" type="TransportConfig">
+
+TLS、REALITY、WebSocket、gRPC 等
+
+</ProtoField>
+
+<ProtoField name="protocol" type="Any">
+
+一种代理服务器配置（VMess、VLESS、Trojan 等）
+
+</ProtoField>
+
+<ProtoField name="protocols" type="Any[]">
+
+同一监听器上的多种协议
+
+</ProtoField>
+
+<ProtoField name="users" type="UserConfig[]">
+
+本入站用户（见[用户](/zh/docs/vx-core/configuration/users)）
+
+</ProtoField>
 
 示例：
 
@@ -35,41 +74,163 @@ description: ProxyInboundConfig 与 MultiProxyInboundConfig
 
 协议 `@type` 值见[代理协议](/zh/docs/vx-core/configuration/protocols)。传输与 TLS/REALITY：[传输](/zh/docs/vx-core/configuration/transport)、[安全](/zh/docs/vx-core/configuration/security)。
 
+> **Note**: 当多个协议都支持UDP时，只会有一个协议的UDP真正生效。如果有Hysteria，它会被优待，其他的协议的UDP不会生效。
+
 ## MultiProxyInboundConfig
 
-当单个监听器需接受**多种传输与安全配置**时使用（常见于 TLS 或 REALITY 后的多协议端口）。
+Multi入站同时可以使用**多种传输与安全配置**。
 
-| 字段 | 类型 | 说明 |
-| --- | --- | --- |
-| `tag` | string | 路由用的入站标签 |
-| `address` | string | 监听地址；空表示所有网卡 |
-| `ports` | uint32[] | 监听端口 |
-| `protocols` | `Any[]` | 代理协议配置（与上文相同的 `Any` 类型） |
-| `securityConfigs` | `Security[]` | 按 SNI/域名/正则匹配的 TLS 或 REALITY |
-| `transportProtocols` | `Protocol[]` | WebSocket、HTTP、gRPC、TCP、SplitHTTP、HTTPUpgrade |
-| `socket` | `SocketConfig` | 套接字级选项 |
-| `users` | `UserConfig[]` | 本入站所有处理器的用户 |
+<ProtoField name="tag" type="string">
 
-### Security（`securityConfigs` 中的每一项）
+路由用的入站标签
 
-| 字段 | 说明 |
-| --- | --- |
-| `tls` | 本安全块生效时的 `TlsConfig` |
-| `reality` | 本安全块生效时的 `RealityConfig` |
-| `domains` | 本块处理的 SNI 主机名 |
-| `regularExpression` | SNI 正则匹配 |
-| `always` | 对所有连接使用本安全配置 |
+</ProtoField>
 
-### 传输协议（`transportProtocols` 中的每一项）
+<ProtoField name="address" type="string">
 
-| 字段 | 说明 |
-| --- | --- |
-| `websocket`、`http`、`grpc`、`httpupgrade`、`splithttp`、`tcp` | 传输专用配置（oneof） |
-| `alpn` | 匹配 ALPN |
-| `sni` | 匹配连接 SNI |
-| `path` | HTTP/1 路径 |
-| `h2` | 连接使用 HTTP/2 |
-| `always` | 对所有连接使用本传输 |
+监听地址；空表示所有网卡
+
+</ProtoField>
+
+<ProtoField name="ports" type="uint32[]">
+
+监听端口
+
+</ProtoField>
+
+<ProtoField name="protocols" type="Any[]">
+
+代理协议配置（与上文相同的 `Any` 类型）
+
+</ProtoField>
+
+<ProtoField name="securityConfigs" type="Security[]">
+
+安全协议
+
+</ProtoField>
+
+<ProtoField name="transportProtocols" type="Protocol[]">
+
+传输协议
+
+</ProtoField>
+
+<ProtoField name="socket" type="SocketConfig">
+
+Socket Option
+
+</ProtoField>
+
+<ProtoField name="users" type="UserConfig[]">
+
+本入站所有处理器的用户
+
+</ProtoField>
+
+<h3 id="inbound-security">Security</h3>
+
+`securityConfigs` 中的每一项
+
+`tls` 与 `reality` ，每个安全块只能指定其中一项。
+
+<ProtoField name="tls" type="TlsConfig">
+
+</ProtoField>
+
+<ProtoField name="reality" type="RealityConfig">
+
+</ProtoField>
+
+<ProtoField name="domains" type="string[]">
+
+对指定的SNI使用本安全配置
+
+</ProtoField>
+
+<ProtoField name="regularExpression" type="string">
+
+对符合正则的SNI使用本安全配置
+
+</ProtoField>
+
+<ProtoField name="always"  type="bool">
+
+对所有连接使用本安全配置
+
+</ProtoField>
+
+<h3 id="inbound-transport-protocol">传输协议</h3>
+
+`transportProtocols` 中的每一项
+
+`websocket`、`http`、`grpc`、`httpupgrade`、`splithttp`、`tcp` ，每个传输块只能指定其中一项。
+
+<ProtoField name="websocket" type="WebsocketConfig">
+
+WebSocket 传输。见 [WebSocket](/zh/docs/vx-core/configuration/transport/websocket)。
+
+</ProtoField>
+
+<ProtoField name="http" type="HttpConfig">
+
+HTTP/2 传输伪装。见 [HTTP transport](/zh/docs/vx-core/configuration/transport/http)。
+
+</ProtoField>
+
+<ProtoField name="grpc" type="GrpcConfig">
+
+gRPC 传输。见 [gRPC](/zh/docs/vx-core/configuration/transport/grpc)。
+
+</ProtoField>
+
+<ProtoField name="httpupgrade" type="HttpUpgradeConfig">
+
+HTTP Upgrade 传输。见 [HTTPUpgrade](/zh/docs/vx-core/configuration/transport/httpupgrade)。
+
+</ProtoField>
+
+<ProtoField name="splithttp" type="SplitHttpConfig">
+
+Split HTTP (XHTTP) 传输。见 [SplitHTTP](/zh/docs/vx-core/configuration/transport/splithttp)。
+
+</ProtoField>
+
+<ProtoField name="tcp" type="TcpConfig">
+
+纯 TCP 传输。见 [TCP](/zh/docs/vx-core/configuration/transport/tcp)。
+
+</ProtoField>
+
+<ProtoField name="alpn" type="string">
+
+匹配 ALPN
+
+</ProtoField>
+
+<ProtoField name="sni" type="string">
+
+匹配连接 SNI
+
+</ProtoField>
+
+<ProtoField name="path" type="string">
+
+HTTP/1 路径
+
+</ProtoField>
+
+<ProtoField name="h2" type="bool">
+
+连接使用 HTTP/2
+
+</ProtoField>
+
+<ProtoField name="always" type="bool">
+
+对所有连接使用本传输
+
+</ProtoField>
 
 字段说明见[传输](/zh/docs/vx-core/configuration/transport)与[安全](/zh/docs/vx-core/configuration/security)。
 

@@ -5,53 +5,51 @@ description: Hysteria2ServerConfig 与 Hysteria2ClientConfig
 
 Proto：[`protos/proto/vx/proxy/hysteria/hysteria.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/proxy/hysteria/hysteria.proto)
 
-Hysteria2 基于 QUIC 运行。TLS 在协议内通过 `tlsConfig` 配置（[TlsConfig](/zh/docs/vx-core/configuration/security/tls)）。
+Hysteria2 基于 QUIC。TLS 在协议内通过 `tlsConfig` 配置（[TlsConfig](/zh/docs/vx-core/configuration/security/tls)），而非 `TransportConfig.tls`。
 
 ## Hysteria2ServerConfig
 
-| 字段 | 说明 |
-| --- | --- |
-| `users` | `UserConfig[]` — 认证字符串在 `secret` 中 |
-| `obfs` | `ObfsConfig`（Salamander） |
-| `bandwidth` | `maxTx` / `maxRx` 上限 |
-| `quic` | QUIC 窗口与超时设置 |
-| `ignoreClientBandwidth` | 忽略客户端带宽提示 |
-| `tlsConfig` | 服务端 TLS |
-| `addresses` | 监听 / 宣告地址 |
+<ProtoField name="users" type="UserConfig[]">
 
-## Hysteria2ClientConfig
+允许的用户；认证密码在 `secret` 中
 
-| 字段 | 说明 |
-| --- | --- |
-| `auth` | 认证密码 |
-| `tlsConfig` | 客户端 TLS（SNI、固定、ECH 等） |
-| `quic` | QUIC 调优 |
-| `fastOpen` | QUIC 快速打开 |
-| `bandwidth` | 客户端上传/下载限制 |
-| `obfs` | 混淆 |
+</ProtoField>
 
-### QuicConfig（共用）
+<ProtoField name="obfs" type="ObfsConfig">
 
-| 字段 | 说明 |
-| --- | --- |
-| `initialStreamReceiveWindow`、`maxStreamReceiveWindow` 等 | 流窗口（MB 或 `*Bytes` 变体） |
-| `initialConnectionReceiveWindow`、`maxConnectionReceiveWindow` 等 | 连接窗口 |
-| `maxIdleTimeout`、`keepAlivePeriod` | QUIC 超时 |
-| `disablePathMtuDiscovery` | 禁用 PMTUD |
-| `maxIncomingStreams` | 仅服务端的流限制 |
+流量混淆，见 [ObfsConfig](#obfsconfig)
 
-### ObfsConfig
+</ProtoField>
 
-| 字段 | 说明 |
-| --- | --- |
-| `salamander` | 带 `password` 的 `SalamanderConfig` |
+<ProtoField name="bandwidth" type="BandwidthConfig">
 
-### BandwidthConfig
+服务端带宽上限，见 [BandwidthConfig](#bandwidthconfig)
 
-| 字段 | 说明 |
-| --- | --- |
-| `maxTx` | 上传上限（客户端：上传） |
-| `maxRx` | 下载上限（客户端：下载） |
+</ProtoField>
+
+<ProtoField name="quic" type="QuicConfig">
+
+QUIC 调优，见 [QuicConfig](#quicconfig)
+
+</ProtoField>
+
+<ProtoField name="ignoreClientBandwidth" type="bool">
+
+忽略客户端上报的带宽提示
+
+</ProtoField>
+
+<ProtoField name="tlsConfig" type="TlsConfig">
+
+服务端 TLS 证书与设置
+
+</ProtoField>
+
+<ProtoField name="addresses" type="string[]">
+
+监听 / 对外宣告的地址
+
+</ProtoField>
 
 ```json
 {
@@ -62,3 +60,164 @@ Hysteria2 基于 QUIC 运行。TLS 在协议内通过 `tlsConfig` 配置（[TlsC
   }
 }
 ```
+
+## Hysteria2ClientConfig
+
+<ProtoField name="auth" type="string">
+
+认证密码，与服务器 `users[].secret` 对应
+
+</ProtoField>
+
+<ProtoField name="tlsConfig" type="TlsConfig">
+
+客户端 TLS（SNI、`allowInsecure`、ECH、证书固定等）
+
+</ProtoField>
+
+<ProtoField name="quic" type="QuicConfig">
+
+QUIC 调优
+
+</ProtoField>
+
+<ProtoField name="fastOpen" type="bool">
+
+启用 QUIC 0-RTT 快速打开
+
+</ProtoField>
+
+<ProtoField name="bandwidth" type="BandwidthConfig">
+
+客户端带宽声明（上传 `maxTx`、下载 `maxRx`）
+
+</ProtoField>
+
+<ProtoField name="obfs" type="ObfsConfig">
+
+Salamander 混淆
+
+</ProtoField>
+
+```json
+{
+  "@type": "type.googleapis.com/vx.proxy.hysteria.Hysteria2ClientConfig",
+  "auth": "auth-password",
+  "tlsConfig": { "serverName": "example.com" }
+}
+```
+
+## QuicConfig
+
+窗口字段有两组：**MB** 字段（`initialStreamReceiveWindow` 等，`uint32`，内部 × 1 MiB）与 **bytes** 字段（`initialStreamReceiveWindowBytes` 等，`uint64`）。MB 字段非零时优先；均为零时使用 bytes 字段或平台默认值。
+
+<ProtoField name="initialStreamReceiveWindow" type="uint32">
+
+初始流接收窗口（MiB）
+
+</ProtoField>
+
+<ProtoField name="maxStreamReceiveWindow" type="uint32">
+
+最大流接收窗口（MiB）
+
+</ProtoField>
+
+<ProtoField name="initialConnectionReceiveWindow" type="uint32">
+
+初始连接接收窗口（MiB）
+
+</ProtoField>
+
+<ProtoField name="maxConnectionReceiveWindow" type="uint32">
+
+最大连接接收窗口（MiB）
+
+</ProtoField>
+
+<ProtoField name="initialStreamReceiveWindowBytes" type="uint64">
+
+初始流接收窗口（字节）
+
+</ProtoField>
+
+<ProtoField name="maxStreamReceiveWindowBytes" type="uint64">
+
+最大流接收窗口（字节）
+
+</ProtoField>
+
+<ProtoField name="initialConnectionReceiveWindowBytes" type="uint64">
+
+初始连接接收窗口（字节）
+
+</ProtoField>
+
+<ProtoField name="maxConnectionReceiveWindowBytes" type="uint64">
+
+最大连接接收窗口（字节）
+
+</ProtoField>
+
+<ProtoField name="maxIdleTimeout" type="uint32">
+
+空闲超时（**秒**，默认 30）
+
+</ProtoField>
+
+<ProtoField name="keepAlivePeriod" type="uint32">
+
+Keep-alive 周期（**秒**，默认 10）
+
+</ProtoField>
+
+<ProtoField name="disablePathMtuDiscovery" type="bool">
+
+禁用 QUIC 路径 MTU 发现
+
+</ProtoField>
+
+<ProtoField name="maxIncomingStreams" type="uint32">
+
+最大入站流数（**仅服务端**）
+
+</ProtoField>
+
+## ObfsConfig
+
+`salamander` 为当前唯一混淆类型（oneof）。
+
+<ProtoField name="salamander" type="SalamanderConfig">
+
+Salamander 混淆配置
+
+</ProtoField>
+
+### SalamanderConfig
+
+<ProtoField name="password" type="string">
+
+混淆密码
+
+</ProtoField>
+
+## BandwidthConfig
+
+`maxTx` / `maxRx` 单位为 **Mbps**（内部转换为字节/秒）。
+
+<ProtoField name="maxTx" type="uint32">
+
+上传带宽上限。客户端为上传；服务端为允许的最大上传
+
+</ProtoField>
+
+<ProtoField name="maxRx" type="uint32">
+
+下载带宽上限。客户端为下载；服务端为允许的最大下载
+
+</ProtoField>
+
+## 相关
+
+- [TLS](/zh/docs/vx-core/configuration/security/tls) — `tlsConfig` 字段
+- [出站](/zh/docs/vx-core/configuration/outbounds) — UDP 出站

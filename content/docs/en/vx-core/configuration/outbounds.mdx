@@ -9,20 +9,77 @@ Each handler has a unique `tag` used by [router](/docs/vx-core/configuration/rou
 
 ## OutboundHandlerConfig
 
-| Field | Type | Description |
-| --- | --- | --- |
-| `tag` | string | Handler name for routing |
-| `transport` | `TransportConfig` | Client transport (TLS, WebSocket, …) |
-| `address` | string | Remote host or IP |
-| `port` | uint32 | Remote port |
-| `ports` | `PortRange[]` | Multiple port ranges |
-| `protocol` | `Any` | Proxy client config (Freedom, Blackhole, VMess, …) |
-| `enableMux` | bool | Enable connection mux |
-| `muxConfig` | `MuxConfig` | `maxConnection`, `maxConcurrency` |
-| `uot` | bool | UDP over TCP |
-| `domainStrategy` | enum | How to resolve domains when dialing (`PreferIPv4`, `PreferIPv6`, `IPv4Only`, `IPv6Only`, `Speed`) |
-| `random` | `RandomPortSelectStrategy` | Use all ports in `ports` at once |
-| `one` | `OnePortSelectStrategy` | Rotate a single port (`interval` or `minInterval` / `maxInterval`) |
+<ProtoField name="tag" type="string">
+
+Handler name for routing
+
+</ProtoField>
+
+<ProtoField name="transport" type="TransportConfig">
+
+Client transport (TLS, WebSocket, …)
+
+</ProtoField>
+
+<ProtoField name="address" type="string">
+
+Remote host or IP
+
+</ProtoField>
+
+<ProtoField name="port" type="uint32">
+
+Remote port
+
+</ProtoField>
+
+<ProtoField name="ports" type="PortRange[]">
+
+Multiple port ranges
+
+</ProtoField>
+
+<ProtoField name="protocol" type="Any">
+
+Proxy client config (Freedom, Blackhole, VMess, …)
+
+</ProtoField>
+
+<ProtoField name="enableMux" type="bool">
+
+Enable connection mux
+
+</ProtoField>
+
+<ProtoField name="muxConfig" type="MuxConfig">
+
+`maxConnection`, `maxConcurrency`
+
+</ProtoField>
+
+<ProtoField name="uot" type="bool">
+
+UDP over TCP
+
+</ProtoField>
+
+<ProtoField name="domainStrategy" type="enum">
+
+How to resolve domains when dialing (`PreferIPv4`, `PreferIPv6`, `IPv4Only`, `IPv6Only`, `Speed`)
+
+</ProtoField>
+
+<ProtoField name="random" type="RandomPortSelectStrategy">
+
+Use all ports in `ports` at once
+
+</ProtoField>
+
+<ProtoField name="one" type="OnePortSelectStrategy">
+
+Rotate a single port (`interval` or `minInterval` / `maxInterval`)
+
+</ProtoField>
 
 ### Direct (freedom) outbound
 
@@ -54,11 +111,24 @@ Proxy client configs: [Proxy protocols](/docs/vx-core/configuration/protocols) (
 
 `OutboundConfig` in the same proto file is used in richer client setups (handler lists, chains, stats). Server `ServerConfig` uses the flat `outbounds` repeated field of `OutboundHandlerConfig` only.
 
-| Field | Description |
-| --- | --- |
-| `handlers` | `HandlerConfig[]` — single outbound or `ChainHandlerConfig` |
-| `hysteriaRejectQuic` | Reject QUIC for Hysteria |
-| `handlerLinkStats`, `handlerMeter`, `totalCounter` | Stats and metering |
+<ProtoField name="handlers">
+
+`HandlerConfig[]` — single outbound or `ChainHandlerConfig`
+
+</ProtoField>
+
+<ProtoField name="hysteriaRejectQuic">
+
+Reject QUIC for Hysteria
+
+</ProtoField>
+
+<ProtoField name="handlerLinkStats, handlerMeter, totalCounter">
+
+Stats and metering
+
+</ProtoField>
+
 
 ## Related
 

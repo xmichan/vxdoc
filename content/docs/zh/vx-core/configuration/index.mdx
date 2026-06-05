@@ -25,19 +25,71 @@ JSON 字段名使用 **camelCase**（例如 `matchAll`、`outboundTag`、`multiI
 
 ## ServerConfig 概览
 
-| 字段 | 类型 | 用途 |
-| --- | --- | --- |
-| `inbounds` | `ProxyInboundConfig[]` | 单协议监听器 |
-| `multiInbounds` | `MultiProxyInboundConfig[]` | 多协议监听器（TLS/REALITY + 传输矩阵） |
-| `outbounds` | `OutboundHandlerConfig[]` | 流量去向（直连、代理、阻断等） |
-| `router` | `RouterConfig` | 按连接选择出站或选择器的规则 |
-| `dns` | `DnsConfig` | DNS 服务器、解析器、劫持、静态记录 |
-| `geo` | `GeoConfig` | 路由与 DNS 使用的域名/IP/应用集合 |
-| `policy` | `PolicyConfig` | 超时与按级别的缓冲区限制 |
-| `log` | `LoggerConfig` | 日志级别、文件路径、脱敏 |
-| `users` | `UserConfig[]` | 全局用户（也可按入站附加） |
-| `dispatcher` | `DispatcherConfig` | 嗅探与目标覆盖 |
-| `dialerFactory` | `DialerFactoryConfig` | 出站拨号超时与解析器绑定 |
+<ProtoField name="inbounds" type="ProxyInboundConfig[]">
+
+入站
+
+</ProtoField>
+
+<ProtoField name="multiInbounds" type="MultiProxyInboundConfig[]">
+
+Multi入站
+
+</ProtoField>
+
+<ProtoField name="outbounds" type="OutboundHandlerConfig[]">
+
+出站
+
+</ProtoField>
+
+<ProtoField name="router" type="RouterConfig">
+
+路由配置
+
+</ProtoField>
+
+<ProtoField name="dns" type="DnsConfig">
+
+DNS配置
+
+</ProtoField>
+
+<ProtoField name="geo" type="GeoConfig">
+
+集合
+
+</ProtoField>
+
+<ProtoField name="policy" type="PolicyConfig">
+
+超时策略
+
+</ProtoField>
+
+<ProtoField name="log" type="LoggerConfig">
+
+日志设置
+
+</ProtoField>
+
+<ProtoField name="users" type="UserConfig[]">
+
+用户
+
+</ProtoField>
+
+<ProtoField name="dispatcher" type="DispatcherConfig">
+
+调度器
+
+</ProtoField>
+
+<ProtoField name="dialerFactory" type="DialerFactoryConfig">
+
+出站工厂
+
+</ProtoField>
 
 最小服务器示例：
 
@@ -90,27 +142,63 @@ JSON 字段名使用 **camelCase**（例如 `matchAll`、`outboundTag`、`multiI
 vx run --config config.json
 ```
 
-| 标志 | 默认值 | 说明 |
-| --- | --- | --- |
-| `--config` | `config.json` | 配置文件路径 |
+<ProtoField name="`--config`" type="default config.json">
+
+配置文件路径
+
+</ProtoField>
 
 通过[安装脚本](/zh/docs/vx-core/quick-start)安装时，默认路径为 `/usr/local/etc/vx/config.json`。
 
 ## Proto 源文件
 
-| 区域 | Proto 路径 |
-| --- | --- |
-| 根 | `protos/proto/vx/server.proto` |
-| 入站 | `protos/proto/vx/inbound/inbound.proto` |
-| 出站 | `protos/proto/vx/outbound/outbound.proto` |
-| 路由 | `protos/proto/vx/router/router.proto` |
-| DNS | `protos/proto/vx/dns/dns.proto` |
-| Geo | `protos/proto/vx/geo/geo.proto` |
-| 策略 | `protos/proto/vx/policy.proto` |
-| 日志 | `protos/proto/vx/log/logger.proto` |
-| 用户 | `protos/proto/vx/user/user.proto` |
-| 调度器 | `protos/proto/vx/dispatcher/dispatcher.proto` |
-| 拨号器工厂 | `protos/proto/vx/dialerfactory/dialerfactory.proto` |
-| 代理协议 | `protos/proto/vx/proxy/*/` — [文档](/zh/docs/vx-core/configuration/protocols) |
-| 传输 | `protos/proto/vx/transport/` — [文档](/zh/docs/vx-core/configuration/transport) |
-| 安全（TLS/REALITY） | `protos/proto/vx/transport/security/` — [文档](/zh/docs/vx-core/configuration/security) |
+<ProtoField name="根" type="protos/proto/vx/server.proto">
+</ProtoField>
+
+<ProtoField name="入站" type="protos/proto/vx/inbound/inbound.proto">
+</ProtoField>
+
+<ProtoField name="出站" type="protos/proto/vx/outbound/outbound.proto">
+</ProtoField>
+
+<ProtoField name="路由" type="protos/proto/vx/router/router.proto">
+</ProtoField>
+
+<ProtoField name="DNS" type="protos/proto/vx/dns/dns.proto">
+</ProtoField>
+
+<ProtoField name="Geo" type="protos/proto/vx/geo/geo.proto">
+</ProtoField>
+
+<ProtoField name="策略" type="protos/proto/vx/policy.proto">
+</ProtoField>
+
+<ProtoField name="日志" type="protos/proto/vx/log/logger.proto">
+</ProtoField>
+
+<ProtoField name="用户" type="protos/proto/vx/user/user.proto">
+</ProtoField>
+
+<ProtoField name="调度器" type="protos/proto/vx/dispatcher/dispatcher.proto">
+</ProtoField>
+
+<ProtoField name="拨号器工厂" type="protos/proto/vx/dialerfactory/dialerfactory.proto">
+</ProtoField>
+
+<ProtoField name="代理协议">
+
+`protos/proto/vx/proxy/*/` — [文档](/zh/docs/vx-core/configuration/protocols)
+
+</ProtoField>
+
+<ProtoField name="传输">
+
+`protos/proto/vx/transport/` — [文档](/zh/docs/vx-core/configuration/transport)
+
+</ProtoField>
+
+<ProtoField name="安全（TLS/REALITY）">
+
+`protos/proto/vx/transport/security/` — [文档](/zh/docs/vx-core/configuration/security)
+
+</ProtoField>

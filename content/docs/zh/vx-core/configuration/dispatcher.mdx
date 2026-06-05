@@ -9,12 +9,29 @@ description: DispatcherConfig — 嗅探与覆盖
 
 ## DispatcherConfig
 
-| 字段 | 类型 | 说明 |
-| --- | --- | --- |
-| `destinationOverride` | string[] | 非空时嗅探连接，协议匹配时用嗅探域名覆盖目标 |
-| `sniff` | bool | 嗅探所有的连接，以获取额外连接元数据，这些数据可以使日志更全面 |
-| `fallbackTimeout` | uint32 | 等待响应数据的时长（毫秒），若此时间内没有收到响应数据，将连接视为失败，开始回退 |
-| `sessionStats` | bool | 启用会话计量统计，日志内会显示 |
+<ProtoField name="destinationOverride" type="string[]">
+
+非空时嗅探连接，协议匹配时用嗅探域名覆盖目标
+
+</ProtoField>
+
+<ProtoField name="sniff" type="bool">
+
+嗅探所有的连接，以获取额外连接元数据，这些数据可以使日志更全面
+
+</ProtoField>
+
+<ProtoField name="fallbackTimeout" type="uint32">
+
+等待响应数据的时长（毫秒），若此时间内没有收到响应数据，将连接视为失败，开始回退
+
+</ProtoField>
+
+<ProtoField name="sessionStats" type="bool">
+
+启用会话计量统计，日志内会显示
+
+</ProtoField>
 
 ## 示例
 

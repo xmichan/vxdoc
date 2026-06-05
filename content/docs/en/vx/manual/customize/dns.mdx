@@ -20,31 +20,25 @@ For **both**, **DNS records** are checked first. If a record matches the query, 
 
 When you add a **DNS Server**, choose a type from the dropdown. Each type is a single resolver implementation.
 
-| Type | What it does |
-| --- | --- |
-| **Fake** | Return fake IPs from configured CIDR pools (typically `198.18.0.0/15`). |
-| **UDP/TCP** | Classic DNS over UDP/TCP to one or more `host:port` addresses. Multiple addresses can be comma-separated; each query is sent to all of them at once and the **first reply** is used. |
-| **HTTPS** | DNS over HTTPS (DoH) to a resolver URL (for example `https://1.1.1.1/dns-query`). |
-| **TLS** | DNS over TLS (DoT) to one or more `host:port` addresses. |
-| **QUIC** | DNS over QUIC. |
-| **Go** | Uses the Go runtime / system DNS resolver (OS resolver behavior). Its traffic does not go through routing, it is typically used in servers and non-TUN modes. |
-| **Empty** | Always returns an empty DNS answer (no records). |
+- **Fake**: Return fake IPs from configured CIDR pools (typically `198.18.0.0/15`).
+- **UDP/TCP**: Classic DNS over UDP/TCP to one or more `host:port` addresses. Multiple addresses can be comma-separated; each query is sent to all of them at once and the **first reply** is used.
+- **HTTPS**: DNS over HTTPS (DoH) to a resolver URL (for example `https://1.1.1.1/dns-query`).
+- **TLS**: DNS over TLS (DoT) to one or more `host:port` addresses.
+- **QUIC**: DNS over QUIC.
+- **Go**: Uses the Go runtime / system DNS resolver (OS resolver behavior). Its traffic does not go through routing, it is typically used in servers and non-TUN modes.
+- **Empty**: Always returns an empty DNS answer (no records).
 
 ### Common fields (most types)
 
-| Field | Purpose |
-| --- | --- |
-| **Name** | Unique tag used in DNS rules and internal DNS server lists. Cannot duplicate another server or composite name. The name `hijack` is reserved. |
-| **Client IP** | Optional ECS (EDNS Client Subnet) source address sent with queries so upstream resolvers return answers for your location. |
-| **Cache duration** | How long to cache responses in seconds. If empty or `0`, cache until the record TTL expires. |
-| **Result IP set** | After resolution, drop A/AAAA answers whose IPs are **not** in the selected IP sets. This can be used to prevent DNS pollution|
+- **Name**: Unique tag used in DNS rules and internal DNS server lists. Cannot duplicate another server or composite name. The name `hijack` is reserved.
+- **Client IP**: Optional ECS (EDNS Client Subnet) source address sent with queries so upstream resolvers return answers for your location.
+- **Cache duration**: How long to cache responses in seconds. If empty or `0`, cache until the record TTL expires.
+- **Result IP set**: After resolution, drop A/AAAA answers whose IPs are **not** in the selected IP sets. This can be used to prevent DNS pollution
 
 ### Fake DNS fields
 
-| Field | Purpose |
-| --- | --- |
-| **Pool** | Comma-separated CIDRs for fake IP allocation (for example `198.18.0.0/15`). |
-| **LRU size** | How many fake DNS mappings to keep per pool (default in the form is 6666). |
+- **Pool**: Comma-separated CIDRs for fake IP allocation (for example `198.18.0.0/15`).
+- **LRU size**: How many fake DNS mappings to keep per pool (default in the form is 6666).
 
 ## Composite DNS servers
 
@@ -69,11 +63,9 @@ Both composite types require at least one member DNS server. Member order matter
 
 Each record has:
 
-| Field | Purpose |
-| --- | --- |
-| **Domain** | Hostname to match (required). |
-| **IP addresses** | Comma-separated IPv4 and/or IPv6 addresses. Creates **A** and **AAAA** answers. |
-| **Proxied domain** | Optional **CNAME** target — the domain resolves to this name instead of direct IPs. |
+- **Domain**: Hostname to match (required).
+- **IP addresses**: Comma-separated IPv4 and/or IPv6 addresses. Creates **A** and **AAAA** answers.
+- **Proxied domain**: Optional **CNAME** target — the domain resolves to this name instead of direct IPs.
 
 ### Applied to all DNS queries
 

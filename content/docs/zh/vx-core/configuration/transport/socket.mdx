@@ -9,20 +9,147 @@ Proto：[`protos/proto/vx/transport/dlhelper.proto`](https://github.com/5vnetwor
 
 ## SocketConfig
 
-| 字段 | 说明 |
-| --- | --- |
-| `mark` | `SO_MARK`（非零） |
-| `tfo` | TCP 快速打开：`AsIs`、`Enable`、`Disable` |
-| `tproxy` | `Off`、`TProxy`、`Redirect` |
-| `receiveOriginalDestAddress` | UDP：接收原始目标（IP_RECVORIGDSTADDR） |
-| `bindAddress`、`bindPort` | 绑定本地地址（Linux） |
-| `acceptProxyProtocol` | 接受 PROXY protocol v1/v2 |
-| `tcpKeepAliveInterval`、`tcpKeepAliveIdle` | TCP keepalive |
-| `tfoQueueLength` | TFO 队列长度 |
-| `bindToDevice` | 绑定到网络接口索引 |
-| `rxBufSize`、`txBufSize`、`forceBufSize` | 套接字缓冲区大小 |
-| `localAddr4`、`localAddr6` | 出站本地地址（拨号 / UDP 监听） |
-| `dialTimeout` | 拨号超时覆盖 |
+<ProtoField name="mark" type="uint32">
+
+`SO_MARK`（非零时设置）
+
+</ProtoField>
+
+<ProtoField name="tfo" type="TCPFastOpenState">
+
+TCP 快速打开，见 [TCPFastOpenState](#tcpfastopenstate)
+
+</ProtoField>
+
+<ProtoField name="tproxy" type="TProxyMode">
+
+透明代理模式，见 [TProxyMode](#tproxymode)
+
+</ProtoField>
+
+<ProtoField name="receiveOriginalDestAddress" type="bool">
+
+UDP：启用 `IP_RECVORIGDSTADDR`，接收原始目标地址
+
+</ProtoField>
+
+<ProtoField name="bindAddress" type="bytes">
+
+绑定本地地址（**Linux only**）
+
+</ProtoField>
+
+<ProtoField name="bindPort" type="uint32">
+
+绑定本地端口（与 `bindAddress` 配合）
+
+</ProtoField>
+
+<ProtoField name="acceptProxyProtocol" type="bool">
+
+接受 PROXY protocol v1/v2
+
+</ProtoField>
+
+<ProtoField name="tcpKeepAliveInterval" type="int32">
+
+TCP keepalive 探测间隔（秒）
+
+</ProtoField>
+
+<ProtoField name="tcpKeepAliveIdle" type="int32">
+
+TCP keepalive 空闲时间（秒）
+
+</ProtoField>
+
+<ProtoField name="tfoQueueLength" type="uint32">
+
+TFO 队列长度
+
+</ProtoField>
+
+<ProtoField name="bindToDevice" type="uint32">
+
+绑定到网络接口索引
+
+</ProtoField>
+
+<ProtoField name="rxBufSize" type="int64">
+
+接收套接字缓冲区大小（字节）
+
+</ProtoField>
+
+<ProtoField name="txBufSize" type="int64">
+
+发送套接字缓冲区大小（字节）
+
+</ProtoField>
+
+<ProtoField name="forceBufSize" type="bool">
+
+强制应用 `rxBufSize` / `txBufSize`
+
+</ProtoField>
+
+<ProtoField name="localAddr4" type="string">
+
+出站 IPv4 本地地址（拨号 / UDP 监听）
+
+</ProtoField>
+
+<ProtoField name="localAddr6" type="string">
+
+出站 IPv6 本地地址
+
+</ProtoField>
+
+<ProtoField name="dialTimeout" type="uint32">
+
+拨号超时覆盖（秒）
+
+</ProtoField>
+
+### TCPFastOpenState
+
+<ProtoField name="AsIs" type="0">
+
+保持系统当前 TFO 设置不变
+
+</ProtoField>
+
+<ProtoField name="Enable" type="1">
+
+显式启用 TFO
+
+</ProtoField>
+
+<ProtoField name="Disable" type="2">
+
+显式禁用 TFO
+
+</ProtoField>
+
+### TProxyMode
+
+<ProtoField name="Off" type="0">
+
+关闭透明代理
+
+</ProtoField>
+
+<ProtoField name="TProxy" type="1">
+
+TProxy 模式
+
+</ProtoField>
+
+<ProtoField name="Redirect" type="2">
+
+Redirect 模式
+
+</ProtoField>
 
 ```json
 {

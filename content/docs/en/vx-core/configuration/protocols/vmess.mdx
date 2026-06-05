@@ -7,10 +7,17 @@ Proto: [`protos/proto/vx/proxy/vmess/vmess.proto`](https://github.com/5vnetwork/
 
 ## VmessServerConfig
 
-| Field | Type | Description |
-| --- | --- | --- |
-| `accounts` | `UserConfig[]` | Allowed users (`id`, `userLevel`, `secret`) |
-| `secureEncryptionOnly` | bool | Reject legacy encryption |
+<ProtoField name="accounts" type="UserConfig[]">
+
+Allowed users (`id`, `userLevel`, `secret`)
+
+</ProtoField>
+
+<ProtoField name="secureEncryptionOnly" type="bool">
+
+Reject legacy encryption
+
+</ProtoField>
 
 ```json
 {
@@ -22,24 +29,45 @@ Proto: [`protos/proto/vx/proxy/vmess/vmess.proto`](https://github.com/5vnetwork/
 
 ## VmessClientConfig
 
-| Field | Type | Description |
-| --- | --- | --- |
-| `id` | string | Account UUID |
-| `security` | `SecurityType` | See table below |
-| `special` | bool | Internal / extended use |
-| `alterId` | uint32 | Legacy alterId (usually 0) |
+<ProtoField name="id" type="string">
+
+Account UUID
+
+</ProtoField>
+
+<ProtoField name="security" type="SecurityType">
+
+See below
+
+</ProtoField>
+
+<ProtoField name="special" type="bool">
+
+Internal / extended use
+
+</ProtoField>
+
+<ProtoField name="alterId" type="uint32">
+
+Legacy alterId (usually 0)
+
+</ProtoField>
 
 ### SecurityType
 
-| Value | Name |
-| --- | --- |
-| `0` | `UNKNOWN` |
-| `1` | `LEGACY` |
-| `2` | `AUTO` |
-| `3` | `AES128_GCM` |
-| `4` | `CHACHA20_POLY1305` |
-| `5` | `NONE` |
-| `6` | `ZERO` |
+<ProtoField name="UNKNOWN" type="0" />
+
+<ProtoField name="LEGACY" type="1" />
+
+<ProtoField name="AUTO" type="2" />
+
+<ProtoField name="AES128_GCM" type="3" />
+
+<ProtoField name="CHACHA20_POLY1305" type="4" />
+
+<ProtoField name="NONE" type="5" />
+
+<ProtoField name="ZERO" type="6" />
 
 In JSON use enum names (for example `"security": "CHACHA20_POLY1305"`).
 

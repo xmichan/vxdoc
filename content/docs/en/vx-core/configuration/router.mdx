@@ -9,46 +9,181 @@ Rules are evaluated in order. The first matching rule decides the outbound or se
 
 ## RouterConfig
 
-| Field | Type | Description |
-| --- | --- | --- |
-| `rules` | `RuleConfig[]` | Ordered routing rules |
+<ProtoField name="rules" type="RuleConfig[]">
+
+Ordered routing rules
+
+</ProtoField>
 
 ## RuleConfig
 
 **Destination:** set exactly one of `outboundTag` or `selectorTag`. If both are empty, the connection is **blocked**.
 
-| Field | Description |
-| --- | --- |
-| `outboundTag` | Send to this outbound handler |
-| `selectorTag` | Send to a [selector](#selectorconfig) (client / load-balancing) |
-| `matchAll` | Match every connection |
-| `inboundTags` | Match inbound `tag` |
-| `usernames` | Match authenticated user id |
-| `srcCidrs`, `srcIpTags` | Source IP match |
-| `dstCidrs`, `dstIpTags` | Destination IP match |
-| `geoDomains`, `domainTags` | Domain match (uses [geo](/docs/vx-core/configuration/geo) sets) |
-| `networks` | `TCP`, `UDP`, etc. |
-| `srcPortRanges`, `dstPortRanges` | Port ranges |
-| `appIds`, `appTags` | Application id match (client) |
-| `protocols` | Protocol sniff result |
-| `ipv6` | IPv6-only match |
-| `fakeIp` | Match fake-IP destinations |
-| `resolveDomain` | Resolve domain to IP; all IPs must be in `dstIpTags` |
-| `resolveSoftRewrite` | Resolve and rewrite target to an IP in `dstIpTags` |
-| `resolveSoftNoRewrite` | Resolve without rewriting target |
-| `skipSniff` | Disable sniff for IP-target connections |
-| `condition` | Nested `Condition` with the same matchers (composable) |
-| `fallbacks` | Try alternate selector/outbound if primary fails |
-| `ruleName` | Debug label |
+<ProtoField name="outboundTag">
+
+Send to this outbound handler
+
+</ProtoField>
+
+<ProtoField name="selectorTag">
+
+Send to a [selector](#selectorconfig) (client / load-balancing)
+
+</ProtoField>
+
+<ProtoField name="matchAll">
+
+Match every connection
+
+</ProtoField>
+
+<ProtoField name="inboundTags">
+
+Match inbound `tag`
+
+</ProtoField>
+
+<ProtoField name="usernames">
+
+Match authenticated user id
+
+</ProtoField>
+
+<ProtoField name="srcCidrs, srcIpTags">
+
+Source IP match
+
+</ProtoField>
+
+<ProtoField name="dstCidrs, dstIpTags">
+
+Destination IP match
+
+</ProtoField>
+
+<ProtoField name="geoDomains, domainTags">
+
+Domain match (uses [geo](/docs/vx-core/configuration/geo) sets)
+
+</ProtoField>
+
+
+<ProtoField name="networks">
+
+`TCP`, `UDP`, etc.
+
+</ProtoField>
+
+<ProtoField name="srcPortRanges, dstPortRanges">
+
+Port ranges
+
+</ProtoField>
+
+<ProtoField name="appIds, appTags">
+
+Application id match (client)
+
+</ProtoField>
+
+
+<ProtoField name="protocols">
+
+Protocol sniff result
+
+</ProtoField>
+
+<ProtoField name="ipv6">
+
+IPv6-only match
+
+</ProtoField>
+
+<ProtoField name="fakeIp">
+
+Match fake-IP destinations
+
+</ProtoField>
+
+<ProtoField name="resolveDomain">
+
+Resolve domain to IP; all IPs must be in `dstIpTags`
+
+</ProtoField>
+
+<ProtoField name="resolveSoftRewrite">
+
+Resolve and rewrite target to an IP in `dstIpTags`
+
+</ProtoField>
+
+<ProtoField name="resolveSoftNoRewrite">
+
+Resolve without rewriting target
+
+</ProtoField>
+
+<ProtoField name="skipSniff">
+
+Disable sniff for IP-target connections
+
+</ProtoField>
+
+<ProtoField name="condition">
+
+Nested `Condition` with the same matchers (composable)
+
+</ProtoField>
+
+<ProtoField name="fallbacks">
+
+Try alternate selector/outbound if primary fails
+
+</ProtoField>
+
+<ProtoField name="ruleName">
+
+Debug label
+
+</ProtoField>
 
 ### Fallback
 
-| Field | Description |
-| --- | --- |
-| `selectorTag`, `outboundTag` | Alternate destination |
-| `action.ipToDomain` | Rewrite IP back to domain when falling back |
-| `dstIpTags`, `domainTags`, `matchAll`, `condition` | Extra match for this fallback |
-| `last` | If condition matches, stop after this fallback |
+<ProtoField name="selectorTag, outboundTag">
+
+Alternate destination
+
+</ProtoField>
+
+
+<ProtoField name="action" type="Action">
+
+Optional action when falling back
+
+</ProtoField>
+
+<ProtoField name="dstIpTags, domainTags, matchAll, condition">
+
+Extra match for this fallback
+
+</ProtoField>
+
+
+<ProtoField name="last">
+
+If condition matches, stop after this fallback
+
+</ProtoField>
+
+### Action
+
+Fields on `Fallback.action`:
+
+<ProtoField name="ipToDomain" type="bool">
+
+Rewrite IP back to domain when falling back
+
+</ProtoField>
 
 ## Condition
 
@@ -58,15 +193,47 @@ Same matchers as `RuleConfig` but without `outboundTag` / `selectorTag` / `fallb
 
 Selectors group outbounds by tag filters and picking strategy (mainly used on the **client**).
 
-| Field | Description |
-| --- | --- |
-| `tag` | Referenced by `selectorTag` on rules |
-| `filter` | `prefixes`, `tags`, `subStrings`, `inverse`, `groupTags`, `countryCodes`, … |
-| `strategy` | `ALL`, `ALL_OK`, `LEAST_PING`, `MOST_THROUGHPUT`, `TOP_PING`, `TOP_THROUGHPUT` |
-| `balanceStrategy` | `RANDOM` or `MEMORY` |
-| `landHandlers` | Landing handler ids |
-| `selectFromOm` | Select from outbound manager (non-DB mode) |
-| `speedTestSize`, `speedTestInterval`, `pingTestInterval`, … | Health and speed tests |
+<ProtoField name="tag">
+
+Referenced by `selectorTag` on rules
+
+</ProtoField>
+
+<ProtoField name="filter">
+
+`prefixes`, `tags`, `subStrings`, `inverse`, `groupTags`, `countryCodes`, …
+
+</ProtoField>
+
+<ProtoField name="strategy">
+
+`ALL`, `ALL_OK`, `LEAST_PING`, `MOST_THROUGHPUT`, `TOP_PING`, `TOP_THROUGHPUT`
+
+</ProtoField>
+
+<ProtoField name="balanceStrategy">
+
+`RANDOM` or `MEMORY`
+
+</ProtoField>
+
+<ProtoField name="landHandlers">
+
+Landing handler ids
+
+</ProtoField>
+
+<ProtoField name="selectFromOm">
+
+Select from outbound manager (non-DB mode)
+
+</ProtoField>
+
+<ProtoField name="speedTestSize, speedTestInterval, pingTestInterval, …">
+
+Health and speed tests
+
+</ProtoField>
 
 ## Examples
 

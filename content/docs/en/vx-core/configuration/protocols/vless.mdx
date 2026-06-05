@@ -7,9 +7,11 @@ Proto: [`protos/proto/vx/proxy/vless/vless.proto`](https://github.com/5vnetwork/
 
 ## VlessServerConfig
 
-| Field | Type | Description |
-| --- | --- | --- |
-| `users` | `UserConfig[]` | Allowed users; `id` is UUID, `secret` optional |
+<ProtoField name="users" type="UserConfig[]">
+
+Allowed users; `id` is UUID, `secret` optional
+
+</ProtoField>
 
 ```json
 {
@@ -22,11 +24,23 @@ Proto: [`protos/proto/vx/proxy/vless/vless.proto`](https://github.com/5vnetwork/
 
 ## VlessClientConfig
 
-| Field | Type | Description |
-| --- | --- | --- |
-| `id` | string | Account UUID |
-| `flow` | string | Flow control, e.g. `xtls-rprx-vision` |
-| `encryption` | string | Client-only; currently `none` |
+<ProtoField name="id" type="string">
+
+Account UUID
+
+</ProtoField>
+
+<ProtoField name="flow" type="string">
+
+Flow control, e.g. `xtls-rprx-vision`
+
+</ProtoField>
+
+<ProtoField name="encryption" type="string">
+
+Client-only; currently `none`
+
+</ProtoField>
 
 ```json
 {

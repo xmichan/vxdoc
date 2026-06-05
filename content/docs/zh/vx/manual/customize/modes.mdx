@@ -14,13 +14,11 @@ import { Accordion, Accordions } from 'fumadocs-ui/components/accordion';
 
 ## 内置模式
 
-| 模式 | 标签 | 默认行为 |
-| --- | --- | --- |
-| **GFW**（黑名单） | GFW | 被屏蔽 / GFW 列表中的域名与 IP — **代理**；其余 — **直连** |
-| **CN**（白名单） | CN | 中国大陆域名与 IP — **直连**；其他 — **代理** |
-| **Proxy All** | Proxy All | 所有非私有流量 — **代理**；私有 — **直连** |
-| **RU Blocked** | Russia Blocked | 俄罗斯屏蔽列表 — **代理**；其余 — **直连** |
-| **RU Blocked (All)** | Russia Blocked(All) | 更广的俄罗斯屏蔽列表 — **代理**；其余 — **直连** |
+- **GFW**（黑名单） (`GFW`): 被屏蔽 / GFW 列表中的域名与 IP — **代理**；其余 — **直连**
+- **CN**（白名单） (`CN`): 中国大陆域名与 IP — **直连**；其他 — **代理**
+- **Proxy All** (`Proxy All`): 所有非私有流量 — **代理**；私有 — **直连**
+- **RU Blocked** (`Russia Blocked`): 俄罗斯屏蔽列表 — **代理**；其余 — **直连**
+- **RU Blocked (All)** (`Russia Blocked(All)`): 更广的俄罗斯屏蔽列表 — **代理**；其余 — **直连**
 
 
 ## 路由决策如何做出
@@ -29,12 +27,10 @@ vx-core 处理连接时，从模式 **路由规则自上而下** 遍历。
 **第一条所有条件均匹配的规则** 生效，匹配后不再考虑后续规则。
 规则的决策为 Direct、节点、选择器或 Block，决定流量去向。
 
-| 决策 | 含义 |
-| --- | --- |
-| **Direct** | 流量直连，不经代理 |
-| **A node** | 流量发往该节点 |
-| **A [Selector](/zh/docs/vx/manual/customize/selectors)** | 流量发往选择器选中的节点 |
-| **Block** | 连接被拒绝 |
+- **Direct**: 流量直连，不经代理
+- **A node**: 流量发往该节点
+- **A [Selector](/zh/docs/vx/manual/customize/selectors)**: 流量发往选择器选中的节点
+- **Block**: 连接被拒绝
 
 若无规则匹配，连接失败并提示「no rule matched.」
 
@@ -146,10 +142,8 @@ DNS 规则在 **所有启用的条件均匹配** 时匹配，或 **无启用条�
 > **警告：** 这与路由规则不同。路由规则若无条件则永不匹配，但
 DNS 规则若无条件则表示「始终匹配」。
 
-| 条件 | 匹配时机 |
-| --- | --- |
-| **Domain** | 查询名称属于域名集合或域名条目之一 |
-| **Query type** | 记录类型为 A、AAAA 等（例如 Fake DNS 规则常限制为 A/AAAA） |
+- **Domain**: 查询名称属于域名集合或域名条目之一
+- **Query type**: 记录类型为 A、AAAA 等（例如 Fake DNS 规则常限制为 A/AAAA）
 
 ## 内部 DNS 服务器
 

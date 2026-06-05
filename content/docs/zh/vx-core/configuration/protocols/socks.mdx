@@ -3,37 +3,88 @@ title: SOCKS
 description: SocksServerConfig 与 SocksClientConfig
 ---
 
-Proto：[`protos/proto/vx/proxy/socks/socks.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/proxy/socks/socks.proto)
+SOCKS 代理配置。Proto：[`protos/proto/vx/proxy/socks/socks.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/proxy/socks/socks.proto)
+
+服务端入站支持 **SOCKS5**（TCP 连接与 UDP associate），并在 `authType` 为 `NO_AUTH` 时兼容 **SOCKS4/4a** TCP。客户端出站使用 **SOCKS5** 握手。
 
 ## AuthType
 
-| 值 | 说明 |
-| --- | --- |
-| `NO_AUTH` | 匿名 |
-| `PASSWORD` | 用户名/密码 |
+<ProtoField name="NO_AUTH" type="0" />
+
+<ProtoField name="PASSWORD" type="1" />
+
+JSON 中使用枚举名（如 `"authType": "PASSWORD"`）。
+
+- `NO_AUTH`：无需用户名/密码；允许 SOCKS4/4a 客户端
+- `PASSWORD`：须 SOCKS5 用户名/密码认证；SOCKS4 请求会被拒绝
 
 ## SocksServerConfig
 
-| 字段 | 类型 | 说明 |
-| --- | --- | --- |
-| `authType` | `AuthType` | 认证模式 |
-| `accounts` | `UserConfig[]` | `PASSWORD` 时的用户 |
-| `address` | string | SOCKS 应答中的 BND.ADDR |
-| `udpEnabled` | bool | 启用 UDP associate |
+<ProtoField name="authType" type="AuthType">
 
-## SocksClientConfig
+认证模式
 
-| 字段 | 类型 | 说明 |
-| --- | --- | --- |
-| `name` | string | 用户名 |
-| `password` | string | 密码 |
-| `delayAuthWrite` | bool | 连接时延迟写入认证 |
+</ProtoField>
+
+<ProtoField name="accounts" type="UserConfig[]">
+
+`PASSWORD` 时允许的用户列表。`id` 为用户名，`secret` 为密码。
+
+</ProtoField>
+
+<ProtoField name="address" type="string">
+
+用于 SOCKS 应答中的 **BND.ADDR**。主要影响 **UDP ASSOCIATE** 回复中的绑定地址：若设置则使用该 IP；否则对本地客户端回环地址，对外部客户端使用入站监听地址。
+
+</ProtoField>
+
+<ProtoField name="udpEnabled" type="bool">
+
+`true` 时允许 SOCKS5 `UDP ASSOCIATE` 命令并启用入站 UDP 中继。`false` 时 UDP 命令返回不支持。
+
+</ProtoField>
 
 ```json
 {
   "@type": "type.googleapis.com/vx.proxy.socks.SocksServerConfig",
   "authType": "PASSWORD",
   "udpEnabled": true,
+  "address": "203.0.113.1",
   "accounts": [{ "id": "u1", "secret": "pass" }]
 }
 ```
+
+## SocksClientConfig
+
+<ProtoField name="name" type="string">
+
+SOCKS5 用户名。与 `password` 均为空时不发送密码认证（对应服务器 `NO_AUTH`）。
+
+</ProtoField>
+
+<ProtoField name="password" type="string">
+
+SOCKS5 密码，与服务器 `accounts[].secret` 对应。
+
+</ProtoField>
+
+<ProtoField name="delayAuthWrite" type="bool">
+
+`false`（默认）：在初始握手报文中一并发送认证信息。
+
+`true`：先发送支持的认证方法，待服务器选定 `PASSWORD` 后再写入用户名/密码。用于需要分步握手的上游 SOCKS 服务器。
+
+</ProtoField>
+
+```json
+{
+  "@type": "type.googleapis.com/vx.proxy.socks.SocksClientConfig",
+  "name": "u1",
+  "password": "pass"
+}
+```
+
+## 相关
+
+- [用户](/zh/docs/vx-core/configuration/users) — `UserConfig`
+- [传输](/zh/docs/vx-core/configuration/transport) — 常与 TCP 入站/出站配合

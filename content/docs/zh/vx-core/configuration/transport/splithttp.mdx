@@ -7,54 +7,8 @@ Proto：[`protos/proto/vx/transport/protocols/splithttp/config.proto`](https://g
 
 Split HTTP / XHTTP 传输。设置在 `TransportConfig.splithttp`。
 
-## SplitHttpConfig
 
-| 字段 | 说明 |
-| --- | --- |
-| `host` | Host 头 |
-| `path` | 请求路径 |
-| `mode` | 运行模式字符串 |
-| `headers` | 额外头映射 |
-| `xPaddingBytes` | `RangeConfig` 填充范围 |
-| `noGRPCHeader` | 省略 gRPC 风格头 |
-| `noSSEHeader` | 服务端：省略 SSE 头 |
-| `scMaxEachPostBytes` | 每次 POST 最大字节（`RangeConfig`） |
-| `scMinPostsIntervalMs` | POST 最小间隔 |
-| `scMaxBufferedPosts` | 服务端：最大缓冲 POST 数 |
-| `scStreamUpServerSecs` | 服务端 stream-up 超时范围 |
-| `xmux` | `XmuxConfig` — mux 并发/连接限制 |
-| `downloadSettings` | 下载路径的独立 `DownConfig` |
+## 相关
 
-### RangeConfig
-
-| 字段 | 说明 |
-| --- | --- |
-| `from`、`to` | 含端点的 int32 范围 |
-
-### XmuxConfig
-
-| 字段 | 说明 |
-| --- | --- |
-| `maxConcurrency`、`maxConnections`、`cMaxReuseTimes`、`hMaxRequestTimes`、`hMaxReusableSecs` | `RangeConfig` 限制 |
-| `hKeepAlivePeriod` | Keep-alive 周期 |
-
-### DownConfig
-
-| 字段 | 说明 |
-| --- | --- |
-| `address`、`port` | 下载端点 |
-| `xhttpConfig` | 嵌套 `SplitHttpConfig` |
-| `tls`、`reality` | 下载 leg 的安全配置 |
-
-```json
-{
-  "transport": {
-    "splithttp": {
-      "path": "/xhttp",
-      "host": "example.com",
-      "mode": "auto"
-    },
-    "tls": { "serverName": "example.com" }
-  }
-}
-```
+- [TLS](/zh/docs/vx-core/configuration/security/tls) — 主传输与 `downloadSettings.tls`
+- [REALITY](/zh/docs/vx-core/configuration/security/reality) — `downloadSettings.reality`

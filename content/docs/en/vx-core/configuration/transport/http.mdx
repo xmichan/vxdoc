@@ -9,12 +9,29 @@ HTTP/2 transport camouflage (not the [HTTP proxy](/docs/vx-core/configuration/pr
 
 ## HttpConfig
 
-| Field | Type | Description |
-| --- | --- | --- |
-| `host` | string[] | Host header values (random choice) |
-| `path` | string | Request path |
-| `method` | string | HTTP method |
-| `header` | `Header[]` | Custom headers (`name`, repeated `value`) |
+<ProtoField name="host" type="string[]">
+
+Host header values (random choice)
+
+</ProtoField>
+
+<ProtoField name="path" type="string">
+
+Request path
+
+</ProtoField>
+
+<ProtoField name="method" type="string">
+
+HTTP method
+
+</ProtoField>
+
+<ProtoField name="header" type="Header[]">
+
+Custom headers (`name`, repeated `value`)
+
+</ProtoField>
 
 ```json
 {

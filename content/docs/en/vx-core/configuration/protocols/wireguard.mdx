@@ -9,26 +9,85 @@ WireGuard is configured as an outbound `DeviceConfig` (no separate `*ServerConfi
 
 ## DeviceConfig
 
-| Field | Type | Description |
-| --- | --- | --- |
-| `secretKey` | string | Local private key |
-| `endpoint` | string[] | Endpoint host(s) |
-| `peers` | `PeerConfig[]` | Remote peers |
-| `mtu` | int32 | Interface MTU |
-| `numWorkers` | int32 | Worker count |
-| `reserved` | bytes | WireGuard reserved bytes (3) |
-| `isClient` | bool | Client mode |
-| `noKernelTun` | bool | Userspace tun only |
+<ProtoField name="secretKey" type="string">
+
+Local private key
+
+</ProtoField>
+
+<ProtoField name="endpoint" type="string[]">
+
+Endpoint host(s)
+
+</ProtoField>
+
+<ProtoField name="peers" type="PeerConfig[]">
+
+Remote peers
+
+</ProtoField>
+
+<ProtoField name="mtu" type="int32">
+
+Interface MTU
+
+</ProtoField>
+
+<ProtoField name="numWorkers" type="int32">
+
+Worker count
+
+</ProtoField>
+
+<ProtoField name="reserved" type="bytes">
+
+WireGuard reserved bytes (3)
+
+</ProtoField>
+
+<ProtoField name="isClient" type="bool">
+
+Client mode
+
+</ProtoField>
+
+<ProtoField name="noKernelTun" type="bool">
+
+Userspace tun only
+
+</ProtoField>
 
 ## PeerConfig
 
-| Field | Description |
-| --- | --- |
-| `publicKey` | Peer public key |
-| `preSharedKey` | Optional PSK |
-| `endpoint` | Peer endpoint `host:port` |
-| `keepAlive` | Persistent keepalive (seconds) |
-| `allowedIps` | Allowed IP CIDRs for this peer |
+<ProtoField name="publicKey">
+
+Peer public key
+
+</ProtoField>
+
+<ProtoField name="preSharedKey">
+
+Optional PSK
+
+</ProtoField>
+
+<ProtoField name="endpoint">
+
+Peer endpoint `host:port`
+
+</ProtoField>
+
+<ProtoField name="keepAlive">
+
+Persistent keepalive (seconds)
+
+</ProtoField>
+
+<ProtoField name="allowedIps">
+
+Allowed IP CIDRs for this peer
+
+</ProtoField>
 
 ```json
 {

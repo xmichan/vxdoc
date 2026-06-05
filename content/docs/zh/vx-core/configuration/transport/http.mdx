@@ -9,12 +9,43 @@ HTTP/2 传输伪装（不是 [HTTP proxy](/zh/docs/vx-core/configuration/protoco
 
 ## HttpConfig
 
-| 字段 | 类型 | 说明 |
-| --- | --- | --- |
-| `host` | string[] | Host 头值（随机选取） |
-| `path` | string | 请求路径 |
-| `method` | string | HTTP 方法 |
-| `header` | `Header[]` | 自定义头（`name`、重复 `value`） |
+<ProtoField name="host" type="string[]">
+
+Host 头值（随机选取）
+
+</ProtoField>
+
+<ProtoField name="path" type="string">
+
+请求路径
+
+</ProtoField>
+
+<ProtoField name="method" type="string">
+
+HTTP 方法
+
+</ProtoField>
+
+<ProtoField name="header" type="HttpHeader[]">
+
+自定义头，见 [HttpHeader](#httpheader)
+
+</ProtoField>
+
+### HttpHeader
+
+<ProtoField name="name" type="string">
+
+头名称（如 `Accept`、`Cookie`）
+
+</ProtoField>
+
+<ProtoField name="value" type="string[]">
+
+头值；多项时随机选取一项
+
+</ProtoField>
 
 ```json
 {

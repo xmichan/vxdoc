@@ -9,11 +9,23 @@ Schema: [`protos/proto/vx/user/user.proto`](https://github.com/5vnetwork/vx-core
 
 ## UserConfig
 
-| Field | Type | Description |
-| --- | --- | --- |
-| `id` | string | User identifier (used in routing `usernames`) |
-| `userLevel` | uint32 | Policy level for [PolicyConfig](/docs/vx-core/configuration/policy) `userPolicyMap` |
-| `secret` | string | Shared secret / UUID depending on protocol |
+<ProtoField name="id" type="string">
+
+User identifier (used in routing `usernames`)
+
+</ProtoField>
+
+<ProtoField name="userLevel" type="uint32">
+
+Policy level for [PolicyConfig](/docs/vx-core/configuration/policy) `userPolicyMap`
+
+</ProtoField>
+
+<ProtoField name="secret" type="string">
+
+Shared secret / UUID depending on protocol
+
+</ProtoField>
 
 ## Example
 

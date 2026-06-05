@@ -7,13 +7,11 @@ description: Domain, IP, and app sets to help you split your traffic
 
 ## Set types
 
-| Type | Contains | Example names |
-| --- | --- | --- |
-| **Atomic domain set** | Domains, geosite, remote URLs | Custom Proxy, Custom Direct, GFW, CN, Private |
-| **Atomic IP set** | CIDRs, geoip, remote URLs | Custom Proxy, Custom Direct, CN, Public |
-| **Great domain set** | Combination of domain sets (include / exclude) | GFW Mode Proxy Domains |
-| **Great IP set** | Combination of other IP sets | GFW Mode Proxy IPs |
-| **App set** | Application IDs | Proxy, Direct |
+- **Atomic domain set** (Domains, geosite, remote URLs): Custom Proxy, Custom Direct, GFW, CN, Private
+- **Atomic IP set** (CIDRs, geoip, remote URLs): Custom Proxy, Custom Direct, CN, Public
+- **Great domain set** (Combination of domain sets (include / exclude)): GFW Mode Proxy Domains
+- **Great IP set** (Combination of other IP sets): GFW Mode Proxy IPs
+- **App set** (Application IDs): Proxy, Direct
 
 **Atomic** sets are building blocks. **Great** sets are built from atomic sets (and other great sets).
 
@@ -56,27 +54,23 @@ In the UI, when you pick domain or IP sets for routing rules, both a set and its
 
 ### Atomic domain set
 
-| Field | Purpose |
-| --- | --- |
-| **Name** | Unique identifier referenced by routing rules. |
-| **Use Bloom Filter** | Reduces memory for large sets. There is a small chance (~1%) of false positives — a domain not in the set may be treated as if it were. |
-| **Inverse** | Flips membership: the set matches destinations that are **not** in its sources. |
-| **GeoSite URL** | HTTPS URL to a custom `geosite.dat` file. If empty, VX uses the `geosite.dat` provided by LoyalSoldier. |
-| **GeoSite Codes** | Categories from geosite data (e.g. `cn`, `gfw`, `private`). |
-| **GeoSite Attributes** | Sub-filters within a code (e.g. `cn` under `category-games`). |
-| **URLs** | Remote files downloadable by urls — see [URL file types](#url-file-types) below. |
-| **Domains** | Manually added domain entries (full domain, suffix, keyword, etc.). |
+- **Name**: Unique identifier referenced by routing rules.
+- **Use Bloom Filter**: Reduces memory for large sets. There is a small chance (~1%) of false positives — a domain not in the set may be treated as if it were.
+- **Inverse**: Flips membership: the set matches destinations that are **not** in its sources.
+- **GeoSite URL**: HTTPS URL to a custom `geosite.dat` file. If empty, VX uses the `geosite.dat` provided by LoyalSoldier.
+- **GeoSite Codes**: Categories from geosite data (e.g. `cn`, `gfw`, `private`).
+- **GeoSite Attributes**: Sub-filters within a code (e.g. `cn` under `category-games`).
+- **URLs**: Remote files downloadable by urls — see [URL file types](#url-file-types) below.
+- **Domains**: Manually added domain entries (full domain, suffix, keyword, etc.).
 
 ### Atomic IP set
 
-| Field | Purpose |
-| --- | --- |
-| **Name** | Unique identifier referenced by routing rules. |
-| **Inverse** | Same as for domain sets — matches IPs **not** in the set's sources. |
-| **GeoIP URL** | HTTPS URL to a custom `geoip.dat` file. If empty, VX uses the `geosite.dat` provided by LoyalSoldier.. |
-| **GeoIP Codes** | Categories from geoip data (e.g. `cn`, `private`). |
-| **URLs** |  Remote files downloadable by urls|
-| **CIDRs** | Manually added IP ranges. |
+- **Name**: Unique identifier referenced by routing rules.
+- **Inverse**: Same as for domain sets — matches IPs **not** in the set's sources.
+- **GeoIP URL**: HTTPS URL to a custom `geoip.dat` file. If empty, VX uses the `geosite.dat` provided by LoyalSoldier..
+- **GeoIP Codes**: Categories from geoip data (e.g. `cn`, `private`).
+- **URLs**: Remote files downloadable by urls
+- **CIDRs**: Manually added IP ranges.
 
 ### Supported URL file types
 
@@ -90,11 +84,9 @@ VX downloads geo files from urls specified in atomic sets periodically.
 
 Configure automatic updates in **Settings → General → Auto Update Geo Files**:
 
-| Setting | Behavior |
-| --- | --- |
-| **Auto Update Geo Files** | Enables periodic re-download of geo files. |
-| **Update Interval** | How often to refresh, in **days** (minimum 1). Default is **7 days**. |
-| **Update Now** | Triggers an immediate download and processing. |
+- **Auto Update Geo Files**: Enables periodic re-download of geo files.
+- **Update Interval**: How often to refresh, in **days** (minimum 1). Default is **7 days**.
+- **Update Now**: Triggers an immediate download and processing.
 
 
 ## Set name cannot be duplicated
@@ -113,24 +105,18 @@ VX always has these built-in sets:
 
 ### Atomic Domain Set
 
-| Set | Role |
-| --- | --- |
-| **Custom Proxy** | This is the set you are editing when you add/remove domains in proxy segment of the simplified view  | 
-| **Custom Direct** | This is the set you are editing when you add/remove domains in direct segment of the simplified view  |
+- **Custom Proxy**: This is the set you are editing when you add/remove domains in proxy segment of the simplified view
+- **Custom Direct**: This is the set you are editing when you add/remove domains in direct segment of the simplified view
 
 ### Atomic IP Set
 
-| Set | Role |
-| --- | --- |
-| **Custom Proxy** | This is the set you are editing when you add/remove ips in proxy segment of the simplified view  | 
-| **Custom Direct** | This is the set you are editing when you add/remove ips in direct segment of the simplified view  |
+- **Custom Proxy**: This is the set you are editing when you add/remove ips in proxy segment of the simplified view
+- **Custom Direct**: This is the set you are editing when you add/remove ips in direct segment of the simplified view
 
 ### App Set
 
-| Set | Role |
-| --- | --- |
-| **Proxy** | This is the set you are editing when you add/remove apps in proxy segment of the simplified view  | 
-| **Direct** | This is the set you are editing when you add/remove apps in direct segment of the simplified view  |
+- **Proxy**: This is the set you are editing when you add/remove apps in proxy segment of the simplified view
+- **Direct**: This is the set you are editing when you add/remove apps in direct segment of the simplified view
 
 ## Related
 

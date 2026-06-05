@@ -7,10 +7,17 @@ Proto: [`protos/proto/vx/proxy/trojan/trojan.proto`](https://github.com/5vnetwor
 
 ## TrojanServerConfig
 
-| Field | Type | Description |
-| --- | --- | --- |
-| `users` | `UserConfig[]` | Password in `secret` |
-| `vision` | bool | Enable Trojan Vision |
+<ProtoField name="users" type="UserConfig[]">
+
+Password in `secret`
+
+</ProtoField>
+
+<ProtoField name="vision" type="bool">
+
+Enable Trojan Vision
+
+</ProtoField>
 
 ```json
 {
@@ -22,10 +29,22 @@ Proto: [`protos/proto/vx/proxy/trojan/trojan.proto`](https://github.com/5vnetwor
 
 ## TrojanClientConfig
 
-| Field | Type | Description |
-| --- | --- | --- |
-| `password` | string | Trojan password |
-| `special` | bool | Internal / extended use |
-| `vision` | bool | Enable Trojan Vision |
+<ProtoField name="password" type="string">
+
+Trojan password
+
+</ProtoField>
+
+<ProtoField name="special" type="bool">
+
+Internal / extended use
+
+</ProtoField>
+
+<ProtoField name="vision" type="bool">
+
+Enable Trojan Vision
+
+</ProtoField>
 
 Often used with [TLS](/docs/vx-core/configuration/security/tls) on port 443.

@@ -9,13 +9,35 @@ It controls protocol sniffing, destination override, and some client-only behavi
 
 ## DispatcherConfig
 
-| Field | Type | Description |
-| --- | --- | --- |
-| `destinationOverride` | string[] | If non-empty, sniff connections and override destination with sniffed domain when protocol matches |
-| `sniff` | bool | Enable sniffing for extra connection metadata (logging / routing) |
-| `ipv6UseDomain` | bool | **Client only** — IPv6 handling preference |
-| `fallbackTimeout` | uint32 | Wait time (ms) for response data before treating connection as failed |
-| `sessionStats` | bool | Meter per-session statistics |
+<ProtoField name="destinationOverride" type="string[]">
+
+If non-empty, sniff connections and override destination with sniffed domain when protocol matches
+
+</ProtoField>
+
+<ProtoField name="sniff" type="bool">
+
+Enable sniffing for extra connection metadata (logging / routing)
+
+</ProtoField>
+
+<ProtoField name="ipv6UseDomain" type="bool">
+
+**Client only** — IPv6 handling preference
+
+</ProtoField>
+
+<ProtoField name="fallbackTimeout" type="uint32">
+
+Wait time (ms) for response data before treating connection as failed
+
+</ProtoField>
+
+<ProtoField name="sessionStats" type="bool">
+
+Meter per-session statistics
+
+</ProtoField>
 
 When `destinationOverride` lists protocols (for example `http`, `tls`), vx-core may replace the connection target with the sniffed hostname so [router](/docs/vx-core/configuration/router) domain rules apply to IP-based connections.
 

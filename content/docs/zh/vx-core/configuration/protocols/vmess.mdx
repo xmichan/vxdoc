@@ -7,10 +7,17 @@ Proto：[`protos/proto/vx/proxy/vmess/vmess.proto`](https://github.com/5vnetwork
 
 ## VmessServerConfig
 
-| 字段 | 类型 | 说明 |
-| --- | --- | --- |
-| `accounts` | `UserConfig[]` | 允许的用户（`id`、`userLevel`、`secret`） |
-| `secureEncryptionOnly` | bool | 拒绝旧版加密 |
+<ProtoField name="accounts" type="UserConfig[]">
+
+允许的用户（`id`、`userLevel`、`secret`）
+
+</ProtoField>
+
+<ProtoField name="secureEncryptionOnly" type="bool">
+
+拒绝旧版加密
+
+</ProtoField>
 
 ```json
 {
@@ -22,24 +29,40 @@ Proto：[`protos/proto/vx/proxy/vmess/vmess.proto`](https://github.com/5vnetwork
 
 ## VmessClientConfig
 
-| 字段 | 类型 | 说明 |
-| --- | --- | --- |
-| `id` | string | 账户 UUID |
-| `security` | `SecurityType` | 见下表 |
-| `special` | bool | 内部 / 扩展用途 |
-| `alterId` | uint32 | 旧版 alterId（通常为 0） |
+<ProtoField name="id" type="string">
+
+类似于密码，可以是任意string
+
+</ProtoField>
+
+<ProtoField name="security" type="SecurityType">
+
+见下方
+
+</ProtoField>
+
+
+<ProtoField name="alterId" type="uint32">
+
+旧版 alterId（通常为 0）
+
+</ProtoField>
 
 ### SecurityType
 
-| 值 | 名称 |
-| --- | --- |
-| `0` | `UNKNOWN` |
-| `1` | `LEGACY` |
-| `2` | `AUTO` |
-| `3` | `AES128_GCM` |
-| `4` | `CHACHA20_POLY1305` |
-| `5` | `NONE` |
-| `6` | `ZERO` |
+<ProtoField name="UNKNOWN" type="0" />
+
+<ProtoField name="LEGACY" type="1" />
+
+<ProtoField name="AUTO" type="2" />
+
+<ProtoField name="AES128_GCM" type="3" />
+
+<ProtoField name="CHACHA20_POLY1305" type="4" />
+
+<ProtoField name="NONE" type="5" />
+
+<ProtoField name="ZERO" type="6" />
 
 JSON 中使用枚举名（例如 `"security": "CHACHA20_POLY1305"`）。
 

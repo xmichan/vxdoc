@@ -10,44 +10,159 @@ Protos：
 
 设置在 `TransportConfig.tls`、`MultiProxyInboundConfig.securityConfigs[].tls`、Hysteria2 `tlsConfig` 以及 SplitHTTP `downloadSettings.tls`。
 
+与 `reality` **互斥**（同一传输块只能二选一）。
+
 ## TlsConfig
 
-| 字段 | 说明 |
-| --- | --- |
-| `certificates` | 服务端/客户端证书链（`Certificate[]`） |
-| `rootCas` | 自定义根 CA PEM |
-| `issueCas` | 用于向对等体签发证书的 CA |
-| `serverName` | SNI；拨号时默认等于目标域名 |
-| `disableSystemRoot` | 不使用系统根 CA |
-| `allowInsecure` | 跳过证书校验（客户端） |
-| `nextProtocol` | ALPN 列表 |
-| `enableSessionResumption` | TLS 会话票证 / 恢复 |
-| `pinnedPeerCertificateChainSha256` | 固定对等体证书链哈希 |
-| `verifyClientCertificate` | 要求有效客户端证书（服务端） |
-| `imitate` | uTLS 客户端指纹名称 |
-| `noSNI` | 不发送 SNI（uTLS） |
-| `forceAlpn` | `TRANSPORT_PREFERENCE_TAKE_PRIORITY`、`NO_ALPN`、`UTLS_PRESET` |
-| `masterKeyLog` | NSS 密钥日志路径（调试） |
-| `echKey` | 服务端 ECH 密钥 |
-| `echConfig` | 客户端 ECH 配置 blob |
-| `enableEch` | 客户端：启用 ECH |
+<ProtoField name="certificates" type="Certificate[]">
+
+服务端/客户端证书链
+
+</ProtoField>
+
+<ProtoField name="rootCas" type="bytes[]">
+
+自定义根 CA PEM（每项为一段 PEM 字节）
+
+</ProtoField>
+
+<ProtoField name="issueCas" type="Certificate[]">
+
+用于向对等体签发证书的 CA
+
+</ProtoField>
+
+<ProtoField name="serverName" type="string">
+
+SNI；拨号时默认等于目标域名
+
+</ProtoField>
+
+<ProtoField name="disableSystemRoot" type="bool">
+
+不使用系统根 CA
+
+</ProtoField>
+
+<ProtoField name="allowInsecure" type="bool">
+
+跳过证书校验（**客户端**）
+
+</ProtoField>
+
+<ProtoField name="nextProtocol" type="string[]">
+
+ALPN 列表（如 `h2`、`http/1.1`）
+
+</ProtoField>
+
+<ProtoField name="enableSessionResumption" type="bool">
+
+启用 TLS 会话票证 / 恢复
+
+</ProtoField>
+
+<ProtoField name="pinnedPeerCertificateChainSha256" type="bytes[]">
+
+固定对等体证书链 SHA-256 哈希（每项为 32 字节）
+
+</ProtoField>
+
+<ProtoField name="verifyClientCertificate" type="bool">
+
+要求有效客户端证书（**服务端**）
+
+</ProtoField>
+
+<ProtoField name="imitate" type="string">
+
+uTLS 客户端指纹名称（如 `chrome`）
+
+</ProtoField>
+
+<ProtoField name="noSNI" type="bool">
+
+不发送 SNI（uTLS）
+
+</ProtoField>
+
+<ProtoField name="forceAlpn" type="ForceALPN">
+
+ALPN 行为，见 [ForceALPN](#forcealpn)
+
+</ProtoField>
+
+<ProtoField name="masterKeyLog" type="string">
+
+NSS 密钥日志路径（调试）
+
+</ProtoField>
+
+<ProtoField name="echKey" type="bytes">
+
+服务端 ECH 密钥
+
+</ProtoField>
+
+<ProtoField name="echConfig" type="bytes">
+
+客户端 ECH 配置 blob
+
+</ProtoField>
+
+<ProtoField name="enableEch" type="bool">
+
+客户端：启用 ECH
+
+</ProtoField>
 
 ### ForceALPN
 
-| 值 | 行为 |
-| --- | --- |
-| `TRANSPORT_PREFERENCE_TAKE_PRIORITY` | 用户设置 ALPN 则用之，否则传输默认 |
-| `NO_ALPN` | 不发送 ALPN 扩展 |
-| `UTLS_PRESET` | 使用 uTLS 预设 ALPN |
+<ProtoField name="TRANSPORT_PREFERENCE_TAKE_PRIORITY" type="0">
+
+用户设置 ALPN 则用之，否则传输默认
+
+</ProtoField>
+
+<ProtoField name="NO_ALPN" type="1">
+
+不发送 ALPN 扩展
+
+</ProtoField>
+
+<ProtoField name="UTLS_PRESET" type="2">
+
+使用 uTLS 预设 ALPN
+
+</ProtoField>
 
 ## Certificate
 
-| 字段 | 说明 |
-| --- | --- |
-| `certificate` | PEM 证书字节 |
-| `key` | PEM 私钥字节 |
-| `certificateFilepath` | 证书文件路径 |
-| `keyFilepath` | 私钥文件路径 |
+证书与私钥可内联 PEM 字节，或通过文件路径加载（路径优先于内联）。
+
+<ProtoField name="certificate" type="bytes">
+
+PEM 证书字节
+
+</ProtoField>
+
+<ProtoField name="key" type="bytes">
+
+PEM 私钥字节
+
+</ProtoField>
+
+<ProtoField name="certificateFilepath" type="string">
+
+证书文件路径
+
+</ProtoField>
+
+<ProtoField name="keyFilepath" type="string">
+
+私钥文件路径
+
+</ProtoField>
 
 ```json
 {
@@ -69,5 +184,6 @@ Protos：
 
 ## 相关
 
+- [REALITY](/zh/docs/vx-core/configuration/security/reality) — 与 TLS 互斥的替代安全层
 - [WebSocket](/zh/docs/vx-core/configuration/transport/websocket) / [gRPC](/zh/docs/vx-core/configuration/transport/grpc) — 常与 443 端口 TLS 配合
 - [VLESS Vision](/zh/docs/vx-core/configuration/protocols/vless) — 与 TLS 或 REALITY 的 `flow`

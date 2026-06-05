@@ -9,12 +9,30 @@ Root message: [`TransportConfig`](https://github.com/5vnetwork/vx-core/blob/main
 
 ## TransportConfig
 
-| Field | Description |
-| --- | --- |
-| `socket` | [`SocketConfig`](/docs/vx-core/configuration/transport/socket) — marks, TFO, bind, buffers |
-| `tcp`, `kcp`, `websocket`, `http`, `grpc`, `httpupgrade`, `splithttp` | Wire protocol (oneof) |
-| `tls`, `reality` | Security layer (oneof); see [Security](/docs/vx-core/configuration/security) |
-| `transportProtocol`, `securityProtocol` | `Any` escape hatch for extended types |
+<ProtoField name="socket" type="SocketConfig">
+
+Marks, TFO, bind, buffers
+
+</ProtoField>
+
+<ProtoField name="tcp, kcp, websocket, http, grpc, httpupgrade, splithttp">
+
+Wire protocol (oneof)
+
+</ProtoField>
+
+<ProtoField name="tls, reality">
+
+Security layer (oneof); see [Security](/docs/vx-core/configuration/security)
+
+</ProtoField>
+
+<ProtoField name="transportProtocol, securityProtocol, Any">
+
+`Any` escape hatch for extended types
+
+</ProtoField>
+
 
 Only one **protocol** and one **security** field should be set per config.
 

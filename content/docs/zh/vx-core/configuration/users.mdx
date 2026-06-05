@@ -9,11 +9,23 @@ description: UserConfig — 认证账户
 
 ## UserConfig
 
-| 字段 | 类型 | 说明 |
-| --- | --- | --- |
-| `id` | string | 用户标识（用于路由 `usernames`） |
-| `userLevel` | uint32 | [PolicyConfig](/zh/docs/vx-core/configuration/policy) `userPolicyMap` 的策略级别 |
-| `secret` | string | 任意长度的密码 |
+<ProtoField name="id" type="string">
+
+用户标识（用于路由 `usernames`）
+
+</ProtoField>
+
+<ProtoField name="userLevel" type="uint32">
+
+[PolicyConfig](/zh/docs/vx-core/configuration/policy) `userPolicyMap` 的策略级别
+
+</ProtoField>
+
+<ProtoField name="secret" type="string">
+
+任意长度的密码
+
+</ProtoField>
 
 ## 示例
 

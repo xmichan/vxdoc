@@ -9,14 +9,41 @@ Set on `TransportConfig.websocket`.
 
 ## WebsocketConfig
 
-| Field | Type | Description |
-| --- | --- | --- |
-| `host` | string | Host header / authority |
-| `path` | string | URL path; empty = `/` |
-| `header` | `Header[]` | Extra headers (`key`, `value`) |
-| `maxEarlyData` | int32 | Max early data bytes |
-| `useBrowserForwarding` | bool | Browser forwarding mode |
-| `earlyDataHeaderName` | string | Header carrying early data |
+<ProtoField name="host" type="string">
+
+Host header / authority
+
+</ProtoField>
+
+<ProtoField name="path" type="string">
+
+URL path; empty = `/`
+
+</ProtoField>
+
+<ProtoField name="header" type="Header[]">
+
+Extra headers (`key`, `value`)
+
+</ProtoField>
+
+<ProtoField name="maxEarlyData" type="int32">
+
+Max early data bytes
+
+</ProtoField>
+
+<ProtoField name="useBrowserForwarding" type="bool">
+
+Browser forwarding mode
+
+</ProtoField>
+
+<ProtoField name="earlyDataHeaderName" type="string">
+
+Header carrying early data
+
+</ProtoField>
 
 ```json
 {

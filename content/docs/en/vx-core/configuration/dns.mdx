@@ -7,71 +7,206 @@ DNS is configured in `ServerConfig.dns` (`DnsConfig`). Schema: [`protos/proto/vx
 
 ## DnsConfig
 
-| Field | Type | Description |
-| --- | --- | --- |
-| `records` | `Record[]` | Static domain → IP mappings |
-| `recordStrings` | string[] | Alternate record encoding |
-| `dnsServers` | `DnsServerConfig[]` | Named DNS upstreams |
-| `internalResolver` | `Resolver` | Resolver used when **dialing** outbounds |
-| `requestDomainResolver` | `Resolver` | Resolver for **incoming** DNS requests |
-| `concurrentDnsServers` | `ConcurrentDnsServer[]` | Query multiple servers in parallel |
-| `serialDnsServers` | `SerialDnsServer[]` | Try servers one after another |
-| `resolvers` | `Resolver[]` | Additional named resolvers |
-| `dnsHijack` | `DnsHijackConfig` | Hijack rules and fake DNS toggle |
+<ProtoField name="records" type="Record[]">
+
+Static domain → IP mappings
+
+</ProtoField>
+
+<ProtoField name="recordStrings" type="string[]">
+
+Alternate record encoding
+
+</ProtoField>
+
+<ProtoField name="dnsServers" type="DnsServerConfig[]">
+
+Named DNS upstreams
+
+</ProtoField>
+
+<ProtoField name="internalResolver" type="Resolver">
+
+Resolver used when **dialing** outbounds
+
+</ProtoField>
+
+<ProtoField name="requestDomainResolver" type="Resolver">
+
+Resolver for **incoming** DNS requests
+
+</ProtoField>
+
+<ProtoField name="concurrentDnsServers" type="ConcurrentDnsServer[]">
+
+Query multiple servers in parallel
+
+</ProtoField>
+
+<ProtoField name="serialDnsServers" type="SerialDnsServer[]">
+
+Try servers one after another
+
+</ProtoField>
+
+<ProtoField name="resolvers" type="Resolver[]">
+
+Additional named resolvers
+
+</ProtoField>
+
+<ProtoField name="dnsHijack" type="DnsHijackConfig">
+
+Hijack rules and fake DNS toggle
+
+</ProtoField>
 
 ### Record
 
-| Field | Description |
-| --- | --- |
-| `domain` | Hostname |
-| `ip` | Static answers |
-| `proxiedDomain` | Map this domain to the same IPs as `proxiedDomain` |
+<ProtoField name="domain">
+
+Hostname
+
+</ProtoField>
+
+<ProtoField name="ip">
+
+Static answers
+
+</ProtoField>
+
+<ProtoField name="proxiedDomain">
+
+Map this domain to the same IPs as `proxiedDomain`
+
+</ProtoField>
 
 ### Resolver
 
-| Field | Description |
-| --- | --- |
-| `dnsServers` | Server names or addresses |
-| `interval` | Wait between tries (serial behavior) |
-| `name` | Resolver name |
+<ProtoField name="dnsServers">
+
+Server names or addresses
+
+</ProtoField>
+
+<ProtoField name="interval">
+
+Wait between tries (serial behavior)
+
+</ProtoField>
+
+<ProtoField name="name">
+
+Resolver name
+
+</ProtoField>
 
 ## DnsServerConfig
 
 Each server has a `name` and a `type` oneof:
 
-| Type | Message | Purpose |
-| --- | --- | --- |
-| `plainDnsServer` | `PlainDnsServer` | UDP DNS (`addresses`, `useDefaultDns`) |
-| `tlsDnsServer` | `TlsDnsServer` | DNS over TLS |
-| `dohDnsServer` | `DohDnsServer` | DNS over HTTPS (`url`) |
-| `quicDnsServer` | `QuicDnsServer` | DNS over QUIC |
-| `fakeDnsServer` | `FakeDnsServer` | Fake-IP pools (`poolConfigs`: `cidr`, `lruSize`) |
-| `goDnsServer` | `GoDnsServer` | Go resolver |
-| `emptyDnsServer` | `EmptyDnsServer` | No-op / placeholder |
+<ProtoField name="plainDnsServer" type="PlainDnsServer">
+
+UDP DNS (`addresses`, `useDefaultDns`)
+
+</ProtoField>
+
+<ProtoField name="tlsDnsServer" type="TlsDnsServer">
+
+DNS over TLS
+
+</ProtoField>
+
+<ProtoField name="dohDnsServer" type="DohDnsServer">
+
+DNS over HTTPS (`url`)
+
+</ProtoField>
+
+<ProtoField name="quicDnsServer" type="QuicDnsServer">
+
+DNS over QUIC
+
+</ProtoField>
+
+<ProtoField name="fakeDnsServer" type="FakeDnsServer">
+
+Fake-IP pools (`poolConfigs`: `cidr`, `lruSize`)
+
+</ProtoField>
+
+<ProtoField name="goDnsServer" type="GoDnsServer">
+
+Go resolver
+
+</ProtoField>
+
+<ProtoField name="emptyDnsServer" type="EmptyDnsServer">
+
+No-op / placeholder
+
+</ProtoField>
 
 Common fields:
 
-| Field | Description |
-| --- | --- |
-| `clientIp` | EDNS client subnet |
-| `cacheDuration` | Override TTL cache; `0` = use minimum answer TTL |
-| `ipTags` | Drop answers outside these [geo](/docs/vx-core/configuration/geo) IP sets |
+<ProtoField name="clientIp">
+
+EDNS client subnet
+
+</ProtoField>
+
+<ProtoField name="cacheDuration">
+
+Override TTL cache; `0` = use minimum answer TTL
+
+</ProtoField>
+
+<ProtoField name="ipTags">
+
+Drop answers outside these [geo](/docs/vx-core/configuration/geo) IP sets
+
+</ProtoField>
 
 ## DnsHijackConfig
 
-| Field | Description |
-| --- | --- |
-| `dnsRules` | `DnsRuleConfig[]` — pick server by domain/tags/type |
-| `enableFakeDns` | Enable fake DNS for hijacked queries |
+<ProtoField name="dnsRules">
+
+`DnsRuleConfig[]` — pick server by domain/tags/type
+
+</ProtoField>
+
+<ProtoField name="enableFakeDns">
+
+Enable fake DNS for hijacked queries
+
+</ProtoField>
 
 ### DnsRuleConfig
 
-| Field | Description |
-| --- | --- |
-| `dnsServerName` | Target `DnsServerConfig.name` |
-| `domains`, `domainTags` | Match query names |
-| `includedTypes` | `A`, `AAAA`, `HTTPS`, … |
-| `ruleName` | Debug label |
+<ProtoField name="dnsServerName">
+
+Target `DnsServerConfig.name`
+
+</ProtoField>
+
+<ProtoField name="domains, domainTags">
+
+Match query names
+
+</ProtoField>
+
+
+<ProtoField name="includedTypes">
+
+`A`, `AAAA`, `HTTPS`, …
+
+</ProtoField>
+
+<ProtoField name="ruleName">
+
+Debug label
+
+</ProtoField>
 
 ## Related
 

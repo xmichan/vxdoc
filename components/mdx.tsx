@@ -1,4 +1,5 @@
 import { GitHubRepoButton } from '@/components/github-repo-button';
+import { ProtoField } from '@/components/proto-field';
 import { YouTube } from '@/components/youtube';
 import * as TabsComponents from 'fumadocs-ui/components/tabs';
 import defaultMdxComponents from 'fumadocs-ui/mdx';
@@ -9,6 +10,7 @@ export function getMDXComponents(components?: MDXComponents) {
     ...defaultMdxComponents,
     ...TabsComponents,
     GitHubRepoButton,
+    ProtoField,
     YouTube,
     ...components,
   } satisfies MDXComponents;

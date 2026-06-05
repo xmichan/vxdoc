@@ -3,13 +3,23 @@ title: HTTP proxy
 description: HttpServerConfig 与 HttpClientConfig
 ---
 
-Proto：[`protos/proto/vx/proxy/http/http.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/proxy/http/http.proto)
+标准 HTTP 代理协议（`CONNECT` 隧道与普通 HTTP 转发）。Proto：[`protos/proto/vx/proxy/http/http.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/proxy/http/http.proto)
 
-标准 HTTP CONNECT 代理（不是 HTTP *传输* — 见[传输 HTTP](/zh/docs/vx-core/configuration/transport/http)）。
+这不是 HTTP **传输**伪装（`TransportConfig.http`）— 见[传输 HTTP](/zh/docs/vx-core/configuration/transport/http)。
+
+- **入站**（`HttpServerConfig`）：接受客户端 HTTP 代理请求，支持 `CONNECT` 与普通 HTTP（绝对 URL）
+- **出站**（`HttpClientConfig`）：向上游 HTTP 代理发起 `CONNECT`，建立 TCP 隧道。不支持 UDP
 
 ## HttpServerConfig
 
-空消息 — 无额外字段。认证通常在传输或路由层处理。
+空消息，无配置字段。
+
+入站处理器支持：
+
+- **`CONNECT`** — 返回 `200 Connection established` 后中继 TCP 流
+- **普通 HTTP** — 转发带绝对 URL 的 HTTP/1.1 请求（非 `CONNECT`）
+
+仅支持 TCP（及 UNIX 套接字）入站。`HttpServerConfig` 本身不包含认证字段。
 
 ```json
 {
@@ -19,14 +29,49 @@ Proto：[`protos/proto/vx/proxy/http/http.proto`](https://github.com/5vnetwork/v
 
 ## HttpClientConfig
 
-| 字段 | 类型 | 说明 |
-| --- | --- | --- |
-| `account` | `Account` | 可选 `username` / `password` |
-| `h1SkipWaitForReply` | bool | HTTP/1 优化 |
+<ProtoField name="account" type="Account">
 
-### Account
+可选 HTTP 代理认证。非空时在 `CONNECT` 请求中发送 `Proxy-Authorization: Basic ...` 头。
 
-| 字段 | 说明 |
-| --- | --- |
-| `username` | 代理认证用户 |
-| `password` | 代理认证密码 |
+</ProtoField>
+
+<ProtoField name="h1SkipWaitForReply" type="bool">
+
+HTTP/1 `CONNECT` 优化，默认 `false`。
+
+- `false`：先发送 `CONNECT` 请求，等待代理返回 `200` 后再发送首批载荷
+- `true`：将首批载荷与 `CONNECT` 请求写在同一次写入中（适用于要求首包随握手发出的上游）；同时把等待首批载荷的超时延长至 1 秒
+
+对 HTTP/2 `CONNECT` 无影响（HTTP/2 本就可在请求体中携带首批数据）。
+
+</ProtoField>
+
+```json
+{
+  "@type": "type.googleapis.com/vx.proxy.http.HttpClientConfig",
+  "account": {
+    "username": "user",
+    "password": "pass"
+  }
+}
+```
+
+## Account
+
+<ProtoField name="username" type="string">
+
+代理认证用户名
+
+</ProtoField>
+
+<ProtoField name="password" type="string">
+
+代理认证密码
+
+</ProtoField>
+
+## 相关
+
+- [传输 HTTP](/zh/docs/vx-core/configuration/transport/http) — HTTP/2 传输伪装（不同用途）
+- [出站](/zh/docs/vx-core/configuration/outbounds) — `protocol` 中嵌入 `HttpClientConfig`
+- [入站](/zh/docs/vx-core/configuration/inbounds) — `protocol` 中嵌入 `HttpServerConfig`

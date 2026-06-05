@@ -9,28 +9,57 @@ Proto: [`shadowsocks.proto`](https://github.com/5vnetwork/vx-core/blob/main/prot
 
 ### ShadowsocksCipherType
 
-| Value | Name |
-| --- | --- |
-| `0` | `AES_128_GCM` |
-| `1` | `AES_256_GCM` |
-| `2` | `CHACHA20_POLY1305` |
-| `3` | `NONE` |
+<ProtoField name="0" type="AES_128_GCM">
+</ProtoField>
+
+<ProtoField name="1" type="AES_256_GCM">
+</ProtoField>
+
+<ProtoField name="2" type="CHACHA20_POLY1305">
+</ProtoField>
+
+<ProtoField name="3" type="NONE">
+</ProtoField>
 
 ### ShadowsocksServerConfig
 
-| Field | Description |
-| --- | --- |
-| `cipherType` | Cipher enum |
-| `ivCheck` | IV validation |
-| `user` | Single `UserConfig` (`secret` = password) |
-| `experimentReducedIvHeadEntropy` | Experimental option |
+<ProtoField name="cipherType">
+
+Cipher enum
+
+</ProtoField>
+
+<ProtoField name="ivCheck">
+
+IV validation
+
+</ProtoField>
+
+<ProtoField name="user">
+
+Single `UserConfig` (`secret` = password)
+
+</ProtoField>
+
+<ProtoField name="experimentReducedIvHeadEntropy">
+
+Experimental option
+
+</ProtoField>
 
 ### ShadowsocksClientConfig
 
-| Field | Description |
-| --- | --- |
-| `cipherType` | Cipher enum |
-| `password` | PSK |
+<ProtoField name="cipherType">
+
+Cipher enum
+
+</ProtoField>
+
+<ProtoField name="password">
+
+PSK
+
+</ProtoField>
 
 ```json
 {
@@ -48,18 +77,37 @@ Proto: [`shadowsocks2022.proto`](https://github.com/5vnetwork/vx-core/blob/main/
 
 ### Shadowsocks2022ServerConfig
 
-| Field | Description |
-| --- | --- |
-| `method` | Cipher suite string (e.g. `2022-blake3-aes-128-gcm`) |
-| `user` | `UserConfig` with PSK in `secret` |
-| `networks` | Allowed networks (`TCP`, `UDP`, …) |
+<ProtoField name="method">
+
+Cipher suite string (e.g. `2022-blake3-aes-128-gcm`)
+
+</ProtoField>
+
+<ProtoField name="user">
+
+`UserConfig` with PSK in `secret`
+
+</ProtoField>
+
+<ProtoField name="networks">
+
+Allowed networks (`TCP`, `UDP`, …)
+
+</ProtoField>
 
 ### Shadowsocks2022ClientConfig
 
-| Field | Description |
-| --- | --- |
-| `method` | Cipher suite string |
-| `key` | PSK / key material |
+<ProtoField name="method">
+
+Cipher suite string
+
+</ProtoField>
+
+<ProtoField name="key">
+
+PSK / key material
+
+</ProtoField>
 
 ```json
 {

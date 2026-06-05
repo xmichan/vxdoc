@@ -9,21 +9,55 @@ description: PolicyConfig — 连接超时与缓冲区
 
 ## PolicyConfig
 
-| 字段 | 类型 | 说明 |
-| --- | --- | --- |
-| `handshakeTimeout` | int32 | 连接后无数据则关闭 |
-| `connectionIdleTimeout` | int32 | 空闲时关闭（双向均无传输） |
-| `udpIdleTimeout` | int32 | 无上行 UDP 数据时关闭 |
-| `upLinkOnlyTimeout` | int32 | 下行结束后，无上行数据则关闭 |
-| `downLinkOnlyTimeout` | int32 | 上行结束后，无下行数据则关闭 |
-| `defaultBufferSize` | int32 | 默认每连接缓冲区 |
-| `userPolicyMap` | map&lt;uint32, UserPolicy&gt; | 按 `userLevel` 覆盖 |
+<ProtoField name="handshakeTimeout" type="int32">
+
+连接后无数据则关闭
+
+</ProtoField>
+
+<ProtoField name="connectionIdleTimeout" type="int32">
+
+空闲时关闭（双向均无传输）
+
+</ProtoField>
+
+<ProtoField name="udpIdleTimeout" type="int32">
+
+无上行 UDP 数据时关闭
+
+</ProtoField>
+
+<ProtoField name="upLinkOnlyTimeout" type="int32">
+
+下行结束后，无上行数据则关闭
+
+</ProtoField>
+
+<ProtoField name="downLinkOnlyTimeout" type="int32">
+
+上行结束后，无下行数据则关闭
+
+</ProtoField>
+
+<ProtoField name="defaultBufferSize" type="int32">
+
+默认每连接缓冲区
+
+</ProtoField>
+
+<ProtoField name="userPolicyMap" type="map&lt;uint32, UserPolicy&gt;">
+
+按 `userLevel` 覆盖
+
+</ProtoField>
 
 ## UserPolicy
 
-| 字段 | 说明 |
-| --- | --- |
-| `bufferSize` | 该级别用户的缓冲区大小 |
+<ProtoField name="bufferSize">
+
+该级别用户的缓冲区大小
+
+</ProtoField>
 
 用户级别来自各账户 [UserConfig](/zh/docs/vx-core/configuration/users) 的 `userLevel`。
 

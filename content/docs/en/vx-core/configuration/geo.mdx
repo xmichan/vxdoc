@@ -9,83 +9,275 @@ Router [rules](/docs/vx-core/configuration/router) and [DNS](/docs/vx-core/confi
 
 ## GeoConfig
 
-| Field | Type | Description |
-| --- | --- | --- |
-| `domainSets` | `DomainSetConfig[]` | Named groups of domain set tags |
-| `greatDomainSets` | `GreatDomainSetConfig[]` | Composed domain sets (`inNames`, `exNames`, opposites) |
-| `atomicDomainSets` | `AtomicDomainSetConfig[]` | Concrete domain lists or geosite files |
-| `greatIpSets` | `GreatIPSetConfig[]` | Composed IP sets |
-| `atomicIpSets` | `AtomicIPSetConfig[]` | CIDR lists or geoip files |
-| `appSets` | `AppSetConfig[]` | Mobile app id groupings |
+<ProtoField name="domainSets" type="DomainSetConfig[]">
+
+Named groups of domain set tags
+
+</ProtoField>
+
+<ProtoField name="greatDomainSets" type="GreatDomainSetConfig[]">
+
+Composed domain sets (`inNames`, `exNames`, opposites)
+
+</ProtoField>
+
+<ProtoField name="atomicDomainSets" type="AtomicDomainSetConfig[]">
+
+Concrete domain lists or geosite files
+
+</ProtoField>
+
+<ProtoField name="greatIpSets" type="GreatIPSetConfig[]">
+
+Composed IP sets
+
+</ProtoField>
+
+<ProtoField name="atomicIpSets" type="AtomicIPSetConfig[]">
+
+CIDR lists or geoip files
+
+</ProtoField>
+
+<ProtoField name="appSets" type="AppSetConfig[]">
+
+Mobile app id groupings
+
+</ProtoField>
 
 Names must be unique within each category (no duplicate names across `greatDomainSets` and `atomicDomainSets`, and similarly for IP sets).
 
+## Domain
+
+A single domain matching rule. Defined in [`protos/proto/vx/common/geo/geo.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/common/geo/geo.proto).
+
+Used in [router](/docs/vx-core/configuration/router) rule `geoDomains` and [AtomicDomainSetConfig](#atomicdomainsetconfig) `domains`.
+
+<ProtoField name="type" type="Domain.Type">
+
+How to match:
+
+- `Plain` — substring (keyword) match
+- `Regex` — regular expression match
+- `RootDomain` — root domain and subdomains (suffix match)
+- `Full` — exact hostname match
+
+</ProtoField>
+
+<ProtoField name="value" type="string">
+
+Domain or pattern to match
+
+</ProtoField>
+
+<ProtoField name="attribute" type="Domain.Attribute[]">
+
+Optional attributes for filtering (e.g. geosite)
+
+</ProtoField>
+
+### Domain.Attribute
+
+<ProtoField name="key" type="string">
+
+Attribute name
+
+</ProtoField>
+
+<ProtoField name="boolValue, intValue" type="bool · int64">
+
+Attribute value (set one)
+
+</ProtoField>
+
 ## AtomicDomainSetConfig
 
-| Field | Description |
-| --- | --- |
-| `name` | Tag used in `domainTags` |
-| `domains` | Inline `Domain` list |
-| `geosite`, `geosites` | Load from geosite file or remote |
-| `useBloomFilter` | Bloom filter optimization |
-| `clashFiles` | Clash-format rule files |
-| `inverse` | Match domains **not** in the set |
-| `remoteGeoFiles` | Download geodata on a schedule |
+<ProtoField name="name">
+
+Tag used in `domainTags`
+
+</ProtoField>
+
+<ProtoField name="domains" type="Domain[]">
+
+Inline [Domain](#domain) list
+
+</ProtoField>
+
+<ProtoField name="geosite, geosites">
+
+Load from geosite file or remote
+
+</ProtoField>
+
+
+<ProtoField name="useBloomFilter">
+
+Bloom filter optimization
+
+</ProtoField>
+
+<ProtoField name="clashFiles">
+
+Clash-format rule files
+
+</ProtoField>
+
+<ProtoField name="inverse">
+
+Match domains **not** in the set
+
+</ProtoField>
+
+<ProtoField name="remoteGeoFiles">
+
+Download geodata on a schedule
+
+</ProtoField>
 
 ### GeositeConfig
 
-| Field | Description |
-| --- | --- |
-| `codes` | Geosite category codes |
-| `attributes` | Attribute filters |
-| `filepath` | Local geosite.dat path |
-| `remoteUrl`, `refreshCron` | Remote download and cron refresh |
+<ProtoField name="codes">
+
+Geosite category codes
+
+</ProtoField>
+
+<ProtoField name="attributes">
+
+Attribute filters
+
+</ProtoField>
+
+<ProtoField name="filepath">
+
+Local geosite.dat path
+
+</ProtoField>
+
+<ProtoField name="remoteUrl, refreshCron">
+
+Remote download and cron refresh
+
+</ProtoField>
+
 
 ## AtomicIPSetConfig
 
-| Field | Description |
-| --- | --- |
-| `name` | Tag used in `*IpTags` |
-| `cidrs` | Inline CIDR list |
-| `geoip` | `GeoIPConfig` — file, codes, remote URL, cron |
-| `inverse` | Match IPs outside the set |
-| `clashFiles`, `remoteGeoFiles` | External rule / remote sources |
+<ProtoField name="name">
+
+Tag used in `*IpTags`
+
+</ProtoField>
+
+<ProtoField name="cidrs">
+
+Inline CIDR list
+
+</ProtoField>
+
+<ProtoField name="geoip">
+
+`GeoIPConfig` — file, codes, remote URL, cron
+
+</ProtoField>
+
+<ProtoField name="inverse">
+
+Match IPs outside the set
+
+</ProtoField>
+
+<ProtoField name="clashFiles, remoteGeoFiles">
+
+External rule / remote sources
+
+</ProtoField>
+
 
 ## GreatDomainSetConfig / GreatIPSetConfig
 
 Build large sets from other named sets:
 
-| Field | Description |
-| --- | --- |
-| `name` | Resulting set name |
-| `oppositeName` | Complement set name |
-| `inNames` | Include these sets |
-| `exNames` | Exclude these sets |
+<ProtoField name="name">
+
+Resulting set name
+
+</ProtoField>
+
+<ProtoField name="oppositeName">
+
+Complement set name
+
+</ProtoField>
+
+<ProtoField name="inNames">
+
+Include these sets
+
+</ProtoField>
+
+<ProtoField name="exNames">
+
+Exclude these sets
+
+</ProtoField>
 
 ## DomainSetConfig
 
-| Field | Description |
-| --- | --- |
-| `name` | Set name |
-| `tags` | Member atomic/great set names |
+<ProtoField name="name">
+
+Set name
+
+</ProtoField>
+
+<ProtoField name="tags">
+
+Member atomic/great set names
+
+</ProtoField>
 
 ## AppSetConfig
 
-| Field | Description |
-| --- | --- |
-| `name` | Referenced by `appTags` in router rules |
-| `appIds` | `AppId` entries (`keyword`, `prefix`, or `exact`) |
-| `clashFiles` | Clash app rules |
+<ProtoField name="name">
+
+Referenced by `appTags` in router rules
+
+</ProtoField>
+
+<ProtoField name="appIds">
+
+`AppId` entries (`keyword`, `prefix`, or `exact`)
+
+</ProtoField>
+
+<ProtoField name="clashFiles">
+
+Clash app rules
+
+</ProtoField>
 
 ## GeoRemoteFile
 
 Used under atomic sets for scheduled downloads:
 
-| Field | Description |
-| --- | --- |
-| `filepath` | Local path to write |
-| `sourceUrl` | HTTPS URL |
-| `refreshCron` | 5-field cron; empty = fetch only at startup/reload |
+<ProtoField name="filepath">
+
+Local path to write
+
+</ProtoField>
+
+<ProtoField name="sourceUrl">
+
+HTTPS URL
+
+</ProtoField>
+
+<ProtoField name="refreshCron">
+
+5-field cron; empty = fetch only at startup/reload
+
+</ProtoField>
 
 ## Related
 

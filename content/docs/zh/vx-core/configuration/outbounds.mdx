@@ -3,28 +3,97 @@ title: 出站
 description: OutboundHandlerConfig 参考
 ---
 
-出站处理器列在 `ServerConfig.outbounds` 中。模式定义：[`protos/proto/vx/outbound/outbound.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/outbound/outbound.proto)。
+出站在 `ServerConfig.outbounds` 中使用。
+
+模式定义：[`protos/proto/vx/outbound/outbound.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/outbound/outbound.proto)。
 
 每个处理器有唯一的 `tag`，供[路由](/zh/docs/vx-core/configuration/router)规则（`outboundTag`）或链式目标引用。
 
 ## OutboundHandlerConfig
 
-| 字段 | 类型 | 说明 |
-| --- | --- | --- |
-| `tag` | string | 路由用的处理器名称 |
-| `transport` | `TransportConfig` | 客户端传输（TLS、WebSocket 等） |
-| `address` | string | 远程主机或 IP |
-| `port` | uint32 | 远程端口 |
-| `ports` | `PortRange[]` | 多个端口范围 |
-| `protocol` | `Any` | 代理客户端配置（Freedom、Blackhole、VMess 等） |
-| `enableMux` | bool | 启用连接多路复用 |
-| `muxConfig` | `MuxConfig` | `maxConnection`、`maxConcurrency` |
-| `uot` | bool | UDP over TCP |
-| `domainStrategy` | enum | 拨号时解析域名的策略（`PreferIPv4`、`PreferIPv6`、`IPv4Only`、`IPv6Only`、`Speed`） |
-| `random` | `RandomPortSelectStrategy` | 同时使用 `ports` 中的全部端口 |
-| `one` | `OnePortSelectStrategy` | 轮换单个端口（`interval` 或 `minInterval` / `maxInterval`） |
+<ProtoField name="tag" type="string">
 
-### 直连（freedom）出站
+路由用的处理器名称
+
+</ProtoField>
+
+<ProtoField name="transport" type="TransportConfig">
+
+客户端传输（TLS、WebSocket 等）
+
+</ProtoField>
+
+<ProtoField name="address" type="string">
+
+远程主机或 IP
+
+</ProtoField>
+
+<ProtoField name="port" type="uint32">
+
+远程端口
+
+</ProtoField>
+
+<ProtoField name="ports" type="PortRange[]">
+
+多个端口范围
+
+</ProtoField>
+
+<ProtoField name="protocol" type="Any">
+
+代理客户端配置（Freedom、Blackhole、VMess 等）
+
+</ProtoField>
+
+<ProtoField name="enableMux" type="bool">
+
+启用连接多路复用
+
+</ProtoField>
+
+<ProtoField name="muxConfig" type="MuxConfig">
+
+`maxConnection`、`maxConcurrency`
+
+</ProtoField>
+
+<ProtoField name="uot" type="bool">
+
+UDP over TCP
+
+</ProtoField>
+
+<ProtoField name="domainStrategy" type="DomainStrategy">
+
+拨号时若 `address` 为域名，按以下策略解析并选择 IP：
+
+- `PreferIPv4`（默认）：同时查询 A 与 AAAA 记录；优先使用 IPv4，若无 IPv4 则用 IPv6。
+- `PreferIPv6`：同时查询 A 与 AAAA 记录；优先尝试 IPv6，若无 IPv6 则用 IPv4。
+- `IPv4Only`：仅查询 A 记录，只使用 IPv4。
+- `IPv6Only`：仅查询 AAAA 记录，只使用 IPv6。
+- `Speed`：并行查询 A 与 AAAA，使用先返回结果的一组地址；若连接失败且另一地址族可用，再尝试另一组。
+
+若网卡不支持 IPv6，`PreferIPv4`、`PreferIPv6`、`Speed` 会自动降级为 `IPv4Only`。
+
+</ProtoField>
+
+<ProtoField name="random" type="RandomPortSelectStrategy">
+
+同时使用 `ports` 中的全部端口
+
+</ProtoField>
+
+<ProtoField name="one" type="OnePortSelectStrategy">
+
+轮换单个端口（`interval` 或 `minInterval` / `maxInterval`）
+
+</ProtoField>
+
+### 示例
+
+#### 直连（freedom）出站
 
 最小服务器需配置此项，以便不经上游代理转发流量：
 
@@ -37,7 +106,7 @@ description: OutboundHandlerConfig 参考
 }
 ```
 
-### 阻断出站
+#### 阻断出站
 
 ```json
 {
@@ -53,4 +122,4 @@ description: OutboundHandlerConfig 参考
 ## 相关
 
 - [路由](/zh/docs/vx-core/configuration/router) — 选择 `outboundTag` 或 `selectorTag`
-- [拨号器工厂](/zh/docs/vx-core/configuration/dialer-factory) — 出站连接时的拨号超时
+- [出站工厂](/zh/docs/vx-core/configuration/dialer-factory) 

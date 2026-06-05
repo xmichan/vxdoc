@@ -5,72 +5,361 @@ description: DnsConfig、服务器与劫持
 
 DNS 在 `ServerConfig.dns`（`DnsConfig`）中配置。模式定义：[`protos/proto/vx/dns/dns.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/dns/dns.proto)。
 
+`dnsServers` 定义具名上游；`concurrentDnsServers` / `serialDnsServers` 可将多个上游组合为新的具名服务器；`internalResolver` 与 `requestDomainResolver` 通过**名称**引用这些服务器。`dnsHijack` 为被劫持的 DNS 查询选择上游。
+
 ## DnsConfig
 
-| 字段 | 类型 | 说明 |
-| --- | --- | --- |
-| `records` | `Record[]` | 静态域名 → IP 映射 |
-| `recordStrings` | string[] |  静态域名 → IP 映射 |
-| `dnsServers` | `DnsServerConfig[]` |  DNS服务器 |
-| `internalResolver` | `Resolver` | 出站**拨号**时使用此解析器解析域名 |
-| `requestDomainResolver` | `Resolver` | **路由** 使用此解析器解析域名 |
-| `concurrentDnsServers` | `ConcurrentDnsServer[]` | 并行查询DNS服务器 |
-| `serialDnsServers` | `SerialDnsServer[]` | 依次查询DNS服务器 |
-| `dnsHijack` | `DnsHijackConfig` | Dns劫持 |
+<ProtoField name="records" type="Record[]">
 
-### Record
+静态域名记录，在查询其他上游之前由本地静态服务器应答。
 
-| 字段 | 说明 |
-| --- | --- |
-| `domain` | 主机名 |
-| `ip` | 静态应答 |
-| `proxiedDomain` | 将此域名映射为与 `proxiedDomain` 相同的 IP |
+</ProtoField>
 
-### Resolver
+<ProtoField name="recordStrings" type="string[]">
 
-| 字段 | 说明 |
-| --- | --- |
-| `dnsServers` | 使用到的DNS服务器 |
-| `interval` | 串行行为中的重试间隔 |
-| `name` | 解析器名称 |
+以标准 DNS RR 文本格式编写的静态记录（如 `www.example.com. 3600 IN A 192.0.2.1`），与 `records` 等效，便于粘贴整行记录。
+
+</ProtoField>
+
+<ProtoField name="dnsServers" type="DnsServerConfig[]">
+
+具名 DNS 上游定义。每条须设置唯一的 `name` 及一种服务器类型（`type` oneof）。
+
+</ProtoField>
+
+<ProtoField name="internalResolver" type="Resolver">
+
+出站**拨号**时解析域名所用的解析器。
+
+</ProtoField>
+
+<ProtoField name="requestDomainResolver" type="Resolver">
+
+**路由**与**调度器**解析请求域名时使用的解析器。
+
+</ProtoField>
+
+<ProtoField name="concurrentDnsServers" type="ConcurrentDnsServer[]">
+
+将多个已定义的 DNS 服务器并行查询，组合为新的具名服务器。
+
+</ProtoField>
+
+<ProtoField name="serialDnsServers" type="SerialDnsServer[]">
+
+按顺序尝试多个已定义的 DNS 服务器，组合为新的具名服务器。
+
+</ProtoField>
+
+<ProtoField name="dnsHijack" type="DnsHijackConfig">
+
+DNS 劫持。
+
+</ProtoField>
+
+## Record
+
+<ProtoField name="domain" type="string">
+
+主机名
+
+</ProtoField>
+
+<ProtoField name="ip" type="string[]">
+
+静态 IP 应答。IPv4 生成 A 记录，IPv6 生成 AAAA 记录。
+
+</ProtoField>
+
+<ProtoField name="proxiedDomain" type="string">
+
+非空时为本域生成指向 `proxiedDomain` 的 CNAME，而非直接返回 `ip`。
+
+</ProtoField>
+
+## Resolver
+
+解析器通过 `dnsServers` 中的**名称**引用 `DnsServerConfig`、`ConcurrentDnsServer` 或 `SerialDnsServer`。多个名称时按串行方式依次尝试。
+
+<ProtoField name="dnsServers" type="string[]">
+
+要使用的具名 DNS 服务器列表
+
+</ProtoField>
+
+<ProtoField name="interval" type="uint32">
+
+串行尝试时，两次查询之间的等待时间（**秒**）
+
+</ProtoField>
+
+<ProtoField name="name" type="string">
+
+解析器名称
+
+</ProtoField>
+
+## ConcurrentDnsServer
+
+<ProtoField name="dnsServers" type="string[]">
+
+并行查询的具名 DNS 服务器名称
+
+</ProtoField>
+
+<ProtoField name="name" type="string">
+
+组合服务器的名称，供 `Resolver.dnsServers` 与 `DnsRuleConfig.dnsServerName` 引用
+
+</ProtoField>
+
+## SerialDnsServer
+
+<ProtoField name="dnsServers" type="string[]">
+
+按顺序尝试的具名 DNS 服务器名称
+
+</ProtoField>
+
+<ProtoField name="interval" type="uint32">
+
+当前服务器失败后，等待多久再尝试下一个（**秒**）
+
+</ProtoField>
+
+<ProtoField name="name" type="string">
+
+组合服务器的名称
+
+</ProtoField>
 
 ## DnsServerConfig
 
-每台服务器有 `name` 与 `type` oneof：
+每条服务器有唯一的 `name`。
 
-| 类型 | 消息 | 用途 |
-| --- | --- | --- |
-| `plainDnsServer` | `PlainDnsServer` | UDP/TCP DNS |
-| `tlsDnsServer` | `TlsDnsServer` | DNS over TLS |
-| `dohDnsServer` | `DohDnsServer` | DNS over HTTPS |
-| `quicDnsServer` | `QuicDnsServer` | DNS over QUIC |
-| `fakeDnsServer` | `FakeDnsServer` | Fake IP 池（`poolConfigs`：`cidr`、`lruSize`） |
-| `goDnsServer` | `GoDnsServer` | Go默认解析器 |
-| `emptyDnsServer` | `EmptyDnsServer` | 返回空的解析 |
+`plainDnsServer`、`tlsDnsServer`、`dohDnsServer`、`quicDnsServer`、`fakeDnsServer`、
+`goDnsServer`、`emptyDnsServer` 只能指定其中一项。
 
-通用字段：
+<ProtoField name="name" type="string">
 
-| 字段 | 说明 |
-| --- | --- |
-| `clientIp` | EDNS 客户端子网 |
-| `cacheDuration` | 覆盖 TTL 缓存；`0` 表示使用应答最小 TTL |
-| `ipTags` | 丢弃不在这些 [geo](/zh/docs/vx-core/configuration/geo) IP 集合内的应答 |
+服务器名称；被解析器、组合服务器与 DNS 规则引用
+
+不可以使用`hijack`作为名称
+
+</ProtoField>
+
+<ProtoField name="plainDnsServer" type="PlainDnsServer">
+
+传统 UDP DNS（可选 TCP）
+
+</ProtoField>
+
+<ProtoField name="tlsDnsServer" type="TlsDnsServer">
+
+DNS over TLS (DoT)
+
+</ProtoField>
+
+<ProtoField name="dohDnsServer" type="DohDnsServer">
+
+DNS over HTTPS (DoH)
+
+</ProtoField>
+
+<ProtoField name="quicDnsServer" type="QuicDnsServer">
+
+DNS over QUIC (DoQ)
+
+</ProtoField>
+
+<ProtoField name="fakeDnsServer" type="FakeDnsServer">
+
+Fake IP 池，为匹配域名分配假地址
+
+</ProtoField>
+
+<ProtoField name="goDnsServer" type="GoDnsServer">
+
+Go 标准库系统解析器
+
+</ProtoField>
+
+<ProtoField name="emptyDnsServer" type="EmptyDnsServer">
+
+空解析器，不返回上游结果
+
+</ProtoField>
+
+<ProtoField name="clientIp" type="string">
+
+EDNS 客户端子网（ECS）中发送的客户端 IP
+
+</ProtoField>
+
+<ProtoField name="cacheDuration" type="uint32">
+
+应答缓存时长（**秒**）。`0` 时使用应答中的最小 TTL。
+
+</ProtoField>
+
+<ProtoField name="ipTags" type="string[]">
+
+仅保留落在这些 [geo](/zh/docs/vx-core/configuration/geo) IP 集合内的应答地址；其余 IP 会被丢弃
+
+</ProtoField>
+
+### PlainDnsServer
+
+<ProtoField name="addresses" type="string[]">
+
+上游地址，格式 `host:port`（通常端口 `53`）
+
+</ProtoField>
+
+<ProtoField name="useDefaultDns" type="bool">
+
+`true` 时使用系统默认网卡的 DNS 服务器；网卡 DNS 变化时自动更新。无可用系统 DNS 时回退到 `addresses`。
+
+</ProtoField>
+
+### TlsDnsServer
+
+<ProtoField name="addresses" type="string[]">
+
+DoT 上游地址，格式 `host:port`（通常端口 `853`）
+
+</ProtoField>
+
+### DohDnsServer
+
+<ProtoField name="url" type="string">
+
+DoH 端点 URL（如 `https://dns.google/dns-query`）
+
+</ProtoField>
+
+### QuicDnsServer
+
+<ProtoField name="address" type="string">
+
+DoQ 上游地址（`host:port`）
+
+</ProtoField>
+
+
+### FakeDnsServer
+
+<ProtoField name="poolConfigs" type="PoolConfig[]">
+
+Fake IP 地址池配置。同一 IP 版本（IPv4 / IPv6）不宜配置多个重叠池。
+
+</ProtoField>
+
+#### PoolConfig
+
+<ProtoField name="cidr" type="string">
+
+假 IP 地址池的 CIDR（如 `198.18.0.0/15`）
+
+</ProtoField>
+
+<ProtoField name="lruSize" type="uint32">
+
+池内域名 → 假 IP 映射的 LRU 容量
+
+</ProtoField>
+
+### GoDnsServer
+
+使用操作系统 / Go 默认解析路径。它的流量不经过调度器，直接发出。本类型通常用于服务端
+
+### EmptyDnsServer
+
+永远返回空解析。
 
 ## DnsHijackConfig
 
-| 字段 | 说明 |
-| --- | --- |
-| `dnsRules` | `DnsRuleConfig[]` — 按域名/标签/类型选择服务器 |
-| `enableFakeDns` | 为被劫持查询启用 Fake DNS |
+<ProtoField name="dnsRules" type="DnsRuleConfig[]">
 
-### DnsRuleConfig
+按域名、集合与查询类型将劫持的 DNS 请求路由到指定 `dnsServerName`。规则按顺序匹配。
 
-| 字段 | 说明 |
-| --- | --- |
-| `dnsServerName` | 目标 `DnsServerConfig.name` |
-| `domains`、`domainTags` | 匹配查询名 |
-| `includedTypes` | `A`、`AAAA`、`HTTPS` 等 |
-| `ruleName` | 调试标签 |
+</ProtoField>
+
+若有此配置，那么一个叫 `hijack` 的DNS Server将被添加。同时，一个名为 `dns` 的出站将被添加，这样就可以在
+路由规则中指定 `dns` 出站来劫持DNS流量
+
+## DnsRuleConfig
+
+<ProtoField name="dnsServerName" type="string">
+
+目标 `DnsServerConfig.name`（或组合服务器名称）
+
+</ProtoField>
+
+<ProtoField name="geoDomains" type="Domain[]">
+
+匹配查询名
+
+</ProtoField>
+
+<ProtoField name="domainTags" type="string[]">
+
+匹配属于这些 [geo](/zh/docs/vx-core/configuration/geo) 域名集合的查询名
+
+</ProtoField>
+
+<ProtoField name="includedTypes" type="DnsType[]">
+
+限制的查询类型。
+
+</ProtoField>
+
+<ProtoField name="ruleName" type="string">
+
+调试与展示用标签
+
+</ProtoField>
+
+### DnsType
+
+proto 定义的 DNS 查询类型枚举，包括 `DnsType_A`、`DnsType_AAAA`、`DnsType_CNAME`、`DnsType_HTTPS`、`DnsType_ANY` 等。
+
+## 示例
+
+静态记录 + 直连 DoH + 劫持规则：
+
+```json
+{
+  "dns": {
+    "records": [
+      { "domain": "internal.example", "ip": ["10.0.0.1"] }
+    ],
+    "dnsServers": [
+      {
+        "name": "doh",
+        "dohDnsServer": { "url": "https://dns.google/dns-query" }
+      }
+    ],
+    "internalResolver": {
+      "dnsServers": ["doh"]
+    },
+    "requestDomainResolver": {
+      "dnsServers": ["doh"]
+    },
+    "dnsHijack": {
+      "enableFakeDns": true,
+      "dnsRules": [
+        {
+          "dnsServerName": "doh",
+          "domainTags": ["gfw"],
+          "includedTypes": ["DnsType_A", "DnsType_AAAA"],
+          "ruleName": "proxy-dns"
+        }
+      ]
+    }
+  }
+}
+```
 
 ## 相关
 

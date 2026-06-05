@@ -43,11 +43,23 @@ Transparent redirect / port forward inbound.
 
 Proto: [`dokodemo.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/proxy/dokodemo/dokodemo.proto)
 
-| Field | Description |
-| --- | --- |
-| `address` | Target address to forward to |
-| `port` | Target port |
-| `networks` | `TCP`, `UDP`, … |
+<ProtoField name="address">
+
+Target address to forward to
+
+</ProtoField>
+
+<ProtoField name="port">
+
+Target port
+
+</ProtoField>
+
+<ProtoField name="networks">
+
+`TCP`, `UDP`, …
+
+</ProtoField>
 
 ```json
 {

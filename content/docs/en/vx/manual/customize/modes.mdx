@@ -14,13 +14,11 @@ import { Accordion, Accordions } from 'fumadocs-ui/components/accordion';
 
 ## Built-in modes
 
-| Mode | Label | Default behavior |
-| --- | --- | --- |
-| **GFW** (blacklist) | GFW | Blocked / GFW-listed domains and IPs — **proxy**; everything else — **direct** |
-| **CN** (whitelist) | CN | China mainland domains and IPs — **direct**; others — **proxy** |
-| **Proxy All** | Proxy All | All non-private traffic — **proxy**; private — **direct** |
-| **RU Blocked** | Russia Blocked | Russia-blocked lists — **proxy**; rest — **direct** |
-| **RU Blocked (All)** | Russia Blocked(All) | Broader Russia-blocked list — **proxy**; rest — **direct** |
+- **GFW** (blacklist) (`GFW`): Blocked / GFW-listed domains and IPs — **proxy**; everything else — **direct**
+- **CN** (whitelist) (`CN`): China mainland domains and IPs — **direct**; others — **proxy**
+- **Proxy All** (`Proxy All`): All non-private traffic — **proxy**; private — **direct**
+- **RU Blocked** (`Russia Blocked`): Russia-blocked lists — **proxy**; rest — **direct**
+- **RU Blocked (All)** (`Russia Blocked(All)`): Broader Russia-blocked list — **proxy**; rest — **direct**
 
 
 ## How routing decisions are made
@@ -29,12 +27,10 @@ When vx-core handles a connection, it walks the mode's **routing rules from top 
 The **first rule whose conditions all match** wins, after matcing, later rules will not be considerd.
 A rule has either Direct, a node, a selector or block as the decision, which decides where the traffic go 
 
-| Decision | Meaning |
-| --- | --- |
-| **Direct** | Traffic go direct, and is not proxied |
-| **A node** | Traffic go to the node |
-| **A [Selector](/docs/vx/manual/customize/selectors)** | Traffic go to the node selected by the selector |
-| **Block** | Connection is rejected |
+- **Direct**: Traffic go direct, and is not proxied
+- **A node**: Traffic go to the node
+- **A [Selector](/docs/vx/manual/customize/selectors)**: Traffic go to the node selected by the selector
+- **Block**: Connection is rejected
 
 If no rule matches, the connection fails with "no rule matched."
 
@@ -152,10 +148,8 @@ A DNS rule matches when **all enabled conditions match**, or when **no condition
 > **Warning:** This is different from routing rules. If a routing rule has no condition, it never matches, but if a 
 dns rule has no conditions, it means "always matches".
 
-| Condition | Matches when |
-| --- | --- |
-| **Domain** | Query name matches is in one of the domains sets or domain entries |
-| **Query type** | Record type is A, AAAA, etc. (for example Fake DNS rules often limit to A/AAAA) |
+- **Domain**: Query name matches is in one of the domains sets or domain entries
+- **Query type**: Record type is A, AAAA, etc. (for example Fake DNS rules often limit to A/AAAA)
 
 ## Internal DNS servers
 

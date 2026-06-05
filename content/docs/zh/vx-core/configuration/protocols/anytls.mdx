@@ -3,22 +3,17 @@ title: AnyTLS
 description: AnytlsServerConfig 与 AnytlsClientConfig
 ---
 
-Proto：[`protos/proto/vx/proxy/anytls/anytls.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/proxy/anytls/anytls.proto)
+AnyTLS 多路复用 TLS 隧道协议。Proto：[`protos/proto/vx/proxy/anytls/anytls.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/proxy/anytls/anytls.proto)
+
+通常配合 [TLS](/zh/docs/vx-core/configuration/security/tls) 或 [WebSocket](/zh/docs/vx-core/configuration/transport/websocket) 传输使用。
 
 ## AnytlsServerConfig
 
-| 字段 | 类型 | 说明 |
-| --- | --- | --- |
-| `users` | `UserConfig[]` | 密码在 `secret` 中 |
+<ProtoField name="users" type="UserConfig[]">
 
-## AnytlsClientConfig
+允许的用户；认证密码在 `secret` 中
 
-| 字段 | 类型 | 说明 |
-| --- | --- | --- |
-| `password` | string | 认证密码 |
-| `idleSessionCheckInterval` | uint32 | 会话空闲检查间隔 |
-| `idleSessionTimeout` | uint32 | 空闲超过此时长后关闭会话 |
-| `minIdleSession` | uint32 | 连接池最小空闲会话数 |
+</ProtoField>
 
 ```json
 {
@@ -27,4 +22,43 @@ Proto：[`protos/proto/vx/proxy/anytls/anytls.proto`](https://github.com/5vnetwo
 }
 ```
 
-按需配合 [TLS](/zh/docs/vx-core/configuration/security/tls) 或 [WebSocket](/zh/docs/vx-core/configuration/transport/websocket) 传输。
+## AnytlsClientConfig
+
+<ProtoField name="password" type="string">
+
+认证密码，与服务器 `users[].secret` 对应
+
+</ProtoField>
+
+<ProtoField name="idleSessionCheckInterval" type="uint32">
+
+空闲会话检查间隔（**秒**，默认 30）
+
+</ProtoField>
+
+<ProtoField name="idleSessionTimeout" type="uint32">
+
+会话空闲超过此时长后关闭（**秒**，默认 30）
+
+</ProtoField>
+
+<ProtoField name="minIdleSession" type="uint32">
+
+连接池保持的最小空闲会话数（默认 5）
+
+</ProtoField>
+
+```json
+{
+  "@type": "type.googleapis.com/vx.proxy.anytls.AnytlsClientConfig",
+  "password": "your-password",
+  "idleSessionCheckInterval": 30,
+  "idleSessionTimeout": 60,
+  "minIdleSession": 4
+}
+```
+
+## 相关
+
+- [TLS](/zh/docs/vx-core/configuration/security/tls)
+- [WebSocket](/zh/docs/vx-core/configuration/transport/websocket)

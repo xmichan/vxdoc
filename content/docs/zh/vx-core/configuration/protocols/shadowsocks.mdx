@@ -3,40 +3,80 @@ title: Shadowsocks
 description: Shadowsocks 与 Shadowsocks 2022 配置
 ---
 
+经典 Shadowsocks 与 Shadowsocks 2022 分别使用不同的 protobuf 消息，通过 [入站](/zh/docs/vx-core/configuration/inbounds) `protocol` / [出站](/zh/docs/vx-core/configuration/outbounds) `protocol` 的 `Any` 字段配置。
+
 ## Shadowsocks（经典）
 
-Proto：[`shadowsocks.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/proxy/shadowsocks/shadowsocks.proto)
+Proto：[`protos/proto/vx/proxy/shadowsocks/shadowsocks.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/proxy/shadowsocks/shadowsocks.proto)
+
+支持 TCP 与 UDP。
 
 ### ShadowsocksCipherType
 
-| 值 | 名称 |
-| --- | --- |
-| `0` | `AES_128_GCM` |
-| `1` | `AES_256_GCM` |
-| `2` | `CHACHA20_POLY1305` |
-| `3` | `NONE` |
+<ProtoField name="AES_128_GCM" type="0" />
+
+<ProtoField name="AES_256_GCM" type="1" />
+
+<ProtoField name="CHACHA20_POLY1305" type="2" />
+
+<ProtoField name="NONE" type="3" />
+
+JSON 中使用枚举名（如 `"cipherType": "CHACHA20_POLY1305"`）。`NONE` 表示不加密载荷，通常仅在与外层 TLS 等组合时使用。
 
 ### ShadowsocksServerConfig
 
-| 字段 | 说明 |
-| --- | --- |
-| `cipherType` | 加密算法枚举 |
-| `ivCheck` | IV 校验 |
-| `user` | 单个 `UserConfig`（`secret` = 密码） |
-| `experimentReducedIvHeadEntropy` | 实验选项 |
+<ProtoField name="cipherType" type="ShadowsocksCipherType">
 
-### ShadowsocksClientConfig
+加密算法
 
-| 字段 | 说明 |
-| --- | --- |
-| `cipherType` | 加密算法枚举 |
-| `password` | PSK |
+</ProtoField>
+
+<ProtoField name="ivCheck" type="bool">
+
+`true` 时启用 IV 重放检测（Bloom 过滤器），拒绝重复 IV
+
+</ProtoField>
+
+<ProtoField name="user" type="UserConfig">
+
+单个用户；`secret` 为 Shadowsocks 密码
+
+</ProtoField>
+
+<ProtoField name="experimentReducedIvHeadEntropy" type="bool">
+
+实验选项：将 IV 前 6 字节映射为可打印字符，降低 IV 熵以便某些流量伪装场景
+
+</ProtoField>
 
 ```json
 {
   "@type": "type.googleapis.com/vx.proxy.shadowsocks.ShadowsocksServerConfig",
   "cipherType": "CHACHA20_POLY1305",
+  "ivCheck": true,
   "user": { "secret": "your-password" }
+}
+```
+
+### ShadowsocksClientConfig
+
+<ProtoField name="cipherType" type="ShadowsocksCipherType">
+
+须与服务器 `cipherType` 一致
+
+</ProtoField>
+
+<ProtoField name="password" type="string">
+
+预共享密钥（PSK），与服务器 `user.secret` 相同
+
+</ProtoField>
+
+```json
+{
+  "@type": "type.googleapis.com/vx.proxy.shadowsocks.ShadowsocksClientConfig",
+  "cipherType": "CHACHA20_POLY1305",
+  "password": "your-password"
 }
 ```
 
@@ -44,22 +84,35 @@ Proto：[`shadowsocks.proto`](https://github.com/5vnetwork/vx-core/blob/main/pro
 
 ## Shadowsocks 2022
 
-Proto：[`shadowsocks2022.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/proxy/shadowsocks2022/shadowsocks2022.proto)
+Proto：[`protos/proto/vx/proxy/shadowsocks2022/shadowsocks2022.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/proxy/shadowsocks2022/shadowsocks2022.proto)
+
+基于 sing-shadowsocks 的 AEAD 2022 实现。支持的 `method`：
+
+- `2022-blake3-aes-128-gcm` — PSK 16 字节
+- `2022-blake3-aes-256-gcm` — PSK 32 字节
+- `2022-blake3-chacha20-poly1305` — PSK 32 字节
+
+PSK 可为合法 base64（长度满足要求），否则核心会用 BLAKE3 从明文密码派生所需长度。
 
 ### Shadowsocks2022ServerConfig
 
-| 字段 | 说明 |
-| --- | --- |
-| `method` | 加密套件字符串（例如 `2022-blake3-aes-128-gcm`） |
-| `user` | `UserConfig`，PSK 在 `secret` 中 |
-| `networks` | 允许的网络（`TCP`、`UDP` 等） |
+<ProtoField name="method" type="string">
 
-### Shadowsocks2022ClientConfig
+加密套件字符串（见上方支持列表）
 
-| 字段 | 说明 |
-| --- | --- |
-| `method` | 加密套件字符串 |
-| `key` | PSK / 密钥材料 |
+</ProtoField>
+
+<ProtoField name="user" type="UserConfig">
+
+单个用户；`secret` 为 PSK（base64 或明文，客户端侧处理逻辑相同）
+
+</ProtoField>
+
+<ProtoField name="networks" type="Network[]">
+
+允许的网络（`TCP`、`UDP` 等）。为空时默认 `TCP` 与 `UDP`。
+
+</ProtoField>
 
 ```json
 {
@@ -68,3 +121,30 @@ Proto：[`shadowsocks2022.proto`](https://github.com/5vnetwork/vx-core/blob/main
   "user": { "secret": "base64-or-raw-key" }
 }
 ```
+
+### Shadowsocks2022ClientConfig
+
+<ProtoField name="method" type="string">
+
+须与服务器 `method` 一致
+
+</ProtoField>
+
+<ProtoField name="key" type="string">
+
+PSK / 密钥材料，与服务器 `user.secret` 相同
+
+</ProtoField>
+
+```json
+{
+  "@type": "type.googleapis.com/vx.proxy.shadowsocks2022.Shadowsocks2022ClientConfig",
+  "method": "2022-blake3-aes-128-gcm",
+  "key": "base64-or-raw-key"
+}
+```
+
+## 相关
+
+- [传输](/zh/docs/vx-core/configuration/transport) — WebSocket、TLS 等
+- [用户](/zh/docs/vx-core/configuration/users) — `UserConfig`

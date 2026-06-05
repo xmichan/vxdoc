@@ -25,19 +25,71 @@ Field names in JSON use **camelCase** (for example `matchAll`, `outboundTag`, `m
 
 ## ServerConfig overview
 
-| Field | Type | Purpose |
-| --- | --- | --- |
-| `inbounds` | `ProxyInboundConfig[]` | Single-protocol listeners |
-| `multiInbounds` | `MultiProxyInboundConfig[]` | Multi-protocol listeners (TLS/REALITY + transport matrix) |
-| `outbounds` | `OutboundHandlerConfig[]` | Where traffic is sent (direct, proxy, block, …) |
-| `router` | `RouterConfig` | Rules that pick an outbound or selector per connection |
-| `dns` | `DnsConfig` | DNS servers, resolvers, hijack, static records |
-| `geo` | `GeoConfig` | Domain/IP/app sets used by routing and DNS |
-| `policy` | `PolicyConfig` | Timeouts and per-level buffer limits |
-| `log` | `LoggerConfig` | Log level, file path, redaction |
-| `users` | `UserConfig[]` | Global users (also attachable per inbound) |
-| `dispatcher` | `DispatcherConfig` | Sniffing and destination override |
-| `dialerFactory` | `DialerFactoryConfig` | Outbound dial timeouts and resolver binding |
+<ProtoField name="inbounds" type="ProxyInboundConfig[]">
+
+Single-protocol listeners
+
+</ProtoField>
+
+<ProtoField name="multiInbounds" type="MultiProxyInboundConfig[]">
+
+Multi-protocol listeners (TLS/REALITY + transport matrix)
+
+</ProtoField>
+
+<ProtoField name="outbounds" type="OutboundHandlerConfig[]">
+
+Where traffic is sent (direct, proxy, block, …)
+
+</ProtoField>
+
+<ProtoField name="router" type="RouterConfig">
+
+Rules that pick an outbound or selector per connection
+
+</ProtoField>
+
+<ProtoField name="dns" type="DnsConfig">
+
+DNS servers, resolvers, hijack, static records
+
+</ProtoField>
+
+<ProtoField name="geo" type="GeoConfig">
+
+Domain/IP/app sets used by routing and DNS
+
+</ProtoField>
+
+<ProtoField name="policy" type="PolicyConfig">
+
+Timeouts and per-level buffer limits
+
+</ProtoField>
+
+<ProtoField name="log" type="LoggerConfig">
+
+Log level, file path, redaction
+
+</ProtoField>
+
+<ProtoField name="users" type="UserConfig[]">
+
+Global users (also attachable per inbound)
+
+</ProtoField>
+
+<ProtoField name="dispatcher" type="DispatcherConfig">
+
+Sniffing and destination override
+
+</ProtoField>
+
+<ProtoField name="dialerFactory" type="DialerFactoryConfig">
+
+Outbound dial timeouts and resolver binding
+
+</ProtoField>
 
 Minimal server example:
 
@@ -90,27 +142,63 @@ Minimal server example:
 vx run --config config.json
 ```
 
-| Flag | Default | Description |
-| --- | --- | --- |
-| `--config` | `config.json` | Path to the config file |
+<ProtoField name="`--config`" type="default config.json">
+
+Path to the config file
+
+</ProtoField>
 
 When installed via the [install script](/docs/vx-core/quick-start), the default path is `/usr/local/etc/vx/config.json`.
 
 ## Proto sources
 
-| Area | Proto path |
-| --- | --- |
-| Root | `protos/proto/vx/server.proto` |
-| Inbounds | `protos/proto/vx/inbound/inbound.proto` |
-| Outbounds | `protos/proto/vx/outbound/outbound.proto` |
-| Router | `protos/proto/vx/router/router.proto` |
-| DNS | `protos/proto/vx/dns/dns.proto` |
-| Geo | `protos/proto/vx/geo/geo.proto` |
-| Policy | `protos/proto/vx/policy.proto` |
-| Log | `protos/proto/vx/log/logger.proto` |
-| Users | `protos/proto/vx/user/user.proto` |
-| Dispatcher | `protos/proto/vx/dispatcher/dispatcher.proto` |
-| Dialer factory | `protos/proto/vx/dialerfactory/dialerfactory.proto` |
-| Proxy protocols | `protos/proto/vx/proxy/*/` — [docs](/docs/vx-core/configuration/protocols) |
-| Transport | `protos/proto/vx/transport/` — [docs](/docs/vx-core/configuration/transport) |
-| Security (TLS/REALITY) | `protos/proto/vx/transport/security/` — [docs](/docs/vx-core/configuration/security) |
+<ProtoField name="Root" type="protos/proto/vx/server.proto">
+</ProtoField>
+
+<ProtoField name="Inbounds" type="protos/proto/vx/inbound/inbound.proto">
+</ProtoField>
+
+<ProtoField name="Outbounds" type="protos/proto/vx/outbound/outbound.proto">
+</ProtoField>
+
+<ProtoField name="Router" type="protos/proto/vx/router/router.proto">
+</ProtoField>
+
+<ProtoField name="DNS" type="protos/proto/vx/dns/dns.proto">
+</ProtoField>
+
+<ProtoField name="Geo" type="protos/proto/vx/geo/geo.proto">
+</ProtoField>
+
+<ProtoField name="Policy" type="protos/proto/vx/policy.proto">
+</ProtoField>
+
+<ProtoField name="Log" type="protos/proto/vx/log/logger.proto">
+</ProtoField>
+
+<ProtoField name="Users" type="protos/proto/vx/user/user.proto">
+</ProtoField>
+
+<ProtoField name="Dispatcher" type="protos/proto/vx/dispatcher/dispatcher.proto">
+</ProtoField>
+
+<ProtoField name="Dialer factory" type="protos/proto/vx/dialerfactory/dialerfactory.proto">
+</ProtoField>
+
+<ProtoField name="Proxy protocols">
+
+`protos/proto/vx/proxy/*/` — [docs](/docs/vx-core/configuration/protocols)
+
+</ProtoField>
+
+<ProtoField name="Transport">
+
+`protos/proto/vx/transport/` — [docs](/docs/vx-core/configuration/transport)
+
+</ProtoField>
+
+<ProtoField name="Security (TLS/REALITY)">
+
+`protos/proto/vx/transport/security/` — [docs](/docs/vx-core/configuration/security)
+
+</ProtoField>

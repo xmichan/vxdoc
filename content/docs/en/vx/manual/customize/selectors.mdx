@@ -9,20 +9,16 @@ description: Proxy selectors in Advanced routing
 
 The **Range** (selector filter) defines which nodes the selector may choose from.
 
-| Range | Meaning |
-| --- | --- |
-| **All Nodes** | All nodes. |
-| **Partial Nodes** | Only nodes you specified. |
+- **All Nodes**: All nodes.
+- **Partial Nodes**: Only nodes you specified.
 
 When **Partial Nodes** is selected, use the filter chips to narrow the pool. 
 
-| Filter | Meaning |
-| --- | --- |
-| **Node** | Individual nodes. |
-| **Group** | Node group or subscription. |
-| **Prefix** | Nodes that starts with the given prefix string. |
-| **Sub String** | Nodes that contains the given substring. |
-| **Area** | Nodes in the area. |
+- **Node**: Individual nodes.
+- **Group**: Node group or subscription.
+- **Prefix**: Nodes that starts with the given prefix string.
+- **Sub String**: Nodes that contains the given substring.
+- **Area**: Nodes in the area.
 
 Changes to the filter take effect immediately, no need to restart.
 
@@ -30,14 +26,12 @@ Changes to the filter take effect immediately, no need to restart.
 
 After filtering, the **Select Strategy** decides **which** node(s) from that pool are actually used.
 
-| Strategy | Meaning | 
-| --- | --- | 
-| **All** | Every node in the filtered pool | 
-| **Usable** | All nodes that are usable | 
-| **Lowest Latency** | The single node with the lowest ping | 
-| **Speed Highest** | The single node with the highest measured throughput | 
-| **Low Latency** | All nodes whose ping is within **30%** of the best ping (e.g. best 100 ms → include nodes ≤ 130 ms) | 
-| **High Speed** | All nodes with throughput ≥ **70%** of the best (e.g. best 100 → include nodes ≥ 70) | 
+- **All**: Every node in the filtered pool
+- **Usable**: All nodes that are usable
+- **Lowest Latency**: The single node with the lowest ping
+- **Speed Highest**: The single node with the highest measured throughput
+- **Low Latency**: All nodes whose ping is within **30%** of the best ping (e.g. best 100 ms → include nodes ≤ 130 ms)
+- **High Speed**: All nodes with throughput ≥ **70%** of the best (e.g. best 100 → include nodes ≥ 70)
 
 Strategies that pick **one** node (**Lowest Latency**, **Speed Highest**) do not show a balance strategy — each connection uses that single node.
 
@@ -47,12 +41,10 @@ Strategies that pick **multiple** nodes (**All**, **Usable**, **Low Latency**, *
 
 Each selector will test nodes periodically. You can configure how to test:
 
-| Field | Default | Purpose |
-| --- | --- | --- |
-| **Speed test size** | 1,000,000 bytes (1 MB) | Download size for each speed test. |
-| **Speed test interval** | 60 minutes | How often to speed-test filtered nodes. |
-| **Ping test interval** | 10 minutes | How often to ping filtered nodes. |
-| **Unusable test interval** | 10 minutes | How often to re-check nodes marked unusable. |
+- **Speed test size** (default `1,000,000 bytes (1 MB)`): Download size for each speed test.
+- **Speed test interval** (default `60 minutes`): How often to speed-test filtered nodes.
+- **Ping test interval** (default `10 minutes`): How often to ping filtered nodes.
+- **Unusable test interval** (default `10 minutes`): How often to re-check nodes marked unusable.
 
 Only **Speed Highest** and **High Speed** test speeds periodically. Only **Lowest Latency** and **Low Latency** test 
 ping periodically. All strategies except **All** test usablility and unusable nodes periodically.
@@ -61,10 +53,8 @@ ping periodically. All strategies except **All** test usablility and unusable no
 
 When the select strategy keeps **multiple** nodes active, **Balance Strategy** decides which node handles a connection:
 
-| Strategy | Behavior |
-| --- | --- |
-| **Random** | Pick a random node from the active set for a connection. IPv6 traffic prefers IPv6-capable nodes when available. |
-| **Memory** | Stickiness: reuse the same node for the same **app** or **root domain** when possible. If no mapping exists yet, assign randomly and remember it. IPv6 traffic prefers IPv6-capable nodes. |
+- **Random**: Pick a random node from the active set for a connection. IPv6 traffic prefers IPv6-capable nodes when available.
+- **Memory**: Stickiness: reuse the same node for the same **app** or **root domain** when possible. If no mapping exists yet, assign randomly and remember it. IPv6 traffic prefers IPv6-capable nodes.
 
 Use **Memory** when you want stable exits per site or app (fewer IP changes mid-session). Use **Random** when you want even load spread across nodes.
 

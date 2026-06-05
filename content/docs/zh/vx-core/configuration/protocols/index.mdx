@@ -15,21 +15,19 @@ Protobuf 包名使用点号（例如 `vx.proxy.vmess.VmessServerConfig`）。
 
 ## 服务端与客户端消息
 
-| 协议 | 服务端（`*ServerConfig`） | 客户端（`*ClientConfig`） |
-| --- | --- | --- |
-| VMess | `vx.proxy.vmess.VmessServerConfig` | `vx.proxy.vmess.VmessClientConfig` |
-| VLESS | `vx.proxy.vless.VlessServerConfig` | `vx.proxy.vless.VlessClientConfig` |
-| Trojan | `vx.proxy.trojan.TrojanServerConfig` | `vx.proxy.trojan.TrojanClientConfig` |
-| Shadowsocks | `vx.proxy.shadowsocks.ShadowsocksServerConfig` | `vx.proxy.shadowsocks.ShadowsocksClientConfig` |
-| Shadowsocks 2022 | `vx.proxy.shadowsocks2022.Shadowsocks2022ServerConfig` | `vx.proxy.shadowsocks2022.Shadowsocks2022ClientConfig` |
-| SOCKS | `vx.proxy.socks.SocksServerConfig` | `vx.proxy.socks.SocksClientConfig` |
-| HTTP proxy | `vx.proxy.http.HttpServerConfig` | `vx.proxy.http.HttpClientConfig` |
-| Hysteria2 | `vx.proxy.hysteria.Hysteria2ServerConfig` | `vx.proxy.hysteria.Hysteria2ClientConfig` |
-| AnyTLS | `vx.proxy.anytls.AnytlsServerConfig` | `vx.proxy.anytls.AnytlsClientConfig` |
-| WireGuard | — | `vx.proxy.wireguard.DeviceConfig` |
-| Freedom | `vx.proxy.freedom.FreedomConfig` | 同上 |
-| Blackhole | `vx.proxy.blackhole.BlackholeConfig` | 同上 |
-| Dokodemo | `vx.proxy.dokodemo.DokodemoConfig` | 同上 |
+- **VMess** — Server: `vx.proxy.vmess.VmessServerConfig`, Client: `vx.proxy.vmess.VmessClientConfig`
+- **VLESS** — Server: `vx.proxy.vless.VlessServerConfig`, Client: `vx.proxy.vless.VlessClientConfig`
+- **Trojan** — Server: `vx.proxy.trojan.TrojanServerConfig`, Client: `vx.proxy.trojan.TrojanClientConfig`
+- **Shadowsocks** — Server: `vx.proxy.shadowsocks.ShadowsocksServerConfig`, Client: `vx.proxy.shadowsocks.ShadowsocksClientConfig`
+- **Shadowsocks 2022** — Server: `vx.proxy.shadowsocks2022.Shadowsocks2022ServerConfig`, Client: `vx.proxy.shadowsocks2022.Shadowsocks2022ClientConfig`
+- **SOCKS** — Server: `vx.proxy.socks.SocksServerConfig`, Client: `vx.proxy.socks.SocksClientConfig`
+- **HTTP proxy** — Server: `vx.proxy.http.HttpServerConfig`, Client: `vx.proxy.http.HttpClientConfig`
+- **Hysteria2** — Server: `vx.proxy.hysteria.Hysteria2ServerConfig`, Client: `vx.proxy.hysteria.Hysteria2ClientConfig`
+- **AnyTLS** — Server: `vx.proxy.anytls.AnytlsServerConfig`, Client: `vx.proxy.anytls.AnytlsClientConfig`
+- **WireGuard** — Client: `vx.proxy.wireguard.DeviceConfig`
+- **Freedom** — Server: `vx.proxy.freedom.FreedomConfig`, Client: 同上
+- **Blackhole** — Server: `vx.proxy.blackhole.BlackholeConfig`, Client: 同上
+- **Dokodemo** — Server: `vx.proxy.dokodemo.DokodemoConfig`, Client: 同上
 
 ## 传输与 TLS
 

@@ -7,18 +7,37 @@ Proto: [`protos/proto/vx/proxy/anytls/anytls.proto`](https://github.com/5vnetwor
 
 ## AnytlsServerConfig
 
-| Field | Type | Description |
-| --- | --- | --- |
-| `users` | `UserConfig[]` | Password in `secret` |
+<ProtoField name="users" type="UserConfig[]">
+
+Password in `secret`
+
+</ProtoField>
 
 ## AnytlsClientConfig
 
-| Field | Type | Description |
-| --- | --- | --- |
-| `password` | string | Auth password |
-| `idleSessionCheckInterval` | uint32 | Session idle check interval |
-| `idleSessionTimeout` | uint32 | Close idle sessions after this |
-| `minIdleSession` | uint32 | Minimum pooled sessions |
+<ProtoField name="password" type="string">
+
+Auth password
+
+</ProtoField>
+
+<ProtoField name="idleSessionCheckInterval" type="uint32">
+
+Session idle check interval
+
+</ProtoField>
+
+<ProtoField name="idleSessionTimeout" type="uint32">
+
+Close idle sessions after this
+
+</ProtoField>
+
+<ProtoField name="minIdleSession" type="uint32">
+
+Minimum pooled sessions
+
+</ProtoField>
 
 ```json
 {

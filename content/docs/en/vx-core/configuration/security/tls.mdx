@@ -12,42 +12,153 @@ Set on `TransportConfig.tls`, `MultiProxyInboundConfig.securityConfigs[].tls`, H
 
 ## TlsConfig
 
-| Field | Description |
-| --- | --- |
-| `certificates` | Server/client cert chain (`Certificate[]`) |
-| `rootCas` | Custom root CA PEM blobs |
-| `issueCas` | CAs used to issue certs to peers |
-| `serverName` | SNI; default = destination domain when dialing |
-| `disableSystemRoot` | Do not use system root CAs |
-| `allowInsecure` | Skip certificate verification (client) |
-| `nextProtocol` | ALPN list |
-| `enableSessionResumption` | TLS session tickets / resumption |
-| `pinnedPeerCertificateChainSha256` | Pin peer cert chain hashes |
-| `verifyClientCertificate` | Require valid client cert (server) |
-| `imitate` | uTLS client fingerprint name |
-| `noSNI` | Do not send SNI (uTLS) |
-| `forceAlpn` | `TRANSPORT_PREFERENCE_TAKE_PRIORITY`, `NO_ALPN`, `UTLS_PRESET` |
-| `masterKeyLog` | NSS key log path (debug) |
-| `echKey` | Server ECH key |
-| `echConfig` | Client ECH config blob |
-| `enableEch` | Client: enable ECH |
+<ProtoField name="certificates">
+
+Server/client cert chain (`Certificate[]`)
+
+</ProtoField>
+
+<ProtoField name="rootCas">
+
+Custom root CA PEM blobs
+
+</ProtoField>
+
+<ProtoField name="issueCas">
+
+CAs used to issue certs to peers
+
+</ProtoField>
+
+<ProtoField name="serverName">
+
+SNI; default = destination domain when dialing
+
+</ProtoField>
+
+<ProtoField name="disableSystemRoot">
+
+Do not use system root CAs
+
+</ProtoField>
+
+<ProtoField name="allowInsecure">
+
+Skip certificate verification (client)
+
+</ProtoField>
+
+<ProtoField name="nextProtocol">
+
+ALPN list
+
+</ProtoField>
+
+<ProtoField name="enableSessionResumption">
+
+TLS session tickets / resumption
+
+</ProtoField>
+
+<ProtoField name="pinnedPeerCertificateChainSha256">
+
+Pin peer cert chain hashes
+
+</ProtoField>
+
+<ProtoField name="verifyClientCertificate">
+
+Require valid client cert (server)
+
+</ProtoField>
+
+<ProtoField name="imitate">
+
+uTLS client fingerprint name
+
+</ProtoField>
+
+<ProtoField name="noSNI">
+
+Do not send SNI (uTLS)
+
+</ProtoField>
+
+<ProtoField name="forceAlpn">
+
+`TRANSPORT_PREFERENCE_TAKE_PRIORITY`, `NO_ALPN`, `UTLS_PRESET`
+
+</ProtoField>
+
+<ProtoField name="masterKeyLog">
+
+NSS key log path (debug)
+
+</ProtoField>
+
+<ProtoField name="echKey">
+
+Server ECH key
+
+</ProtoField>
+
+<ProtoField name="echConfig">
+
+Client ECH config blob
+
+</ProtoField>
+
+<ProtoField name="enableEch">
+
+Client: enable ECH
+
+</ProtoField>
 
 ### ForceALPN
 
-| Value | Behavior |
-| --- | --- |
-| `TRANSPORT_PREFERENCE_TAKE_PRIORITY` | User ALPN if set, else transport default |
-| `NO_ALPN` | Do not send ALPN extension |
-| `UTLS_PRESET` | Use uTLS preset ALPN |
+<ProtoField name="TRANSPORT_PREFERENCE_TAKE_PRIORITY">
+
+User ALPN if set, else transport default
+
+</ProtoField>
+
+<ProtoField name="NO_ALPN">
+
+Do not send ALPN extension
+
+</ProtoField>
+
+<ProtoField name="UTLS_PRESET">
+
+Use uTLS preset ALPN
+
+</ProtoField>
 
 ## Certificate
 
-| Field | Description |
-| --- | --- |
-| `certificate` | PEM cert bytes |
-| `key` | PEM private key bytes |
-| `certificateFilepath` | Path to cert file |
-| `keyFilepath` | Path to key file |
+<ProtoField name="certificate">
+
+PEM cert bytes
+
+</ProtoField>
+
+<ProtoField name="key">
+
+PEM private key bytes
+
+</ProtoField>
+
+<ProtoField name="certificateFilepath">
+
+Path to cert file
+
+</ProtoField>
+
+<ProtoField name="keyFilepath">
+
+Path to key file
+
+</ProtoField>
 
 ```json
 {

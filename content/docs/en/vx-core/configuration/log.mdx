@@ -7,15 +7,47 @@ Logging is configured in `ServerConfig.log` (`LoggerConfig`). Schema: [`protos/p
 
 ## LoggerConfig
 
-| Field | Type | Description |
-| --- | --- | --- |
-| `logLevel` | `Level` | Minimum level: `DEBUG`, `INFO`, `WARN`, `ERROR`, `FATAL`, `DISABLED` |
-| `filePath` | string | Log file path |
-| `logFileDir` | string | If `filePath` is empty, write timestamped files here (`2006-01-02T15:04:05.txt`) |
-| `consoleWriter` | bool | Human-readable console output |
-| `showColor` | bool | Colorized logs (with console writer) |
-| `showCaller` | bool | Include caller location |
-| `redact` | bool | Redact domains and IPs in log lines |
+<ProtoField name="logLevel" type="Level">
+
+Minimum level: `DEBUG`, `INFO`, `WARN`, `ERROR`, `FATAL`, `DISABLED`
+
+</ProtoField>
+
+<ProtoField name="filePath" type="string">
+
+Log file path
+
+</ProtoField>
+
+<ProtoField name="logFileDir" type="string">
+
+If `filePath` is empty, write timestamped files here (`2006-01-02T15:04:05.txt`)
+
+</ProtoField>
+
+<ProtoField name="consoleWriter" type="bool">
+
+Human-readable console output
+
+</ProtoField>
+
+<ProtoField name="showColor" type="bool">
+
+Colorized logs (with console writer)
+
+</ProtoField>
+
+<ProtoField name="showCaller" type="bool">
+
+Include caller location
+
+</ProtoField>
+
+<ProtoField name="redact" type="bool">
+
+Redact domains and IPs in log lines
+
+</ProtoField>
 
 ## Example
 

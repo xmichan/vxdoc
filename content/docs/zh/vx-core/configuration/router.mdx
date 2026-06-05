@@ -3,7 +3,9 @@ title: 路由
 description: RouterConfig 与 RuleConfig
 ---
 
-路由在 `ServerConfig.router`（`RouterConfig`）中配置。模式定义：[`protos/proto/vx/router/router.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/router/router.proto)。
+路由在 `ServerConfig.router`（`RouterConfig`）中配置。
+
+模式定义：[`protos/proto/vx/router/router.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/router/router.proto)。
 
 规则按顺序评估，第一条匹配的规则决定出站或选择器。命中后后续规则不在考虑。
 
@@ -40,66 +42,336 @@ description: RouterConfig 与 RuleConfig
 
 ## RouterConfig
 
-| 字段 | 类型 | 说明 |
-| --- | --- | --- |
-| `rules` | `RuleConfig[]` | 有序路由规则 |
+<ProtoField name="rules" type="RuleConfig[]">
+
+有序路由规则
+
+</ProtoField>
 
 ## RuleConfig
 
 **目标：** `outboundTag` 与 `selectorTag` 须恰好设置其一。若均为空，连接将被**阻断**。
 
-| 字段 | 说明 |
-| --- | --- |
-| `outboundTag` | 发往该出站处理器 |
-| `selectorTag` | 发往[选择器](#selectorconfig)（客户端 / 负载均衡） |
-| `condition` | 用于匹配连接的Metadata |
-| `fallbacks` | 主目标失败时尝试备用选择器/出站 |
-| `ruleName` | 名称 |
+<ProtoField name="outboundTag" type="string">
+
+发往该出站处理器
+
+</ProtoField>
+
+<ProtoField name="selectorTag" type="string">
+
+发往[选择器](#selectorconfig)（客户端 / 负载均衡）
+
+</ProtoField>
+
+<ProtoField name="condition" type="Condition">
+
+用于匹配连接的 Metadata
+
+</ProtoField>
+
+<ProtoField name="fallbacks" type="Fallback[]">
+
+主目标失败时尝试备用选择器/出站
+
+</ProtoField>
+
+<ProtoField name="ruleName" type="string">
+
+名称
+
+</ProtoField>
 
 ### Fallback
 
-| 字段 | 说明 |
-| --- | --- |
-| `selectorTag`、`outboundTag` | 备用目标 |
-| `action.ipToDomain` | 回退时将 IP 改写回域名 |
-| `condition` | 本回退的条件，成立时回退才会生效 |
-| `last` | 若条件匹配，此回退为最终回退，后面的不在考虑 |
+<ProtoField name="selectorTag" type="string">
+
+备用选择器（与 `outboundTag` 二选一）
+
+</ProtoField>
+
+<ProtoField name="outboundTag" type="string">
+
+备用出站（与 `selectorTag` 二选一）
+
+</ProtoField>
+
+<ProtoField name="action" type="Action">
+
+回退时的附加动作
+
+</ProtoField>
+
+<ProtoField name="condition" type="Condition">
+
+本回退的条件，成立时回退才会生效
+
+</ProtoField>
+
+<ProtoField name="last" type="bool">
+
+若条件匹配，此回退为最终回退，后面的不在考虑
+
+</ProtoField>
+
+#### Action
+
+`Fallback.action` 的字段：
+
+<ProtoField name="ipToDomain" type="bool">
+
+回退时将 IP 改写回域名
+
+</ProtoField>
 
 ## Condition
 
 用于 `rule.condition` 或 `fallback.condition`。
 
-| 字段 | 说明 |
-| --- | --- |
-| `matchAll` | 匹配所有连接 |
-| `usernames` | 匹配已认证用户 id |
-| `srcCidrs`、`srcIpTags` | 源 IP 匹配 |
-| `dstCidrs`、`dstIpTags` | 目标 IP 匹配 |
-| `geoDomains`、`domainTags` | 域名匹配（使用 [geo](/zh/docs/vx-core/configuration/geo) 集合） |
-| `networks` | `TCP`、`UDP` 等 |
-| `srcPortRanges`、`dstPortRanges` | 端口范围 |
-| `appIds`、`appTags` | 应用 id 匹配（客户端） |
-| `protocols` | 协议嗅探结果 |
-| `ipv6` | 仅匹配 IPv6 |
-| `fakeIp` | 匹配 Fake IP 目标 |
-| `resolveDomain` | 解析域名；所有 IP 须在 `dstIpTags` 或 `dstCidrs` 中 |
-| `resolveSoftRewrite` | 解析域名，任意IP在`dstIpTags` 或 `dstCidrs` 中即可，并将目标改写为此 IP |
-| `resolveSoftNoRewrite` | 解析域名，任意IP在`dstIpTags` 或 `dstCidrs` 中即可，但不改写目标 |
-| `skipSniff` | 对 IP 目标连接禁用嗅探 |
-| `inboundTags` | 匹配入站 `tag` |
+<ProtoField name="matchAll" type="bool">
+
+匹配所有连接
+
+</ProtoField>
+
+<ProtoField name="usernames" type="string[]">
+
+匹配已认证用户 id
+
+</ProtoField>
+
+<ProtoField name="srcCidrs" type="string[]">
+
+源 IP 匹配
+
+</ProtoField>
+
+<ProtoField name="srcIpTags" type="string[]">
+
+源 IP 匹配, 使用Geo里的集合名称
+
+</ProtoField>
+
+<ProtoField name="dstCidrs" type="string[]">
+
+目标 IP 匹配
+
+</ProtoField>
+
+<ProtoField name="dstIpTags" type="string[]">
+
+目标 IP 匹配， 使用Geo里的集合名称
+
+</ProtoField>
+
+<ProtoField name="resolveDomain" type="bool">
+
+解析域名；所有 IP 须在 `dstIpTags` 或 `dstCidrs` 中
+
+</ProtoField>
+
+<ProtoField name="resolveSoftRewrite" type="bool">
+
+解析域名，任意 IP 在 `dstIpTags` 或 `dstCidrs` 中即可，并将目标改写为此 IP
+
+</ProtoField>
+
+<ProtoField name="resolveSoftNoRewrite" type="bool">
+
+解析域名，任意 IP 在 `dstIpTags` 或 `dstCidrs` 中即可，但不改写目标
+
+</ProtoField>
+
+<ProtoField name="geoDomains" type="Domain[]">
+
+内联 [Domain](/zh/docs/vx-core/configuration/geo#domain) 条目进行域名匹配
+
+</ProtoField>
+
+<ProtoField name="domainTags" type="string[]">
+
+域名匹配（引用 [geo](/zh/docs/vx-core/configuration/geo) 集合）
+
+</ProtoField>
+
+<ProtoField name="networks" type="Network[]">
+
+`TCP`、`UDP` 等
+
+</ProtoField>
+
+<ProtoField name="srcPortRanges" type="PortRange[]">
+
+源端口范围
+
+</ProtoField>
+
+<ProtoField name="dstPortRanges" type="PortRange[]">
+
+目标端口范围
+
+</ProtoField>
+
+<ProtoField name="appIds" type="AppId[]">
+
+应用 id 匹配
+
+</ProtoField>
+
+<ProtoField name="appTags" type="string[]">
+
+应用集合匹配（引用 [geo](/zh/docs/vx-core/configuration/geo) 集合）
+
+</ProtoField>
+
+<ProtoField name="protocols" type="string[]">
+
+协议嗅探结果
+
+</ProtoField>
+
+<ProtoField name="ipv6" type="bool">
+
+仅匹配 IPv6
+
+</ProtoField>
+
+<ProtoField name="fakeIp" type="bool">
+
+匹配 Fake IP 目标
+
+</ProtoField>
+
+
+<ProtoField name="skipSniff" type="bool">
+
+对 IP 目标连接禁用嗅探
+
+</ProtoField>
+
+<ProtoField name="inboundTags" type="string[]">
+
+匹配入站 `tag`
+
+</ProtoField>
 
 ## SelectorConfig
 
-选择器按标签过滤与选取策略分组出站（主要用于**客户端**）。
+选择器从一组出站中筛选候选节点，再按策略选出实际用于连接的节点。定义在 `ClientConfig.selectors`（`SelectorsConfig`），主要用于 **VX 客户端**；[路由](/zh/docs/vx-core/configuration/router)规则通过 `selectorTag` 引用其 `tag`。
 
-| 字段 | 说明 |
-| --- | --- |
-| `tag` | 规则中 `selectorTag` 引用 |
-| `filter` | `prefixes`、`tags`、`subStrings`、`inverse` |
-| `strategy` | `ALL`、`ALL_OK`、`LEAST_PING`、`MOST_THROUGHPUT`、`TOP_PING`、`TOP_THROUGHPUT` |
-| `balanceStrategy` | `RANDOM` 或 `MEMORY` |
-| `selectFromOm` | 从出站管理器选择而非数据库，由于服务端并不支持数据库，服务端若使用选择器，此应该为true |
-| `speedTestSize`、`speedTestInterval`、`pingTestInterval` 等 | 健康检查与测速 |
+客户端 UI 行为说明见[选择器](/zh/docs/vx/manual/customize/selectors)。
+
+<ProtoField name="tag" type="string">
+
+选择器名称。`RuleConfig.selectorTag` 与 `Fallback.selectorTag` 引用此值。
+
+</ProtoField>
+
+<ProtoField name="filter" type="Filter">
+
+候选出站池的筛选条件，见 [Filter](#filter)。
+
+</ProtoField>
+
+<ProtoField name="strategy" type="SelectingStrategy">
+
+从筛选池中**实际选用**哪些节点：
+
+- `ALL`：池中全部节点
+- `ALL_OK`：全部可用节点（无可用时回退到未测试节点）
+- `LEAST_PING`：ping 最低的单节点
+- `MOST_THROUGHPUT`：测速吞吐量最高的单节点
+- `TOP_PING`：ping 在最低值 **30%** 以内的所有节点（如最低 100 ms → 包含 ≤ 130 ms）
+- `TOP_THROUGHPUT`：吞吐量 ≥ 最高值 **70%** 的所有节点（如最高 100 → 包含 ≥ 70）
+
+单节点策略（`LEAST_PING`、`MOST_THROUGHPUT`）不使用 `balanceStrategy`；多节点策略才需要负载均衡。
+
+</ProtoField>
+
+<ProtoField name="balanceStrategy" type="BalanceStrategy">
+
+多节点策略下，每条连接由哪个节点处理：
+
+- `RANDOM`（默认）：从活跃集合中随机选择；IPv6 连接优先选支持 IPv6 的节点
+- `MEMORY`：按应用或根域名粘性复用同一节点；尚无映射时随机分配并记住
+
+</ProtoField>
+
+<ProtoField name="selectFromOm" type="bool">
+
+服务端此项应为 `true` 
+
+</ProtoField>
+
+<ProtoField name="speedTestSize" type="uint32">
+
+每次测速的下载字节数。未设置 `speedTestSizeRange` 且为 `0` 时，核心默认 **1 MiB**。
+
+</ProtoField>
+
+<ProtoField name="speedTestInterval" type="uint32">
+
+对筛选节点测速的间隔（**分钟**）。仅 `MOST_THROUGHPUT` 与 `TOP_THROUGHPUT` 会定期测速。
+
+</ProtoField>
+
+<ProtoField name="pingTestInterval" type="uint32">
+
+对筛选节点 ping 的间隔（**分钟**）。仅 `LEAST_PING` 与 `TOP_PING` 会定期 ping。
+
+</ProtoField>
+
+<ProtoField name="unusableTestInterval" type="uint32">
+
+重新检查已标记不可用节点的间隔（**分钟**）。除 `ALL` 外各策略都会检测可用性。
+
+</ProtoField>
+
+<ProtoField name="speedTestSizeRange" type="SpeedTestSizeRange">
+
+测速下载大小的随机范围（字节）。满足 `0 < min ≤ max` 时，每次测速在 `[min, max]` 内随机取值；否则使用 `speedTestSize`。
+
+</ProtoField>
+
+### Filter
+
+<ProtoField name="prefixes" type="string[]">
+
+出站 `tag` 以任一前缀开头即匹配
+
+</ProtoField>
+
+<ProtoField name="tags" type="string[]">
+
+出站 `tag` 等于列表中任一值即匹配
+
+</ProtoField>
+
+<ProtoField name="subStrings" type="string[]">
+
+出站 `tag` 包含任一子串即匹配（仅数据库模式）
+
+</ProtoField>
+
+<ProtoField name="inverse" type="bool">
+
+`true` 时取反：未命中 `prefixes` / `tags` 的出站才入选（出站管理器模式）
+
+</ProtoField>
+
+### SpeedTestSizeRange
+
+<ProtoField name="min" type="uint32">
+
+随机测速大小的下限（字节）
+
+</ProtoField>
+
+<ProtoField name="max" type="uint32">
+
+随机测速大小的上限（字节）
+
+</ProtoField>
 
 
 ## 相关

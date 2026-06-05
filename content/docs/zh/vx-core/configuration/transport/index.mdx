@@ -9,14 +9,89 @@ description: TransportConfig — 线路协议与套接字选项
 
 ## TransportConfig
 
-| 字段 | 说明 |
-| --- | --- |
-| `socket` | [`SocketConfig`](/zh/docs/vx-core/configuration/transport/socket) — mark、TFO、绑定、缓冲区 |
-| `tcp`、`kcp`、`websocket`、`http`、`grpc`、`httpupgrade`、`splithttp` | 线路协议（oneof） |
-| `tls`、`reality` | 安全层（oneof）；见[安全](/zh/docs/vx-core/configuration/security) |
-| `transportProtocol`、`securityProtocol` | 扩展类型的 `Any` 逃生舱 |
+<ProtoField name="socket" type="SocketConfig">
 
-每个配置应只设置一个**协议**与一个**安全**字段。
+套接字选项（mark、TFO、绑定、缓冲区等）。见 [Socket](/zh/docs/vx-core/configuration/transport/socket)。
+
+</ProtoField>
+
+### 线路协议（oneof）
+
+`tcp`、`kcp`、`websocket`、`http`、`grpc`、`httpupgrade`、`splithttp` 互斥，每个 `TransportConfig` 只能设置其中一项。
+
+<ProtoField name="tcp" type="TcpConfig">
+
+纯 TCP 传输。见 [TCP](/zh/docs/vx-core/configuration/transport/tcp)。
+
+</ProtoField>
+
+<ProtoField name="kcp" type="KcpConfig">
+
+基于 UDP 的 KCP 传输。见 [KCP](/zh/docs/vx-core/configuration/transport/kcp)。
+
+</ProtoField>
+
+<ProtoField name="websocket" type="WebsocketConfig">
+
+WebSocket 传输。见 [WebSocket](/zh/docs/vx-core/configuration/transport/websocket)。
+
+</ProtoField>
+
+<ProtoField name="http" type="HttpConfig">
+
+HTTP/2 传输伪装。见 [HTTP transport](/zh/docs/vx-core/configuration/transport/http)。
+
+</ProtoField>
+
+<ProtoField name="grpc" type="GrpcConfig">
+
+gRPC 传输。见 [gRPC](/zh/docs/vx-core/configuration/transport/grpc)。
+
+</ProtoField>
+
+<ProtoField name="httpupgrade" type="HttpUpgradeConfig">
+
+HTTP Upgrade 传输。见 [HTTPUpgrade](/zh/docs/vx-core/configuration/transport/httpupgrade)。
+
+</ProtoField>
+
+<ProtoField name="splithttp" type="SplitHttpConfig">
+
+Split HTTP (XHTTP) 传输。见 [SplitHTTP](/zh/docs/vx-core/configuration/transport/splithttp)。
+
+</ProtoField>
+
+### 安全层（oneof）
+
+`tls` 与 `reality` 互斥。见[安全](/zh/docs/vx-core/configuration/security)。
+
+<ProtoField name="tls" type="TlsConfig">
+
+TLS 证书、SNI、uTLS、ECH
+
+</ProtoField>
+
+<ProtoField name="reality" type="RealityConfig">
+
+REALITY 伪装
+
+</ProtoField>
+
+### 扩展
+
+<ProtoField name="transportProtocol" type="Any">
+
+自定义传输协议的 `Any` 逃生舱
+
+</ProtoField>
+
+<ProtoField name="securityProtocol" type="Any">
+
+自定义安全协议的 `Any` 逃生舱
+
+</ProtoField>
+
+每个配置应只设置一个**线路协议**与一个**安全**字段（或均不设置）。
 
 ## 示例（VLESS + WebSocket + TLS）
 

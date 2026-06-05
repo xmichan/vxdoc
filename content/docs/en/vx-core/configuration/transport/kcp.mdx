@@ -9,17 +9,59 @@ UDP-based KCP transport. Set on `TransportConfig.kcp`.
 
 ## KcpConfig
 
-| Field | Type | Description |
-| --- | --- | --- |
-| `mtu` | uint32 | MTU |
-| `tti` | uint32 | Transmission time interval |
-| `uplinkCapacity` | uint32 | Uplink capacity (deprecated style tuning) |
-| `downlinkCapacity` | uint32 | Downlink capacity |
-| `congestion` | bool | Enable congestion control |
-| `writeBuffer` | uint32 | Write buffer size |
-| `readBuffer` | uint32 | Read buffer size |
-| `headerConfig` | `Any` | Packet header disguise (same family as [TCP headers](/docs/vx-core/configuration/transport/tcp)) |
-| `seed` | string | Obfuscation seed |
+<ProtoField name="mtu" type="uint32">
+
+MTU
+
+</ProtoField>
+
+<ProtoField name="tti" type="uint32">
+
+Transmission time interval
+
+</ProtoField>
+
+<ProtoField name="uplinkCapacity" type="uint32">
+
+Uplink capacity (deprecated style tuning)
+
+</ProtoField>
+
+<ProtoField name="downlinkCapacity" type="uint32">
+
+Downlink capacity
+
+</ProtoField>
+
+<ProtoField name="congestion" type="bool">
+
+Enable congestion control
+
+</ProtoField>
+
+<ProtoField name="writeBuffer" type="uint32">
+
+Write buffer size
+
+</ProtoField>
+
+<ProtoField name="readBuffer" type="uint32">
+
+Read buffer size
+
+</ProtoField>
+
+<ProtoField name="headerConfig" type="Any">
+
+Packet header disguise (same family as [TCP headers](/docs/vx-core/configuration/transport/tcp))
+
+</ProtoField>
+
+<ProtoField name="seed" type="string">
+
+Obfuscation seed
+
+</ProtoField>
 
 ```json
 {

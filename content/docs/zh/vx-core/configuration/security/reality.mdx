@@ -7,34 +7,121 @@ Proto：[`protos/proto/vx/transport/security/reality/config.proto`](https://gith
 
 设置在 `TransportConfig.reality` 或 `MultiProxyInboundConfig.securityConfigs[].reality`。
 
+与 `tls` **互斥**（同一传输块只能二选一）。
+
 ## RealityConfig
 
 ### 仅服务端
 
-| 字段 | 说明 |
-| --- | --- |
-| `dest` | 回退目标（例如 `www.microsoft.com:443`） |
-| `xver` | 发往 dest 的 PROXY protocol 版本 |
-| `serverNames` | 允许的 SNI 服务器名 |
-| `privateKey` | X25519 私钥 |
-| `minClientVer`、`maxClientVer` | 允许的客户端版本字节 |
-| `maxTimeDiff` | 最大客户端时钟偏差（毫秒） |
-| `shortIds` | 允许的 short ID 列表 |
+<ProtoField name="dest" type="string">
 
-### 客户端 / 共用
+回退目标（例如 `www.microsoft.com:443`）
 
-| 字段 | 说明 |
-| --- | --- |
-| `show` | 调试输出 |
-| `Fingerprint` | uTLS 指纹 |
-| `serverName` | 呈现的 SNI |
-| `publicKey` | 服务端公钥（字节） |
-| `pbk` | 公钥（字符串形式） |
-| `shortId` | 客户端 short ID（字节） |
-| `sid` | Short ID 字符串（8 字节） |
-| `spiderX` | Spider X 路径 |
-| `spiderY` | Spider Y 值 |
-| `masterKeyLog` | 密钥日志路径（调试） |
+</ProtoField>
+
+<ProtoField name="xver" type="uint64">
+
+发往 `dest` 的 PROXY protocol 版本（0 = 不发送）
+
+</ProtoField>
+
+<ProtoField name="serverNames" type="string[]">
+
+允许的 SNI 服务器名
+
+</ProtoField>
+
+<ProtoField name="privateKey" type="bytes">
+
+X25519 私钥
+
+</ProtoField>
+
+<ProtoField name="minClientVer" type="bytes">
+
+允许的客户端最低版本字节
+
+</ProtoField>
+
+<ProtoField name="maxClientVer" type="bytes">
+
+允许的客户端最高版本字节
+
+</ProtoField>
+
+<ProtoField name="maxTimeDiff" type="uint64">
+
+最大客户端时钟偏差（**毫秒**）
+
+</ProtoField>
+
+<ProtoField name="shortIds" type="bytes[]">
+
+允许的 short ID 列表（每项最多 8 字节）
+
+</ProtoField>
+
+### 客户端
+
+<ProtoField name="show" type="bool">
+
+调试输出
+
+</ProtoField>
+
+<ProtoField name="Fingerprint" type="string">
+
+uTLS 指纹（如 `chrome`、`firefox`）
+
+</ProtoField>
+
+<ProtoField name="serverName" type="string">
+
+呈现的 SNI
+
+</ProtoField>
+
+<ProtoField name="publicKey" type="bytes">
+
+服务端公钥（字节）
+
+</ProtoField>
+
+<ProtoField name="pbk" type="string">
+
+公钥（Base64 字符串，与 `publicKey` 等价表示）
+
+</ProtoField>
+
+<ProtoField name="shortId" type="bytes">
+
+客户端 short ID（字节，须 8 字节）
+
+</ProtoField>
+
+<ProtoField name="sid" type="string">
+
+Short ID 十六进制字符串（8 字节）
+
+</ProtoField>
+
+<ProtoField name="spiderX" type="string">
+
+Spider X 路径
+
+</ProtoField>
+
+<ProtoField name="spiderY" type="int64[]">
+
+Spider Y 值列表
+
+</ProtoField>
+
+<ProtoField name="masterKeyLog" type="string">
+
+密钥日志路径（调试）
+
+</ProtoField>
 
 ```json
 {
@@ -54,28 +141,8 @@ Proto：[`protos/proto/vx/transport/security/reality/config.proto`](https://gith
 }
 ```
 
-客户端出站示例字段：
-
-```json
-{
-  "transport": {
-    "tcp": {},
-    "reality": {
-      "serverName": "www.example.com",
-      "publicKey": "...",
-      "shortId": "...",
-      "fingerprint": "chrome"
-    }
-  },
-  "protocol": {
-    "@type": "type.googleapis.com/vx.proxy.vless.VlessClientConfig",
-    "id": "uuid",
-    "flow": "xtls-rprx-vision"
-  }
-}
-```
-
 ## 相关
 
+- [TLS](/zh/docs/vx-core/configuration/security/tls) — 与 REALITY 互斥
 - [VLESS](/zh/docs/vx-core/configuration/protocols/vless) — Vision 流控
 - [入站](/zh/docs/vx-core/configuration/inbounds) — 多入站上的 `securityConfigs`

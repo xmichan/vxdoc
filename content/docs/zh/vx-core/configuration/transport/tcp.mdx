@@ -9,21 +9,55 @@ Proto：[`protos/proto/vx/transport/protocols/tcp/config.proto`](https://github.
 
 ## TcpConfig
 
-| 字段 | 类型 | 说明 |
-| --- | --- | --- |
-| `headerSettings` | `Any` | 连接头伪装（HTTP、TLS、SRTP 等） |
+<ProtoField name="headerSettings" type="Any">
+
+连接头伪装（HTTP、TLS、SRTP 等）
+
+</ProtoField>
 
 ### 头类型（`headerSettings` @type）
 
-| @type | 用途 |
-| --- | --- |
-| `vx.transport.headers.noop.Config` | 无头 |
-| `vx.transport.headers.http.Config` | HTTP 请求/响应伪装 |
-| `vx.transport.headers.tls.Config` | TLS 记录伪装 |
-| `vx.transport.headers.srtp.Config` | SRTP 伪装 |
-| `vx.transport.headers.utp.Config` | uTP 伪装 |
-| `vx.transport.headers.wechat.Config` | 微信视频伪装 |
-| `vx.transport.headers.wireguard.Config` | WireGuard 伪装 |
+<ProtoField name="vx.transport.headers.noop.Config">
+
+无头
+
+</ProtoField>
+
+<ProtoField name="vx.transport.headers.http.Config">
+
+HTTP 请求/响应伪装
+
+</ProtoField>
+
+<ProtoField name="vx.transport.headers.tls.Config">
+
+TLS 记录伪装
+
+</ProtoField>
+
+<ProtoField name="vx.transport.headers.srtp.Config">
+
+SRTP 伪装
+
+</ProtoField>
+
+<ProtoField name="vx.transport.headers.utp.Config">
+
+uTP 伪装
+
+</ProtoField>
+
+<ProtoField name="vx.transport.headers.wechat.Config">
+
+微信视频伪装
+
+</ProtoField>
+
+<ProtoField name="vx.transport.headers.wireguard.Config">
+
+WireGuard 伪装
+
+</ProtoField>
 
 HTTP 头配置（`vx.transport.headers.http.Config`）包含 `request` 与 `response`，其中有 `version`、`method`、`uri` 与 `header` 列表。见 [`headers/http/config.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/transport/headers/http/config.proto)。
 

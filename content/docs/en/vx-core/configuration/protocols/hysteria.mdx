@@ -9,49 +9,140 @@ Hysteria2 runs over QUIC. TLS is configured inside the protocol via `tlsConfig` 
 
 ## Hysteria2ServerConfig
 
-| Field | Description |
-| --- | --- |
-| `users` | `UserConfig[]` — auth string in `secret` |
-| `obfs` | `ObfsConfig` (Salamander) |
-| `bandwidth` | `maxTx` / `maxRx` caps |
-| `quic` | QUIC window and timeout settings |
-| `ignoreClientBandwidth` | Ignore client bandwidth hints |
-| `tlsConfig` | Server TLS |
-| `addresses` | Listen / announce addresses |
+<ProtoField name="users">
+
+`UserConfig[]` — auth string in `secret`
+
+</ProtoField>
+
+<ProtoField name="obfs">
+
+`ObfsConfig` (Salamander)
+
+</ProtoField>
+
+<ProtoField name="bandwidth">
+
+`maxTx` / `maxRx` caps
+
+</ProtoField>
+
+<ProtoField name="quic">
+
+QUIC window and timeout settings
+
+</ProtoField>
+
+<ProtoField name="ignoreClientBandwidth">
+
+Ignore client bandwidth hints
+
+</ProtoField>
+
+<ProtoField name="tlsConfig">
+
+Server TLS
+
+</ProtoField>
+
+<ProtoField name="addresses">
+
+Listen / announce addresses
+
+</ProtoField>
 
 ## Hysteria2ClientConfig
 
-| Field | Description |
-| --- | --- |
-| `auth` | Auth password |
-| `tlsConfig` | Client TLS (SNI, pins, ECH, …) |
-| `quic` | QUIC tuning |
-| `fastOpen` | QUIC fast open |
-| `bandwidth` | Client upload/download limits |
-| `obfs` | Obfuscation |
+<ProtoField name="auth">
+
+Auth password
+
+</ProtoField>
+
+<ProtoField name="tlsConfig">
+
+Client TLS (SNI, pins, ECH, …)
+
+</ProtoField>
+
+<ProtoField name="quic">
+
+QUIC tuning
+
+</ProtoField>
+
+<ProtoField name="fastOpen">
+
+QUIC fast open
+
+</ProtoField>
+
+<ProtoField name="bandwidth">
+
+Client upload/download limits
+
+</ProtoField>
+
+<ProtoField name="obfs">
+
+Obfuscation
+
+</ProtoField>
 
 ### QuicConfig (shared)
 
-| Field | Description |
-| --- | --- |
-| `initialStreamReceiveWindow`, `maxStreamReceiveWindow`, … | Stream windows (MB or `*Bytes` variants) |
-| `initialConnectionReceiveWindow`, `maxConnectionReceiveWindow`, … | Connection windows |
-| `maxIdleTimeout`, `keepAlivePeriod` | QUIC timeouts |
-| `disablePathMtuDiscovery` | Disable PMTUD |
-| `maxIncomingStreams` | Server-only stream limit |
+<ProtoField name="initialStreamReceiveWindow, maxStreamReceiveWindow, …">
+
+Stream windows (MB or `*Bytes` variants)
+
+</ProtoField>
+
+<ProtoField name="initialConnectionReceiveWindow, maxConnectionReceiveWindow, …">
+
+Connection windows
+
+</ProtoField>
+
+<ProtoField name="maxIdleTimeout, keepAlivePeriod">
+
+QUIC timeouts
+
+</ProtoField>
+
+
+<ProtoField name="disablePathMtuDiscovery">
+
+Disable PMTUD
+
+</ProtoField>
+
+<ProtoField name="maxIncomingStreams">
+
+Server-only stream limit
+
+</ProtoField>
 
 ### ObfsConfig
 
-| Field | Description |
-| --- | --- |
-| `salamander` | `SalamanderConfig` with `password` |
+<ProtoField name="salamander">
+
+`SalamanderConfig` with `password`
+
+</ProtoField>
 
 ### BandwidthConfig
 
-| Field | Description |
-| --- | --- |
-| `maxTx` | Upload cap (client: upload) |
-| `maxRx` | Download cap (client: download) |
+<ProtoField name="maxTx">
+
+Upload cap (client: upload)
+
+</ProtoField>
+
+<ProtoField name="maxRx">
+
+Download cap (client: download)
+
+</ProtoField>
 
 ```json
 {

@@ -9,17 +9,59 @@ Proto：[`protos/proto/vx/transport/protocols/kcp/config.proto`](https://github.
 
 ## KcpConfig
 
-| 字段 | 类型 | 说明 |
-| --- | --- | --- |
-| `mtu` | uint32 | MTU |
-| `tti` | uint32 | 传输时间间隔 |
-| `uplinkCapacity` | uint32 | 上行容量（旧式调参） |
-| `downlinkCapacity` | uint32 | 下行容量 |
-| `congestion` | bool | 启用拥塞控制 |
-| `writeBuffer` | uint32 | 写缓冲区大小 |
-| `readBuffer` | uint32 | 读缓冲区大小 |
-| `headerConfig` | `Any` | 包头伪装（与 [TCP 头](/zh/docs/vx-core/configuration/transport/tcp) 同族） |
-| `seed` | string | 混淆种子 |
+<ProtoField name="mtu" type="uint32">
+
+MTU
+
+</ProtoField>
+
+<ProtoField name="tti" type="uint32">
+
+传输时间间隔
+
+</ProtoField>
+
+<ProtoField name="uplinkCapacity" type="uint32">
+
+上行容量（旧式调参）
+
+</ProtoField>
+
+<ProtoField name="downlinkCapacity" type="uint32">
+
+下行容量
+
+</ProtoField>
+
+<ProtoField name="congestion" type="bool">
+
+启用拥塞控制
+
+</ProtoField>
+
+<ProtoField name="writeBuffer" type="uint32">
+
+写缓冲区大小
+
+</ProtoField>
+
+<ProtoField name="readBuffer" type="uint32">
+
+读缓冲区大小
+
+</ProtoField>
+
+<ProtoField name="headerConfig" type="Any">
+
+包头伪装（与 [TCP 头](/zh/docs/vx-core/configuration/transport/tcp) 同族）
+
+</ProtoField>
+
+<ProtoField name="seed" type="string">
+
+混淆种子
+
+</ProtoField>
 
 ```json
 {

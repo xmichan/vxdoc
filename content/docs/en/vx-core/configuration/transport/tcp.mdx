@@ -9,21 +9,55 @@ Plain TCP transport. Set on `TransportConfig.tcp`.
 
 ## TcpConfig
 
-| Field | Type | Description |
-| --- | --- | --- |
-| `headerSettings` | `Any` | Connection header disguise (HTTP, TLS, SRTP, …) |
+<ProtoField name="headerSettings" type="Any">
+
+Connection header disguise (HTTP, TLS, SRTP, …)
+
+</ProtoField>
 
 ### Header types (`headerSettings` @type)
 
-| @type | Purpose |
-| --- | --- |
-| `vx.transport.headers.noop.Config` | No header |
-| `vx.transport.headers.http.Config` | HTTP request/response disguise |
-| `vx.transport.headers.tls.Config` | TLS record disguise |
-| `vx.transport.headers.srtp.Config` | SRTP disguise |
-| `vx.transport.headers.utp.Config` | uTP disguise |
-| `vx.transport.headers.wechat.Config` | WeChat video disguise |
-| `vx.transport.headers.wireguard.Config` | WireGuard disguise |
+<ProtoField name="vx.transport.headers.noop.Config">
+
+No header
+
+</ProtoField>
+
+<ProtoField name="vx.transport.headers.http.Config">
+
+HTTP request/response disguise
+
+</ProtoField>
+
+<ProtoField name="vx.transport.headers.tls.Config">
+
+TLS record disguise
+
+</ProtoField>
+
+<ProtoField name="vx.transport.headers.srtp.Config">
+
+SRTP disguise
+
+</ProtoField>
+
+<ProtoField name="vx.transport.headers.utp.Config">
+
+uTP disguise
+
+</ProtoField>
+
+<ProtoField name="vx.transport.headers.wechat.Config">
+
+WeChat video disguise
+
+</ProtoField>
+
+<ProtoField name="vx.transport.headers.wireguard.Config">
+
+WireGuard disguise
+
+</ProtoField>
 
 HTTP header config (`vx.transport.headers.http.Config`) includes `request` and `response` with `version`, `method`, `uri`, and `header` lists. See [`headers/http/config.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/transport/headers/http/config.proto).
 

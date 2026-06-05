@@ -7,11 +7,23 @@ Outbound dialing defaults are set in `ServerConfig.dialerFactory` (`DialerFactor
 
 ## DialerFactoryConfig
 
-| Field | Type | Description |
-| --- | --- | --- |
-| `dialTimeout` | uint32 | Timeout for establishing outbound connections (seconds) |
-| `shouldBindDevice` | bool | Bind sockets to the default network interface |
-| `useInternalResolver` | bool | Use [DNS](/docs/vx-core/configuration/dns) `internalResolver` when resolving domains on dial |
+<ProtoField name="dialTimeout" type="uint32">
+
+Timeout for establishing outbound connections (seconds)
+
+</ProtoField>
+
+<ProtoField name="shouldBindDevice" type="bool">
+
+Bind sockets to the default network interface
+
+</ProtoField>
+
+<ProtoField name="useInternalResolver" type="bool">
+
+Use [DNS](/docs/vx-core/configuration/dns) `internalResolver` when resolving domains on dial
+
+</ProtoField>
 
 ## Example
 

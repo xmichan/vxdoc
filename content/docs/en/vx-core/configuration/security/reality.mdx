@@ -11,30 +11,110 @@ Set on `TransportConfig.reality` or `MultiProxyInboundConfig.securityConfigs[].r
 
 ### Server-only
 
-| Field | Description |
-| --- | --- |
-| `dest` | Fallback destination (e.g. `www.microsoft.com:443`) |
-| `xver` | PROXY protocol version sent to dest |
-| `serverNames` | Allowed SNI server names |
-| `privateKey` | X25519 private key |
-| `minClientVer`, `maxClientVer` | Allowed client version bytes |
-| `maxTimeDiff` | Max client clock skew (ms) |
-| `shortIds` | Allowed short IDs (list) |
+<ProtoField name="dest">
+
+Fallback destination (e.g. `www.microsoft.com:443`)
+
+</ProtoField>
+
+<ProtoField name="xver">
+
+PROXY protocol version sent to dest
+
+</ProtoField>
+
+<ProtoField name="serverNames">
+
+Allowed SNI server names
+
+</ProtoField>
+
+<ProtoField name="privateKey">
+
+X25519 private key
+
+</ProtoField>
+
+<ProtoField name="minClientVer, maxClientVer">
+
+Allowed client version bytes
+
+</ProtoField>
+
+
+<ProtoField name="maxTimeDiff">
+
+Max client clock skew (ms)
+
+</ProtoField>
+
+<ProtoField name="shortIds">
+
+Allowed short IDs (list)
+
+</ProtoField>
 
 ### Client / shared
 
-| Field | Description |
-| --- | --- |
-| `show` | Debug output |
-| `Fingerprint` | uTLS fingerprint |
-| `serverName` | SNI to present |
-| `publicKey` | Server public key (bytes) |
-| `pbk` | Public key (string form) |
-| `shortId` | Client short ID (bytes) |
-| `sid` | Short ID string (8 bytes) |
-| `spiderX` | Spider X path |
-| `spiderY` | Spider Y values |
-| `masterKeyLog` | Key log path (debug) |
+<ProtoField name="show">
+
+Debug output
+
+</ProtoField>
+
+<ProtoField name="Fingerprint">
+
+uTLS fingerprint
+
+</ProtoField>
+
+<ProtoField name="serverName">
+
+SNI to present
+
+</ProtoField>
+
+<ProtoField name="publicKey">
+
+Server public key (bytes)
+
+</ProtoField>
+
+<ProtoField name="pbk">
+
+Public key (string form)
+
+</ProtoField>
+
+<ProtoField name="shortId">
+
+Client short ID (bytes)
+
+</ProtoField>
+
+<ProtoField name="sid">
+
+Short ID string (8 bytes)
+
+</ProtoField>
+
+<ProtoField name="spiderX">
+
+Spider X path
+
+</ProtoField>
+
+<ProtoField name="spiderY">
+
+Spider Y values
+
+</ProtoField>
+
+<ProtoField name="masterKeyLog">
+
+Key log path (debug)
+
+</ProtoField>
 
 ```json
 {

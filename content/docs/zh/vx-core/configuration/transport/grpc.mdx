@@ -9,16 +9,53 @@ Proto：[`protos/proto/vx/transport/protocols/grpc/config.proto`](https://github
 
 ## GrpcConfig
 
-| 字段 | 类型 | 说明 |
-| --- | --- | --- |
-| `authority` | string | `:authority` 伪头 |
-| `serviceName` | string | gRPC 服务名 |
-| `multiMode` | bool | 多流模式 |
-| `idleTimeout` | int32 | 空闲超时（秒） |
-| `healthCheckTimeout` | int32 | 健康检查超时 |
-| `permitWithoutStream` | bool | 无活跃流时允许 ping |
-| `initialWindowsSize` | int32 | 初始窗口大小 |
-| `userAgent` | string | User-Agent 覆盖 |
+<ProtoField name="authority" type="string">
+
+`:authority` 伪头
+
+</ProtoField>
+
+<ProtoField name="serviceName" type="string">
+
+gRPC 服务名
+
+</ProtoField>
+
+<ProtoField name="multiMode" type="bool">
+
+多流模式
+
+</ProtoField>
+
+<ProtoField name="idleTimeout" type="int32">
+
+空闲超时（秒）
+
+</ProtoField>
+
+<ProtoField name="healthCheckTimeout" type="int32">
+
+健康检查超时
+
+</ProtoField>
+
+<ProtoField name="permitWithoutStream" type="bool">
+
+无活跃流时允许 ping
+
+</ProtoField>
+
+<ProtoField name="initialWindowsSize" type="int32">
+
+初始窗口大小
+
+</ProtoField>
+
+<ProtoField name="userAgent" type="string">
+
+User-Agent 覆盖
+
+</ProtoField>
 
 ```json
 {
