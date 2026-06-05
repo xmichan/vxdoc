@@ -5,68 +5,8 @@ description: RouterConfig 与 RuleConfig
 
 路由在 `ServerConfig.router`（`RouterConfig`）中配置。模式定义：[`protos/proto/vx/router/router.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/router/router.proto)。
 
-规则按顺序评估，第一条匹配的规则决定出站或选择器。
+规则按顺序评估，第一条匹配的规则决定出站或选择器。命中后后续规则不在考虑。
 
-## RouterConfig
-
-| 字段 | 类型 | 说明 |
-| --- | --- | --- |
-| `rules` | `RuleConfig[]` | 有序路由规则 |
-
-## RuleConfig
-
-**目标：** `outboundTag` 与 `selectorTag` 须恰好设置其一。若均为空，连接将被**阻断**。
-
-| 字段 | 说明 |
-| --- | --- |
-| `outboundTag` | 发往该出站处理器 |
-| `selectorTag` | 发往[选择器](#selectorconfig)（客户端 / 负载均衡） |
-| `matchAll` | 匹配所有连接 |
-| `inboundTags` | 匹配入站 `tag` |
-| `usernames` | 匹配已认证用户 id |
-| `srcCidrs`、`srcIpTags` | 源 IP 匹配 |
-| `dstCidrs`、`dstIpTags` | 目标 IP 匹配 |
-| `geoDomains`、`domainTags` | 域名匹配（使用 [geo](/zh/docs/vx-core/configuration/geo) 集合） |
-| `networks` | `TCP`、`UDP` 等 |
-| `srcPortRanges`、`dstPortRanges` | 端口范围 |
-| `appIds`、`appTags` | 应用 id 匹配（客户端） |
-| `protocols` | 协议嗅探结果 |
-| `ipv6` | 仅匹配 IPv6 |
-| `fakeIp` | 匹配 Fake IP 目标 |
-| `resolveDomain` | 解析域名；所有 IP 须在 `dstIpTags` 中 |
-| `resolveSoftRewrite` | 解析并将目标改写为 `dstIpTags` 中的 IP |
-| `resolveSoftNoRewrite` | 解析但不改写目标 |
-| `skipSniff` | 对 IP 目标连接禁用嗅探 |
-| `condition` | 嵌套 `Condition`，含相同匹配器（可组合） |
-| `fallbacks` | 主目标失败时尝试备用选择器/出站 |
-| `ruleName` | 调试标签 |
-
-### Fallback
-
-| 字段 | 说明 |
-| --- | --- |
-| `selectorTag`、`outboundTag` | 备用目标 |
-| `action.ipToDomain` | 回退时将 IP 改写回域名 |
-| `dstIpTags`、`domainTags`、`matchAll`、`condition` | 本回退的额外匹配 |
-| `last` | 条件匹配后在此回退后停止 |
-
-## Condition
-
-与 `RuleConfig` 相同的匹配器，但无 `outboundTag` / `selectorTag` / `fallbacks`。用于 `rule.condition` 或 `fallback.condition`。包含 `hasDomain`，仅在有域名时匹配。
-
-## SelectorConfig
-
-选择器按标签过滤与选取策略分组出站（主要用于**客户端**）。
-
-| 字段 | 说明 |
-| --- | --- |
-| `tag` | 规则中 `selectorTag` 引用 |
-| `filter` | `prefixes`、`tags`、`subStrings`、`inverse`、`groupTags`、`countryCodes` 等 |
-| `strategy` | `ALL`、`ALL_OK`、`LEAST_PING`、`MOST_THROUGHPUT`、`TOP_PING`、`TOP_THROUGHPUT` |
-| `balanceStrategy` | `RANDOM` 或 `MEMORY` |
-| `landHandlers` | 落地处理器 id |
-| `selectFromOm` | 从出站管理器选择（非 DB 模式） |
-| `speedTestSize`、`speedTestInterval`、`pingTestInterval` 等 | 健康检查与测速 |
 
 ## 示例
 
@@ -97,6 +37,70 @@ description: RouterConfig 与 RuleConfig
   }
 }
 ```
+
+## RouterConfig
+
+| 字段 | 类型 | 说明 |
+| --- | --- | --- |
+| `rules` | `RuleConfig[]` | 有序路由规则 |
+
+## RuleConfig
+
+**目标：** `outboundTag` 与 `selectorTag` 须恰好设置其一。若均为空，连接将被**阻断**。
+
+| 字段 | 说明 |
+| --- | --- |
+| `outboundTag` | 发往该出站处理器 |
+| `selectorTag` | 发往[选择器](#selectorconfig)（客户端 / 负载均衡） |
+| `condition` | 用于匹配连接的Metadata |
+| `fallbacks` | 主目标失败时尝试备用选择器/出站 |
+| `ruleName` | 名称 |
+
+### Fallback
+
+| 字段 | 说明 |
+| --- | --- |
+| `selectorTag`、`outboundTag` | 备用目标 |
+| `action.ipToDomain` | 回退时将 IP 改写回域名 |
+| `condition` | 本回退的条件，成立时回退才会生效 |
+| `last` | 若条件匹配，此回退为最终回退，后面的不在考虑 |
+
+## Condition
+
+用于 `rule.condition` 或 `fallback.condition`。
+
+| 字段 | 说明 |
+| --- | --- |
+| `matchAll` | 匹配所有连接 |
+| `usernames` | 匹配已认证用户 id |
+| `srcCidrs`、`srcIpTags` | 源 IP 匹配 |
+| `dstCidrs`、`dstIpTags` | 目标 IP 匹配 |
+| `geoDomains`、`domainTags` | 域名匹配（使用 [geo](/zh/docs/vx-core/configuration/geo) 集合） |
+| `networks` | `TCP`、`UDP` 等 |
+| `srcPortRanges`、`dstPortRanges` | 端口范围 |
+| `appIds`、`appTags` | 应用 id 匹配（客户端） |
+| `protocols` | 协议嗅探结果 |
+| `ipv6` | 仅匹配 IPv6 |
+| `fakeIp` | 匹配 Fake IP 目标 |
+| `resolveDomain` | 解析域名；所有 IP 须在 `dstIpTags` 或 `dstCidrs` 中 |
+| `resolveSoftRewrite` | 解析域名，任意IP在`dstIpTags` 或 `dstCidrs` 中即可，并将目标改写为此 IP |
+| `resolveSoftNoRewrite` | 解析域名，任意IP在`dstIpTags` 或 `dstCidrs` 中即可，但不改写目标 |
+| `skipSniff` | 对 IP 目标连接禁用嗅探 |
+| `inboundTags` | 匹配入站 `tag` |
+
+## SelectorConfig
+
+选择器按标签过滤与选取策略分组出站（主要用于**客户端**）。
+
+| 字段 | 说明 |
+| --- | --- |
+| `tag` | 规则中 `selectorTag` 引用 |
+| `filter` | `prefixes`、`tags`、`subStrings`、`inverse` |
+| `strategy` | `ALL`、`ALL_OK`、`LEAST_PING`、`MOST_THROUGHPUT`、`TOP_PING`、`TOP_THROUGHPUT` |
+| `balanceStrategy` | `RANDOM` 或 `MEMORY` |
+| `selectFromOm` | 从出站管理器选择而非数据库，由于服务端并不支持数据库，服务端若使用选择器，此应该为true |
+| `speedTestSize`、`speedTestInterval`、`pingTestInterval` 等 | 健康检查与测速 |
+
 
 ## 相关
 

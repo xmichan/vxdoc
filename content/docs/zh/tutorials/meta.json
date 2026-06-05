@@ -7,6 +7,7 @@
     "deploy-reality-xhttp",
     "deploy-multi-protocol",
     "sync-and-backup",
-    "custom-routing"
+    "custom-routing",
+    "ech"
   ]
 }

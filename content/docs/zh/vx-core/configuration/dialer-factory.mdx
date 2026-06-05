@@ -3,14 +3,16 @@ title: 拨号器工厂
 description: DialerFactoryConfig — 出站拨号
 ---
 
-出站拨号默认值在 `ServerConfig.dialerFactory`（`DialerFactoryConfig`）中设置。模式定义：[`protos/proto/vx/dialerfactory/dialerfactory.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/dialerfactory/dialerfactory.proto)。
+出站拨号默认值在 `ServerConfig.dialerFactory`（`DialerFactoryConfig`）中设置。
+所有的出站都将由此工厂生成。
+模式定义：[`protos/proto/vx/dialerfactory/dialerfactory.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/dialerfactory/dialerfactory.proto)。
 
 ## DialerFactoryConfig
 
 | 字段 | 类型 | 说明 |
 | --- | --- | --- |
-| `dialTimeout` | uint32 | 建立出站连接的超时（秒） |
-| `shouldBindDevice` | bool | 将套接字绑定到默认网络接口 |
+| `dialTimeout` | uint32 | 连接超时（秒） |
+| `shouldBindDevice` | bool | 将Socket绑定到默认物理网络接口 |
 | `useInternalResolver` | bool | 拨号解析域名时使用 [DNS](/zh/docs/vx-core/configuration/dns) `internalResolver` |
 
 ## 示例

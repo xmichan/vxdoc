@@ -1,29 +1,63 @@
 ﻿---
-title: VX-core 面板
+title: vx-core 面板
 description: 从客户端管理 vx-core 服务器配置
 ---
 
 VX 中的服务器面板是在 Linux VPS 上部署与配置 vx-core 的推荐方式 — 无需 SSH 终端或手动编辑 JSON。
 
-## 部署
+## 快捷部署
 
-通过 SSH 连接后，VX 可以：
+在服务器面板中通过 **SSH** 连接 VPS 后，可使用 **快捷部署** 一键安装核心、部署节点，启用 **BBR** 。部署完成后，VX 会自动将对应节点添加到客户端，便于立即连接。
 
-- 运行官方安装脚本
-- 启用 `vx` systemd 服务
-- 应用可选优化（BBR、防火墙规则）
+面板提供三种预设方案，按目标核心与协议组合区分：
 
-部署支持 vx-core，以及在迁移或并行运行时支持 Xray 与 Hysteria 配置。
+### 应有尽有（All-in-One）
+
+推荐使用此方案，因为你可以在VX内配置vx-core的入站。此方案在443端口部署多协议节点。支持CDN节点与Reality节点。
+
+- **安装**：vx-core
+- **入站组合**：(VMess、Trojan、AnyTLS) × (WebSocket、gRPC) × (TLS、REALITY) + Hysteria2
+- **可选**：REALITY 目标域名、CDN 主机名（用于 WebSocket + TLS 前置）
+
+分步视频教程见 [一次部署多种协议](/zh/docs/tutorials/deploy-multi-protocol)。
+
+### 双核四协议
+
+如果你不想使用vx内核，你可以使用这个方案。该方案既会在443端口部署伪装节点，也会在高位端口部署节点，防止443端口被封。
+
+- **安装**：Xray-core、Hysteria
+- **入站**：
+  - VMess — 五个随机端口
+  - Shadowsocks — 五个随机端口
+  - Hysteria — 443 端口
+  - VLESS XTLS Vision — 443 端口
+
+若服务器上已安装 Xray 或 Hysteria，**原有配置将被替换**。若未开启 BBR，部署时会尝试开启。
+
+### Reality / XHTTP
+
+面向需要 **REALITY** 与 **XHTTP**（SplitHTTP）伪装入站的场景，基于 **Xray-core**。
+
+- **安装**：Xray-core
+- **入站**：REALITY 与 XHTTP（SplitHTTP）组合
+
+若服务器上已安装 Xray，**原有 Xray 配置将被替换**。若未开启 BBR，部署时会尝试开启。
+部署 REALITY 时通常需要指定用作 destination / SNI 的目标站点。
+
+分步视频教程见 [部署 REALITY / XHTTP](/zh/docs/tutorials/deploy-reality-xhttp)。
+
+
+<Callout type="warn">
+  **双核四协议** 与 **Reality / XHTTP** 会覆盖服务器上已有的 Xray 或 Hysteria 配置。部署前请确认 VPS 上无需要保留的手动配置；已有 vx-core 且仅需增删入站时，可使用下方的 **入站向导** 或 **配置编辑**。
+</Callout>
+
+<Callout type="info">
+ VX快捷部署的节点都会使用自签证书，并启用 SHA256 对等验证以防止MITM。若未开启 BBR，部署时会尝试开启。
+</Callout>
 
 ## 配置编辑
 
 在应用中直接查看并编辑 `/usr/local/etc/vx/config.json`。更改通过 SSH 推送，服务会自动重启。
-
-可编辑：
-
-- 入站定义（端口、协议、TLS 设置）
-- 路由规则
-- 出站处理器
 
 ## 服务控制
 
@@ -40,5 +74,7 @@ VX 中的服务器面板是在 Linux VPS 上部署与配置 vx-core 的推荐方
 
 ## 相关
 
+- [部署 REALITY / XHTTP](/zh/docs/tutorials/deploy-reality-xhttp) — Reality/XHTTP 快捷部署教程
+- [一次部署多种协议](/zh/docs/tutorials/deploy-multi-protocol) — All-in-One 快捷部署教程
 - [VPS 监控](/zh/docs/vx/manual/vps-monitor) — 运行时状态
 - [配置](/zh/docs/vx-core/configuration) — 配置文件参考

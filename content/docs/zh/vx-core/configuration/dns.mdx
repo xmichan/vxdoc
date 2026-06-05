@@ -10,14 +10,13 @@ DNS 在 `ServerConfig.dns`（`DnsConfig`）中配置。模式定义：[`protos/p
 | 字段 | 类型 | 说明 |
 | --- | --- | --- |
 | `records` | `Record[]` | 静态域名 → IP 映射 |
-| `recordStrings` | string[] | 备用记录编码 |
-| `dnsServers` | `DnsServerConfig[]` | 命名的 DNS 上游 |
-| `internalResolver` | `Resolver` | **拨号**出站时使用的解析器 |
-| `requestDomainResolver` | `Resolver` | **入站** DNS 请求使用的解析器 |
-| `concurrentDnsServers` | `ConcurrentDnsServer[]` | 并行查询多台服务器 |
-| `serialDnsServers` | `SerialDnsServer[]` | 依次尝试多台服务器 |
-| `resolvers` | `Resolver[]` | 其他命名解析器 |
-| `dnsHijack` | `DnsHijackConfig` | 劫持规则与 Fake DNS 开关 |
+| `recordStrings` | string[] |  静态域名 → IP 映射 |
+| `dnsServers` | `DnsServerConfig[]` |  DNS服务器 |
+| `internalResolver` | `Resolver` | 出站**拨号**时使用此解析器解析域名 |
+| `requestDomainResolver` | `Resolver` | **路由** 使用此解析器解析域名 |
+| `concurrentDnsServers` | `ConcurrentDnsServer[]` | 并行查询DNS服务器 |
+| `serialDnsServers` | `SerialDnsServer[]` | 依次查询DNS服务器 |
+| `dnsHijack` | `DnsHijackConfig` | Dns劫持 |
 
 ### Record
 
@@ -31,7 +30,7 @@ DNS 在 `ServerConfig.dns`（`DnsConfig`）中配置。模式定义：[`protos/p
 
 | 字段 | 说明 |
 | --- | --- |
-| `dnsServers` | 服务器名称或地址 |
+| `dnsServers` | 使用到的DNS服务器 |
 | `interval` | 串行行为中的重试间隔 |
 | `name` | 解析器名称 |
 
@@ -41,13 +40,13 @@ DNS 在 `ServerConfig.dns`（`DnsConfig`）中配置。模式定义：[`protos/p
 
 | 类型 | 消息 | 用途 |
 | --- | --- | --- |
-| `plainDnsServer` | `PlainDnsServer` | UDP DNS（`addresses`、`useDefaultDns`） |
+| `plainDnsServer` | `PlainDnsServer` | UDP/TCP DNS |
 | `tlsDnsServer` | `TlsDnsServer` | DNS over TLS |
-| `dohDnsServer` | `DohDnsServer` | DNS over HTTPS（`url`） |
+| `dohDnsServer` | `DohDnsServer` | DNS over HTTPS |
 | `quicDnsServer` | `QuicDnsServer` | DNS over QUIC |
 | `fakeDnsServer` | `FakeDnsServer` | Fake IP 池（`poolConfigs`：`cidr`、`lruSize`） |
-| `goDnsServer` | `GoDnsServer` | Go 解析器 |
-| `emptyDnsServer` | `EmptyDnsServer` | 空操作 / 占位 |
+| `goDnsServer` | `GoDnsServer` | Go默认解析器 |
+| `emptyDnsServer` | `EmptyDnsServer` | 返回空的解析 |
 
 通用字段：
 

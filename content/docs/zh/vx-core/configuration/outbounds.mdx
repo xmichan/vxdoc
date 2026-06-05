@@ -50,16 +50,6 @@ description: OutboundHandlerConfig 参考
 
 代理客户端配置见[代理协议](/zh/docs/vx-core/configuration/protocols)（`*ClientConfig` 消息）。按需配合[传输](/zh/docs/vx-core/configuration/transport)与[安全](/zh/docs/vx-core/configuration/security)。
 
-## OutboundConfig（客户端 / 高级）
-
-同一 proto 文件中的 `OutboundConfig` 用于更复杂的客户端场景（处理器列表、链、统计）。服务器 `ServerConfig` 仅使用扁平的 `outbounds`（`OutboundHandlerConfig` 重复字段）。
-
-| 字段 | 说明 |
-| --- | --- |
-| `handlers` | `HandlerConfig[]` — 单出站或 `ChainHandlerConfig` |
-| `hysteriaRejectQuic` | 为 Hysteria 拒绝 QUIC |
-| `handlerLinkStats`、`handlerMeter`、`totalCounter` | 统计与计量 |
-
 ## 相关
 
 - [路由](/zh/docs/vx-core/configuration/router) — 选择 `outboundTag` 或 `selectorTag`

@@ -5,19 +5,16 @@ description: DispatcherConfig — 嗅探与覆盖
 
 调度器在 `ServerConfig.dispatcher`（`DispatcherConfig`）中配置。模式定义：[`protos/proto/vx/dispatcher/dispatcher.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/dispatcher/dispatcher.proto)。
 
-用于控制协议嗅探、目标覆盖及部分仅客户端行为。
+所有的入站，DNS服务器的流量都会经过调度器。调度器会通过路由来选择一个节点，然后把流量交给此节点处理。
 
 ## DispatcherConfig
 
 | 字段 | 类型 | 说明 |
 | --- | --- | --- |
 | `destinationOverride` | string[] | 非空时嗅探连接，协议匹配时用嗅探域名覆盖目标 |
-| `sniff` | bool | 启用嗅探以获取额外连接元数据（日志 / 路由） |
-| `ipv6UseDomain` | bool | **仅客户端** — IPv6 处理偏好 |
-| `fallbackTimeout` | uint32 | 将连接视为失败前等待响应数据的时长（毫秒） |
-| `sessionStats` | bool | 按会话计量统计 |
-
-当 `destinationOverride` 列出协议（例如 `http`、`tls`）时，vx-core 可能用嗅探主机名替换连接目标，使[路由](/zh/docs/vx-core/configuration/router)域名规则适用于基于 IP 的连接。
+| `sniff` | bool | 嗅探所有的连接，以获取额外连接元数据，这些数据可以使日志更全面 |
+| `fallbackTimeout` | uint32 | 等待响应数据的时长（毫秒），若此时间内没有收到响应数据，将连接视为失败，开始回退 |
+| `sessionStats` | bool | 启用会话计量统计，日志内会显示 |
 
 ## 示例
 

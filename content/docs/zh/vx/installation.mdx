@@ -19,9 +19,8 @@ description: 如何在您的平台上安装 VX
 
 安装完成后：
 
-1. 打开 VX，若提示则接受隐私政策
-2. 添加订阅或导入单个节点
-3. 选择节点并点击 **连接**
+1. 添加订阅或导入单个节点
+2. 选择节点并点击 **连接**
 
 ## 添加订阅
 
@@ -55,14 +54,17 @@ description: 如何在您的平台上安装 VX
 
 ## 从源码构建
 
-VX 是 Flutter 项目。本地构建：
+VX 是 Flutter 项目。你可以参考[Github workflow文件](https://github.com/5VNetwork/VX/tree/main/.github/workflows)来自行构建。
 
+{/* 
 ```bash
 git clone https://github.com/5vnetwork/vx.git
 git clone https://github.com/5vnetwork/tm-plugin.git
 cd vx
 flutter pub get
 flutter run
-```
+``` */}
 
-您还需要为目标平台构建好的 vx-core 副本。请参阅[构建 vx-core](/zh/docs/vx-core/building)。
+
+VX构建时需要 一些来自vx-core的文件，这些文件已发布在[Github Release](https://github.com/5VNetwork/vx-core/releases/tag/build)。
+你可以直接用那些现成的文件。也可以自行构建，请参阅[构建 vx-core](/zh/docs/vx-core/building)。

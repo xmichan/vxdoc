@@ -5,7 +5,7 @@ description: PolicyConfig — 连接超时与缓冲区
 
 连接策略在 `ServerConfig.policy`（`PolicyConfig`）中设置。模式定义：[`protos/proto/vx/policy.proto`](https://github.com/5vnetwork/vx-core/blob/main/protos/proto/vx/policy.proto)。
 
-除非部署工具另有说明，所有超时值单位为**秒**。
+所有超时值单位为**秒**。
 
 ## PolicyConfig
 
@@ -16,7 +16,7 @@ description: PolicyConfig — 连接超时与缓冲区
 | `udpIdleTimeout` | int32 | 无上行 UDP 数据时关闭 |
 | `upLinkOnlyTimeout` | int32 | 下行结束后，无上行数据则关闭 |
 | `downLinkOnlyTimeout` | int32 | 上行结束后，无下行数据则关闭 |
-| `defaultBufferSize` | int32 | 默认每连接缓冲区（并非所有协议都遵守） |
+| `defaultBufferSize` | int32 | 默认每连接缓冲区 |
 | `userPolicyMap` | map&lt;uint32, UserPolicy&gt; | 按 `userLevel` 覆盖 |
 
 ## UserPolicy
