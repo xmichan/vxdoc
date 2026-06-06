@@ -22,7 +22,7 @@ Bind the socket to the default physical network NIC
 
 </ProtoField>
 
-<ProtoField name="useInternalResolver" type="bool">
+<ProtoField name="resolveDomain" type="bool">
 
 Use the [internal DNS resolver](/docs/vx-core/configuration/dns) `internalResolver` when resolving domains during dialing
 
@@ -35,7 +35,7 @@ Use the [internal DNS resolver](/docs/vx-core/configuration/dns) `internalResolv
   "dialerFactory": {
     "dialTimeout": 10,
     "shouldBindDevice": false,
-    "useInternalResolver": true
+    "resolveDomain": true
   }
 }
 ```

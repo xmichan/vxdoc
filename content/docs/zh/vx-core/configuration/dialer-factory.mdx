@@ -22,7 +22,7 @@ description: DialerFactoryConfig
 
 </ProtoField>
 
-<ProtoField name="useInternalResolver" type="bool">
+<ProtoField name="resolveDomain" type="bool">
 
 拨号解析域名时使用 [内部DNS解析器](/zh/docs/vx-core/configuration/dns) `internalResolver`
 
@@ -35,7 +35,7 @@ description: DialerFactoryConfig
   "dialerFactory": {
     "dialTimeout": 10,
     "shouldBindDevice": false,
-    "useInternalResolver": true
+    "resolveDomain": true
   }
 }
 ```
