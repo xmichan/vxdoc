@@ -1,3 +1,5 @@
+import { areAdsEnabled } from '@/lib/ads';
+
 export type AdsterraAtOptions = {
   key: string;
   format: 'iframe';
@@ -61,7 +63,8 @@ function buildSlot(
 }
 
 export function getAdsterraSlots(): AdsterraSlots {
-  const enabled = process.env.NEXT_PUBLIC_ADSTERRA_ENABLED !== 'false';
+  const enabled =
+    areAdsEnabled() && process.env.NEXT_PUBLIC_ADSTERRA_ENABLED !== 'false';
   const scriptHost =
     process.env.NEXT_PUBLIC_ADSTERRA_SCRIPT_HOST?.trim() ||
     DEFAULT_SCRIPT_HOST;
