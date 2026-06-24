@@ -1,6 +1,6 @@
 import { AdLayout } from '@/components/ads/AdLayout';
 import { SetHtmlLang } from '@/components/set-html-lang';
-import { i18n, i18nTranslations } from '@/lib/i18n';
+import { adLabels, i18n, i18nTranslations } from '@/lib/i18n';
 import { i18nProvider } from 'fumadocs-ui/i18n';
 import { RootProvider } from 'fumadocs-ui/provider/next';
 import { Inter, Noto_Sans_SC } from 'next/font/google';
@@ -28,12 +28,13 @@ export default async function LangLayout({
 
   const lang = langParam as (typeof i18n.languages)[number];
   const fontClass = lang === 'zh' ? notoSansSC.className : inter.className;
+  const adLabel = adLabels[lang];
 
   return (
     <div className={fontClass}>
       <SetHtmlLang lang={lang} />
       <RootProvider i18n={i18nProvider(i18nTranslations, lang)}>
-        <AdLayout>{children}</AdLayout>
+        <AdLayout adLabel={adLabel}>{children}</AdLayout>
       </RootProvider>
     </div>
   );

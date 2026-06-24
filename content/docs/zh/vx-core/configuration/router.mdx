@@ -31,9 +31,28 @@ description: RouterConfig 与 RuleConfig
   "router": {
     "rules": [
       {
-        "inboundTags": ["trojan"],
-        "matchAll": true,
+        "conditions": [
+          { "inboundTags": ["trojan"] }
+        ],
         "outboundTag": "direct"
+      }
+    ]
+  }
+}
+```
+
+域名或应用集合任一匹配时走代理：
+
+```json
+{
+  "router": {
+    "rules": [
+      {
+        "conditions": [
+          { "domainTags": ["proxy"] },
+          { "appTags": ["proxy"] }
+        ],
+        "selectorTag": "proxy"
       }
     ]
   }
@@ -64,9 +83,23 @@ description: RouterConfig 与 RuleConfig
 
 </ProtoField>
 
+<ProtoField name="matchAll" type="bool">
+
+匹配所有连接。为 `true` 时忽略 `conditions`。
+
+</ProtoField>
+
+<ProtoField name="conditions" type="Condition[]">
+
+匹配谓词列表。当**任一**条件成立时规则命中（逻辑 OR）。`matchAll` 为 `true` 时忽略。若为空且 `matchAll` 为 `false`，规则永不命中。
+
+推荐使用此字段，而非顶层匹配字段或单数 `condition`。
+
+</ProtoField>
+
 <ProtoField name="condition" type="Condition">
 
-用于匹配连接的 Metadata
+**旧版。** 单个条件；等价于 `conditions` 中的一项。仅在 `conditions` 为空时使用。
 
 </ProtoField>
 
@@ -102,15 +135,27 @@ description: RouterConfig 与 RuleConfig
 
 </ProtoField>
 
+<ProtoField name="matchAll" type="bool">
+
+匹配所有连接时启用此回退
+
+</ProtoField>
+
+<ProtoField name="conditions" type="Condition[]">
+
+回退条件列表。当**任一**条件成立时此回退可用（逻辑 OR）。`matchAll` 为 `true` 时忽略。
+
+</ProtoField>
+
 <ProtoField name="condition" type="Condition">
 
-本回退的条件，成立时回退才会生效
+**旧版。** 单个条件。仅在 `conditions` 为空时使用。也支持旧版顶层 `domainTags` / `dstIpTags`（合并为单个隐式条件）。
 
 </ProtoField>
 
 <ProtoField name="last" type="bool">
 
-若条件匹配，此回退为最终回退，后面的不在考虑
+若此回退被选用，则为最终回退，后面的不再考虑
 
 </ProtoField>
 
@@ -126,13 +171,9 @@ description: RouterConfig 与 RuleConfig
 
 ## Condition
 
-用于 `rule.condition` 或 `fallback.condition`。
+用于 `RuleConfig.conditions`、`RuleConfig.condition`（旧版）或 `Fallback.conditions` / `Fallback.condition`（旧版）。
 
-<ProtoField name="matchAll" type="bool">
-
-匹配所有连接
-
-</ProtoField>
+每个 `Condition` 是规则或回退 `conditions` 列表中的一项。列表内**任一**条件成立即匹配（OR）；单个 `Condition` 内**所有**已启用的子条件须同时成立（AND）。若无任何子条件，该 `Condition` 不成立。
 
 <ProtoField name="usernames" type="string[]">
 
@@ -239,6 +280,18 @@ description: RouterConfig 与 RuleConfig
 <ProtoField name="fakeIp" type="bool">
 
 匹配 Fake IP 目标
+
+</ProtoField>
+
+<ProtoField name="hasNoDomain" type="bool">
+
+连接使用 IP 目标且无嗅探到的域名
+
+</ProtoField>
+
+<ProtoField name="allTags" type="string[]">
+
+域名、IP 或应用集合联合匹配（任一集合命中即可）
 
 </ProtoField>
 

@@ -18,9 +18,9 @@ export type AdsterraSlots = {
   enabled: boolean;
   leftRail: AdsterraSlot | null;
   rightRail: AdsterraSlot | null;
-  stickyBottomPhone: AdsterraSlot | null;
-  stickyBottomSmallTablet: AdsterraSlot | null;
-  stickyBottomTablet: AdsterraSlot | null;
+  inContentPhone: AdsterraSlot | null;
+  inContentSmallTablet: AdsterraSlot | null;
+  inContentTablet: AdsterraSlot | null;
 };
 
 const DEFAULT_SCRIPT_HOST = 'www.highperformanceformat.com';
@@ -71,27 +71,27 @@ export function getAdsterraSlots(): AdsterraSlots {
 
   const sideWidth = parseIntEnv('NEXT_PUBLIC_ADSTERRA_SIDE_WIDTH', 160);
   const sideHeight = parseIntEnv('NEXT_PUBLIC_ADSTERRA_SIDE_HEIGHT', 600);
-  const bottomPhoneWidth = parseIntEnv(
+  const inContentPhoneWidth = parseIntEnv(
     'NEXT_PUBLIC_ADSTERRA_BOTTOM_PHONE_WIDTH',
     320,
   );
-  const bottomPhoneHeight = parseIntEnv(
+  const inContentPhoneHeight = parseIntEnv(
     'NEXT_PUBLIC_ADSTERRA_BOTTOM_PHONE_HEIGHT',
     50,
   );
-  const bottomSmallTabletWidth = parseIntEnv(
+  const inContentSmallTabletWidth = parseIntEnv(
     'NEXT_PUBLIC_ADSTERRA_BOTTOM_SMALL_TABLET_WIDTH',
     468,
   );
-  const bottomSmallTabletHeight = parseIntEnv(
+  const inContentSmallTabletHeight = parseIntEnv(
     'NEXT_PUBLIC_ADSTERRA_BOTTOM_SMALL_TABLET_HEIGHT',
     60,
   );
-  const bottomTabletWidth = parseIntEnv(
+  const inContentTabletWidth = parseIntEnv(
     'NEXT_PUBLIC_ADSTERRA_BOTTOM_TABLET_WIDTH',
     728,
   );
-  const bottomTabletHeight = parseIntEnv(
+  const inContentTabletHeight = parseIntEnv(
     'NEXT_PUBLIC_ADSTERRA_BOTTOM_TABLET_HEIGHT',
     90,
   );
@@ -110,42 +110,42 @@ export function getAdsterraSlots(): AdsterraSlots {
     sideHeight,
     scriptHost,
   );
-  const stickyBottomPhone = buildSlot(
-    'sticky-bottom-phone',
+  const inContentPhone = buildSlot(
+    'in-content-phone',
     'd1999258ab11acd00c51ba71a7fa5f99',
-    bottomPhoneWidth,
-    bottomPhoneHeight,
+    inContentPhoneWidth,
+    inContentPhoneHeight,
     scriptHost,
   );
-  const stickyBottomSmallTablet = buildSlot(
-    'sticky-bottom-small-tablet',
+  const inContentSmallTablet = buildSlot(
+    'in-content-small-tablet',
     '7797b4092fe93fda6984651def3939ef',
-    bottomSmallTabletWidth,
-    bottomSmallTabletHeight,
+    inContentSmallTabletWidth,
+    inContentSmallTabletHeight,
     scriptHost,
   );
-  const stickyBottomTablet = buildSlot(
-    'sticky-bottom-tablet',
+  const inContentTablet = buildSlot(
+    'in-content-tablet',
     'aa3832a16a4b341d98a87586deef0a2c',
-    bottomTabletWidth,
-    bottomTabletHeight,
+    inContentTabletWidth,
+    inContentTabletHeight,
     scriptHost,
   );
 
   const hasAnySlot = Boolean(
     leftRail ||
       rightRail ||
-      stickyBottomPhone ||
-      stickyBottomSmallTablet ||
-      stickyBottomTablet,
+      inContentPhone ||
+      inContentSmallTablet ||
+      inContentTablet,
   );
 
   return {
     enabled: enabled && hasAnySlot,
     leftRail,
     rightRail,
-    stickyBottomPhone,
-    stickyBottomSmallTablet,
-    stickyBottomTablet,
+    inContentPhone,
+    inContentSmallTablet,
+    inContentTablet,
   };
 }

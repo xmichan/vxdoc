@@ -1,0 +1,82 @@
+---
+title: 谷歌云 VPS 部署
+description: 利用 VX 快捷部署，一键在谷歌云 VPS 上部署节点并导入客户端。谷歌云提供三个月免费试用。
+---
+
+利用 [VX 快捷部署](/zh/docs/vx/manual/vx-core-panel#快捷部署)，一键在谷歌云 VPS 上部署节点，并导入客户端。
+
+<Callout type="info">
+  谷歌云提供三个月的免费试用，试用期间不会对信用卡进行扣款，可以放心试用。
+</Callout>
+
+## 前提条件
+
+- 谷歌云账号
+- 已安装 [VX 客户端](/zh/docs/vx/installation)
+
+## 视频教程
+
+请观看下方视频，或在 [YouTube](https://www.youtube.com/watch?v=ce7ew_p7XlU) 上打开。
+
+本视频为中文讲解，涵盖创建谷歌云实例、配置防火墙、生成 SSH 密钥，以及在 VX 中连接服务器并快捷部署。
+
+<YouTube id="ce7ew_p7XlU" title="谷歌云 VPS 配置与 VX 快捷部署" />
+
+## 视频中用到的命令
+
+<Tabs
+  groupId="gcp-ssh-key"
+  items={['Windows', 'macOS']}
+  persist
+  defaultIndex={0}
+>
+  <Tab value="Windows">
+
+### 生成 SSH 密钥
+
+```bash
+mkdir .ssh & ssh-keygen -t rsa -f .ssh\gcp -N "" -C cat
+```
+
+### 复制公钥
+
+```bash
+type .ssh\gcp.pub | clip
+```
+
+### 复制私钥
+
+```bash
+type .ssh\gcp | clip
+```
+
+  </Tab>
+  <Tab value="macOS">
+
+### 生成 SSH 密钥
+
+```bash
+mkdir .ssh; ssh-keygen -t rsa -f ~/.ssh/gcp -C cat -N ""
+```
+
+### 复制公钥
+
+```bash
+cat .ssh/gcp.pub | pbcopy
+```
+
+### 复制私钥
+
+```bash
+cat .ssh/gcp | pbcopy
+```
+
+  </Tab>
+</Tabs>
+
+## 相关文档
+
+- [vx-core 面板](/zh/docs/vx/manual/vx-core-panel) — 快捷部署与服务器管理
+- [一次部署多种协议](/zh/docs/tutorials/deploy-multi-protocol) — All-in-One 快捷部署教程
+- [部署 REALITY / XHTTP](/zh/docs/tutorials/deploy-reality-xhttp) — Reality/XHTTP 快捷部署教程
+- [VPS 监控](/zh/docs/vx/manual/vps-monitor) — 运行时状态

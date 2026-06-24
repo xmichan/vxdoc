@@ -64,3 +64,8 @@ export const i18nTranslations = i18n
   });
 
 export type Locale = (typeof i18n)['languages'][number];
+
+export const adLabels: Record<Locale, string> = {
+  en: 'Ad',
+  zh: '广告',
+};

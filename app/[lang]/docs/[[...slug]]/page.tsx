@@ -1,6 +1,8 @@
 import { DocsComments } from '@/components/docs-comments';
+import { InContentAd } from '@/components/ads/InContentAd';
 import { getMDXComponents } from '@/components/mdx';
 import type { Locale } from '@/lib/i18n';
+import { adLabels } from '@/lib/i18n';
 import { getPageImage, getPageMarkdownUrl, source } from '@/lib/source';
 import { gitConfig } from '@/lib/shared';
 import {
@@ -22,6 +24,7 @@ export default async function Page(props: PageProps<'/[lang]/docs/[[...slug]]'>)
 
   const MDX = page.data.body;
   const markdownUrl = getPageMarkdownUrl(page).url;
+  const adLabel = adLabels[params.lang];
 
   return (
     <DocsPage toc={page.data.toc} full={page.data.full}>
@@ -34,6 +37,7 @@ export default async function Page(props: PageProps<'/[lang]/docs/[[...slug]]'>)
           githubUrl={`https://github.com/${gitConfig.user}/${gitConfig.repo}/blob/${gitConfig.branch}/content/docs/${page.path}`}
         />
       </div>
+      <InContentAd label={adLabel} />
       <DocsBody>
         <MDX
           components={getMDXComponents({

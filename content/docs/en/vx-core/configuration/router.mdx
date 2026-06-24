@@ -31,9 +31,28 @@ Route a specific inbound to a specific outbound:
   "router": {
     "rules": [
       {
-        "inboundTags": ["trojan"],
-        "matchAll": true,
+        "conditions": [
+          { "inboundTags": ["trojan"] }
+        ],
         "outboundTag": "direct"
+      }
+    ]
+  }
+}
+```
+
+Route to proxy when the domain or app set matches:
+
+```json
+{
+  "router": {
+    "rules": [
+      {
+        "conditions": [
+          { "domainTags": ["proxy"] },
+          { "appTags": ["proxy"] }
+        ],
+        "selectorTag": "proxy"
       }
     ]
   }
@@ -64,9 +83,23 @@ Send to a [selector](#selectorconfig) (client / load balancing)
 
 </ProtoField>
 
+<ProtoField name="matchAll" type="bool">
+
+Match every connection. When `true`, `conditions` is ignored.
+
+</ProtoField>
+
+<ProtoField name="conditions" type="Condition[]">
+
+Match predicates. The rule applies when **any** condition matches (logical OR). Ignored when `matchAll` is true. If empty and `matchAll` is false, the rule never matches.
+
+Prefer this over top-level match fields and the singular `condition` field.
+
+</ProtoField>
+
 <ProtoField name="condition" type="Condition">
 
-Metadata used to match connections
+**Legacy.** Single condition; equivalent to one entry in `conditions`. Used only when `conditions` is empty.
 
 </ProtoField>
 
@@ -102,15 +135,27 @@ Additional action on fallback
 
 </ProtoField>
 
+<ProtoField name="matchAll" type="bool">
+
+Apply this fallback for every connection
+
+</ProtoField>
+
+<ProtoField name="conditions" type="Condition[]">
+
+Match predicates for this fallback. The fallback is eligible when **any** condition matches (logical OR). Ignored when `matchAll` is true.
+
+</ProtoField>
+
 <ProtoField name="condition" type="Condition">
 
-Condition for this fallback; the fallback applies only when it matches
+**Legacy.** Single condition. Used only when `conditions` is empty. Legacy top-level `domainTags` / `dstIpTags` are also supported (merged into one implicit condition).
 
 </ProtoField>
 
 <ProtoField name="last" type="bool">
 
-If the condition matches, this fallback is final and later fallbacks are not considered
+If this fallback is used, it is final and later fallbacks are not considered
 
 </ProtoField>
 
@@ -126,13 +171,9 @@ Rewrite the IP back to a domain on fallback
 
 ## Condition
 
-Used in `rule.condition` or `fallback.condition`.
+Used in `RuleConfig.conditions`, legacy `RuleConfig.condition`, or `Fallback.conditions` / legacy `Fallback.condition`.
 
-<ProtoField name="matchAll" type="bool">
-
-Match all connections
-
-</ProtoField>
+Each `Condition` is one entry in a rule or fallback `conditions` list. The list matches when **any** condition matches (OR). Within one `Condition`, **all** enabled subconditions must match (AND). A `Condition` with no subconditions never matches.
 
 <ProtoField name="usernames" type="string[]">
 
@@ -239,6 +280,18 @@ Match IPv6 only
 <ProtoField name="fakeIp" type="bool">
 
 Match Fake IP destinations
+
+</ProtoField>
+
+<ProtoField name="hasNoDomain" type="bool">
+
+Connection uses IP targets and has no sniffed domain
+
+</ProtoField>
+
+<ProtoField name="allTags" type="string[]">
+
+Combined domain, IP, or app set match (matches if any listed set matches)
 
 </ProtoField>
 

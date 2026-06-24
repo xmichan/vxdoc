@@ -52,11 +52,13 @@ Each routing rule has:
 
 ### Match all
 
-Enable **Match all** to make a rule apply to every connection (typically used for a catch-all "default proxy" or "default direct" rule at the bottom of the list). When Match all is on, other conditions are cleared.
+Enable **Match all** to make a rule apply to every connection (typically used for a catch-all "default proxy" or "default direct" rule at the bottom of the list). When Match all is on, the `conditions` list is ignored.
 
 ### Condition types
 
-When Match all is off, **every enabled condition must match** (logical AND). If no condition is enabled, the rule never matches.
+When Match all is off, a rule matches when **any** entry in its `conditions` list matches (logical OR). If the list is empty, the rule never matches.
+
+Within a single `Condition`, **every enabled subcondition must match** (logical AND). If a `Condition` has no subconditions enabled, it never matches.
 
 #### Inbound
 
@@ -96,15 +98,15 @@ you want all of them to go a specific node, you can add one rule with this condi
 
 *Matches when a connection has the specified network type* 
 
-> **Warning:** Avoid having both **Domain** and **IP** conditions in the same rule unless you understand why: 
-the rule matches when **both** conditions are true, which means both domain and IP information should be present to make the two conditions both match,
-which is often not true (many connections only have just one of them, not both).
+> **Warning:** Avoid having both **Domain** and **IP** subconditions in the same `Condition` unless you understand why:
+the `Condition` matches only when **both** subconditions are true, which means both domain and IP information should be present,
+which is often not true (many connections only have just one of them, not both). Use separate entries in `conditions` if you want domain **or** IP to match.
 
 ### Fallbacks
 
-A routing rule can define **fallbacks**. If the outbound chosen by the rule fails (for example the selected node is unreachable), 
-vx-core tries the node/selector specified in each fallback in order. Each fallback has its own conditions and node/selector — the
- fallback is used only when **all** of its conditions are true. If a fallback's conditions are not all true, next fallback is condisered.
+A routing rule can define **fallbacks**. If the outbound chosen by the rule fails (for example the selected node is unreachable),
+vx-core tries the node/selector specified in each fallback in order. Each fallback has its own `conditions` list and node/selector — the
+fallback is used only when **any** of its conditions matches (or when **Match all** is enabled). If a fallback does not match, the next fallback is considered.
 
 For example, GFW's final rule "Default Direct" uses two fallbacks so traffic that failed when go direct can retry proxy. Each
  fallback has conditions to make sure only connections with non-CN domains or ips retry proxy, to prevent domestic connections
