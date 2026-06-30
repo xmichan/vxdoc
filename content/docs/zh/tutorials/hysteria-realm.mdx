@@ -1,0 +1,167 @@
+---
+title: 使用 VX 作为 Hysteria Realm 服务器
+description: 在 VX 中启用 Hysteria Realm，注册设备供其他客户端连接
+---
+
+在一台设备上使用VX轻松部署 [**Hysteria Realm**](https://v2.hysteria.network/zh/docs/advanced/Realms/) 服务器作为代理服务器，其他 VX 客户端连接此代理服务器。
+
+仅需几步操作，无需公网 IP 或端口转发。
+
+本教程分两部分：**在服务器设备上启用 Realm**，以及 **其他客户端连接此Realm服务器**。
+
+**Hysteria Realm**服务器可以用于以下用途：
+- 海外华人，可以用一台闲置安卓设备充当代理服务器，回国时无需再购买VPN。国内家人也可用此设备翻墙
+- 利用一台闲置设备在国内充当代理服务器，在国外的时候也可以听QQ音乐，看爱奇艺，无需购买回国加速器
+
+
+
+## 前置条件
+
+- 两台已安装 [VX 客户端]的设备(/zh/docs/vx/installation)。一台作为代理服务器，一台作为客户端
+
+## 一、在服务器设备上启用 Realm
+
+服务器设备可以是闲置的安卓/苹果手机。通常情况下它会被放在家里，供你远游的时候连接。
+
+### 1. 打开设置
+
+在主页点击右上角 **设置**（齿轮图标）。
+
+<Screenshot src="/tutorials/realm/01-open-settings.png" alt="打开设置" />
+
+### 2. 进入高级设置
+
+选择 **高级**（VPN 相关设置）。
+
+<Screenshot src="/tutorials/realm/02-advanced-settings.png" alt="进入高级设置" />
+
+### 3. 打开 Hysteria Realm
+
+选择 **Hysteria Realm**。
+
+<Screenshot src="/tutorials/realm/03-hysteria-realm.png" alt="打开 Hysteria Realm" />
+
+### 4. 自动配置
+
+点击 **自动配置**。VX 会生成认证密码、TLS 证书、Realm URL 等参数，并写入 **服务器配置** 卡片。
+
+<Screenshot src="/tutorials/realm/04-auto-configure.png" alt="自动配置 Realm 服务器" />
+
+<Callout>
+  **Pro 用户** 使用由我们运行的会合服务器 `realm.leeveck.site`；**非 Pro 用户** 使用由Hysteria官方运营的免费公益会合服务器 `realm.hy2.io`。也可点击 **服务器配置** 卡片手动编辑密码、Realm URL、带宽等选项。
+</Callout>
+
+### 5. 启用 Realm 服务器
+
+打开 **启用 Realm 服务器** 开关。开启后，VX 连接时会自动运行 Hysteria Realm 入站。
+
+<Screenshot src="/tutorials/realm/05-enable-realm-server.png" alt="启用 Realm 服务器" />
+
+### 6. 注册供其他设备使用（可选）
+
+若希望其他 VX 客户端从云端发现此设备：
+
+1. 填写 **设备名称**（在其他设备的选择器中显示）
+2. （可选）设置 **云端加密密码**（需单独告知客户端，不会上传至服务器）
+3. 点击 **上传到云端**
+
+也可使用 **复制** 或 **二维码** 直接分享 Realm 节点链接，无需云端注册。
+
+<Screenshot src="/tutorials/realm/06-enter-password.png" alt="填写云端加密密码" />
+
+<Screenshot src="/tutorials/realm/07-upload-to-cloud.png" alt="上传到云端" />
+
+上传成功后会提示 **设备已注册，可供其他客户端使用**。
+
+### 7. 将路由模式设为直连（可选）
+
+服务器端的VX设备，如果本身不需要科学上网，建议使用 **直连** 模式，这样所有流经它的流量，也就是客户端发来的流量，都会走直连。
+
+返回 **高级** 页面（或从设置返回主页），打开底部 **路由** 标签页。
+
+<Screenshot src="/tutorials/realm/08-back-from-advanced.png" alt="返回并打开路由" />
+
+<Screenshot src="/tutorials/realm/09-routing-tab.png" alt="打开路由标签页" />
+
+点击 **高级**，进入 **模式** 标签页。
+
+<Screenshot src="/tutorials/realm/10-routing-advanced.png" alt="路由高级 → 模式" />
+
+<Screenshot src="/tutorials/realm/11-routing-mode-tab.png" alt="路由模式标签页" />
+
+点击模式下拉框，选择 **直连**（All traffic will go direct），然后 **确定**。
+
+<Screenshot src="/tutorials/realm/12-select-direct-mode.png" alt="选择直连模式" />
+
+（可选）如果服务端设备本身无需翻墙，你可以在【高级】/【TUN设置】里清除“TUN IPv4路由”和“TUN IPv6路由”，这样设备本身的流量将不经过VX处理，提高性能
+<Screenshot src="/tutorials/realm/clear-ip-route.png" alt="清除路由" />
+
+### 8. 启动 VX
+
+返回 **主页**，确认模式为 **直连**，点击 **启动**（播放按钮）。
+
+<Screenshot src="/tutorials/realm/13-back-to-home.png" alt="返回主页并选择直连" />
+
+<Screenshot src="/tutorials/realm/14-home-direct-mode.png" alt="主页选择直连模式" />
+
+<Screenshot src="/tutorials/realm/15-start-vx.png" alt="启动 VX" />
+
+启动后，主页会出现 **Realm 服务器** 卡片。几秒后状态为 **已注册** 表示已成功注册到会合服务器；卡片还会显示公网地址与当前 **对端** 数量。
+
+<Screenshot src="/tutorials/realm/16-realm-server-registered.png" alt="Realm 服务器已注册" />
+
+## 二、在客户端设备上连接
+
+以下步骤在另一台已安装 VX 的Windows设备上操作。
+
+### 1. 通过云端添加 Realm 设备
+
+<Callout>
+  **Pro 用户** 可以通过云端添加Realm节点。非Pro用户请通过扫描二维码或者复制订阅链接的方式导入Realm节点 。
+</Callout>
+
+打开 **节点** 标签页，点击 **+ 添加节点**，选择 **Realm 设备**。
+
+<Screenshot src="/tutorials/realm/17-nodes-tab.png" alt="打开节点" />
+
+<Screenshot src="/tutorials/realm/18-add-realm-device.png" alt="添加 Realm 设备" />
+
+### 2. 选择设备并添加
+
+在 **设备** 下拉框中选择已注册的服务器（例如上一步设置的 **X**），点击 **添加**。
+
+若通过复制/二维码分享而非云端注册，可改用 **剪贴板** 导入 Realm 链接。
+
+<Screenshot src="/tutorials/realm/19-select-device-add.png" alt="选择设备并添加" />
+
+### 3. 输入解密密码
+
+若设备通过云端注册，需输入服务器端设置的 **云端加密密码**。
+
+<Screenshot src="/tutorials/realm/20-decrypt-password.png" alt="输入解密密码" />
+
+添加成功后，节点列表会出现一条 **Hysteria2** 节点，地址指向会合服务器。
+
+### 4. 启用节点并连接
+
+打开该节点的 **使用** 开关，返回主页选择 **全局**（或其他所需模式），点击 **启动** 连接。
+
+<Screenshot src="/tutorials/realm/21-enable-node.png" alt="启用 Realm 节点" />
+
+<Screenshot src="/tutorials/realm/22-connect-client.png" alt="客户端连接" />
+
+连接成功后，服务器端主页 **Realm 服务器** 卡片上的 **对端** 数量会增加，表示已有客户端通过 Realm 连入。
+
+<Screenshot src="/tutorials/realm/23-peers-connected.png" alt="对端已连接" />
+
+## 视频演示
+
+如视频无法播放，请在 [YouTube](https://www.youtube.com/watch?v=5jSD4V9fkuw) 上打开。
+
+<YouTube id="5jSD4V9fkuw" title="VX 部署Hysteria Realm服务器" />
+
+## 相关文档
+
+- [VX 安装](/zh/docs/vx/installation) — 请先安装客户端
+- [Hysteria 协议](/zh/docs/vx-core/configuration/protocols/hysteria) — vx-core Hysteria2 配置参考
+- [备份与同步](/zh/docs/tutorials/sync-and-backup) — 跨设备同步节点与设置（Pro）

@@ -8,6 +8,7 @@
     "deploy-multi-protocol",
     "sync-and-backup",
     "custom-routing",
-    "ech"
+    "ech",
+    "hysteria-realm"
   ]
 }
