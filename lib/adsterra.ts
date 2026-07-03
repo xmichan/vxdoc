@@ -62,9 +62,14 @@ function buildSlot(
   };
 }
 
+/** Set to true when re-enabling Adsterra banner ads. */
+const ADSTERRA_ENABLED = false;
+
 export function getAdsterraSlots(): AdsterraSlots {
   const enabled =
-    areAdsEnabled() && process.env.NEXT_PUBLIC_ADSTERRA_ENABLED !== 'false';
+    ADSTERRA_ENABLED &&
+    areAdsEnabled() &&
+    process.env.NEXT_PUBLIC_ADSTERRA_ENABLED !== 'false';
   const scriptHost =
     process.env.NEXT_PUBLIC_ADSTERRA_SCRIPT_HOST?.trim() ||
     DEFAULT_SCRIPT_HOST;
