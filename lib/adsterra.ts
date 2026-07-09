@@ -63,13 +63,12 @@ function buildSlot(
 }
 
 /** Set to true when re-enabling Adsterra banner ads. */
-const ADSTERRA_ENABLED = false;
+const ADSTERRA_ENABLED = true;
 
 export function getAdsterraSlots(): AdsterraSlots {
   const enabled =
     ADSTERRA_ENABLED &&
-    areAdsEnabled() &&
-    process.env.NEXT_PUBLIC_ADSTERRA_ENABLED !== 'false';
+    areAdsEnabled();
   const scriptHost =
     process.env.NEXT_PUBLIC_ADSTERRA_SCRIPT_HOST?.trim() ||
     DEFAULT_SCRIPT_HOST;
@@ -110,9 +109,9 @@ export function getAdsterraSlots(): AdsterraSlots {
   );
   const rightRail = buildSlot(
     'right-rail',
-    '01066605ce3288fe33004b1025506f81',
-    sideWidth,
-    sideHeight,
+    'ae05698d2d36242acddac49dae942789',
+    160,
+    300,
     scriptHost,
   );
   const inContentPhone = buildSlot(
@@ -139,10 +138,10 @@ export function getAdsterraSlots(): AdsterraSlots {
 
   const hasAnySlot = Boolean(
     leftRail ||
-      rightRail ||
-      inContentPhone ||
-      inContentSmallTablet ||
-      inContentTablet,
+    rightRail ||
+    inContentPhone ||
+    inContentSmallTablet ||
+    inContentTablet,
   );
 
   return {
