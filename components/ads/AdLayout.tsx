@@ -1,5 +1,5 @@
 import { getAdsterraSlots } from '@/lib/adsterra';
-import { AdUnit } from './AdUnit';
+import { AdsterraRail } from './AdsterraRails';
 
 type AdLayoutProps = {
   children: React.ReactNode;
@@ -19,27 +19,23 @@ export function AdLayout({ children, adLabel }: AdLayoutProps) {
   return (
     <div className="flex min-h-full">
       {slots.leftRail && (
-        <aside
-          className="sticky top-0 hidden h-screen shrink-0 flex-col items-center border-r border-border/60 bg-muted/20 py-4 lg:flex"
-          style={sideWidth ? { width: sideWidth + 32 } : undefined}
-          role="complementary"
-          aria-label="Advertisement"
-        >
-          <AdUnit slot={slots.leftRail} label={adLabel} labelAlign="start" />
-        </aside>
+        <AdsterraRail
+          slot={slots.leftRail}
+          label={adLabel}
+          sideWidth={sideWidth}
+          side="left"
+        />
       )}
 
       <div className="min-w-0 flex-1">{children}</div>
 
       {slots.rightRail && (
-        <aside
-          className="sticky top-0 hidden h-screen shrink-0 flex-col items-center border-l border-border/60 bg-muted/20 py-4 lg:flex"
-          style={sideWidth ? { width: sideWidth + 32 } : undefined}
-          role="complementary"
-          aria-label="Advertisement"
-        >
-          <AdUnit slot={slots.rightRail} label={adLabel} labelAlign="start" />
-        </aside>
+        <AdsterraRail
+          slot={slots.rightRail}
+          label={adLabel}
+          sideWidth={sideWidth}
+          side="right"
+        />
       )}
     </div>
   );
