@@ -12,8 +12,16 @@ export default function Layout({ children }: LayoutProps<'/'>) {
             crossOrigin="anonymous"
           />
         )}
+        {areAdsEnabled() && (
+          <script src="https://pl30407483.effectivecpmnetwork.com/b1/f4/af/b1f4af572d332b3341e151d37c9ad979.js" />
+        )}
       </head>
-      <body className="flex min-h-screen flex-col">{children}</body>
+      <body className="flex min-h-screen flex-col">
+        {children}
+        {areAdsEnabled() && (
+          <script src="https://pl30407484.effectivecpmnetwork.com/76/ce/04/76ce040dfa71ee60e37f17077ab2811a.js" />
+        )}
+      </body>
     </html>
   );
 }

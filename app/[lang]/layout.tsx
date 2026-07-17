@@ -1,6 +1,8 @@
+import { AdDisclaimer } from '@/components/ads/AdDisclaimer';
 import { AdLayout } from '@/components/ads/AdLayout';
 import { SetHtmlLang } from '@/components/set-html-lang';
-import { adLabels, i18n, i18nTranslations } from '@/lib/i18n';
+import { areAdsEnabled } from '@/lib/ads';
+import { adDisclaimers, adLabels, i18n, i18nTranslations } from '@/lib/i18n';
 import { i18nProvider } from 'fumadocs-ui/i18n';
 import { RootProvider } from 'fumadocs-ui/provider/next';
 import { Inter, Noto_Sans_SC } from 'next/font/google';
@@ -31,10 +33,13 @@ export default async function LangLayout({
   const adLabel = adLabels[lang];
 
   return (
-    <div className={fontClass}>
+    <div className={`${fontClass} flex min-h-screen flex-col`}>
       <SetHtmlLang lang={lang} />
       <RootProvider i18n={i18nProvider(i18nTranslations, lang)}>
-        <AdLayout adLabel={adLabel}>{children}</AdLayout>
+        <div className="flex min-h-0 flex-1 flex-col">
+          <AdLayout adLabel={adLabel}>{children}</AdLayout>
+        </div>
+        {areAdsEnabled() && <AdDisclaimer text={adDisclaimers[lang]} />}
       </RootProvider>
     </div>
   );

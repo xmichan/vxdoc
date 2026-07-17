@@ -69,3 +69,8 @@ export const adLabels: Record<Locale, string> = {
   en: 'Ad',
   zh: '广告',
 };
+
+export const adDisclaimers: Record<Locale, string> = {
+  en: 'Advertisements on this site are provided by third parties. We do not review or control their content and provide no guarantee for the faithfulness of their content.',
+  zh: '本网站上的广告由第三方提供，我们对其内容不做审核，请自行甄别。',
+};
