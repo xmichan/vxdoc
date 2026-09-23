@@ -23,7 +23,7 @@ export type AdsterraSlots = {
   inContentTablet: AdsterraSlot | null;
 };
 
-const DEFAULT_SCRIPT_HOST = 'www.highperformanceformat.com';
+const DEFAULT_SCRIPT_HOST = 'www.highrevenueformat.com';
 
 function parseIntEnv(name: string, fallback: number): number {
   const raw = process.env[name];
