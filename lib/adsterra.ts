@@ -23,7 +23,7 @@ export type AdsterraSlots = {
   inContentTablet: AdsterraSlot | null;
 };
 
-const DEFAULT_SCRIPT_HOST = 'www.highrevenueformat.com';
+const DEFAULT_SCRIPT_HOST = 'grop.net';
 
 function parseIntEnv(name: string, fallback: number): number {
   const raw = process.env[name];
@@ -32,9 +32,15 @@ function parseIntEnv(name: string, fallback: number): number {
   return Number.isFinite(value) && value > 0 ? value : fallback;
 }
 
-function buildScriptSrc(key: string, host: string): string {
+/** Adsterra body units use `https://{host}/{pathPrefix}/{key}` (e.g. `/22/{key}`). */
+function buildScriptSrc(
+  key: string,
+  host: string,
+  pathPrefix: string,
+): string {
   const normalizedHost = host.replace(/^https?:\/\//, '').replace(/\/$/, '');
-  return `https://${normalizedHost}/${key}/invoke.js`;
+  const normalizedPrefix = pathPrefix.replace(/^\/+|\/+$/g, '');
+  return `https://${normalizedHost}/${normalizedPrefix}/${key}`;
 }
 
 function buildSlot(
@@ -43,6 +49,7 @@ function buildSlot(
   width: number,
   height: number,
   scriptHost: string,
+  pathPrefix: string,
 ): AdsterraSlot | null {
   const trimmedKey = key?.trim();
   if (!trimmedKey) return null;
@@ -58,7 +65,7 @@ function buildSlot(
   return {
     id,
     atOptions,
-    scriptSrc: buildScriptSrc(trimmedKey, scriptHost),
+    scriptSrc: buildScriptSrc(trimmedKey, scriptHost, pathPrefix),
   };
 }
 
@@ -106,6 +113,7 @@ export function getAdsterraSlots(): AdsterraSlots {
     sideWidth,
     sideHeight,
     scriptHost,
+    '22',
   );
   const rightRail = buildSlot(
     'right-rail',
@@ -113,6 +121,7 @@ export function getAdsterraSlots(): AdsterraSlots {
     160,
     300,
     scriptHost,
+    '22',
   );
   const inContentPhone = buildSlot(
     'in-content-phone',
@@ -120,6 +129,7 @@ export function getAdsterraSlots(): AdsterraSlots {
     inContentPhoneWidth,
     inContentPhoneHeight,
     scriptHost,
+    '22',
   );
   const inContentSmallTablet = buildSlot(
     'in-content-small-tablet',
@@ -127,6 +137,7 @@ export function getAdsterraSlots(): AdsterraSlots {
     inContentSmallTabletWidth,
     inContentSmallTabletHeight,
     scriptHost,
+    '22',
   );
   const inContentTablet = buildSlot(
     'in-content-tablet',
@@ -134,6 +145,7 @@ export function getAdsterraSlots(): AdsterraSlots {
     inContentTabletWidth,
     inContentTabletHeight,
     scriptHost,
+    '22',
   );
 
   const hasAnySlot = Boolean(

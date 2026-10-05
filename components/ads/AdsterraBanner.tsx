@@ -9,7 +9,7 @@ type AdsterraBannerProps = {
   className?: string;
 };
 
-/** Serializes official Adsterra embeds so each unit's atOptions is set before invoke.js runs. */
+/** Serializes official Adsterra embeds so each unit's atOptions is set before the unit script runs. */
 let adLoadQueue: Promise<void> = Promise.resolve();
 
 function enqueueAdLoad(task: () => Promise<void>): Promise<void> {
@@ -20,7 +20,7 @@ function enqueueAdLoad(task: () => Promise<void>): Promise<void> {
 /**
  * Renders Adsterra's official body embed:
  * 1. inline script setting atOptions
- * 2. external invoke.js for the ad key
+ * 2. external unit script for the ad key (`/{pathPrefix}/{key}`)
  * @see https://adsterra.com publishers → get code
  */
 export function AdsterraBanner({ slot, className }: AdsterraBannerProps) {
